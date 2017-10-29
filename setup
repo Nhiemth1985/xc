@@ -1,0 +1,101 @@
+#!/bin/sh
+#
+# setup
+# 
+# Author: Márcio Pessoa <marcio.pessoa@sciemon.com>
+# Contributors: none
+# 
+# Description:
+#   Install or upgrade xC software on device.
+# 
+# Example: 
+#   setup install /opt/sciemon/xc
+#   setup install user@computer:/opt/sciemon/xc
+#   setup update /opt/sciemon/xc
+#   setup update user@computer:/opt/sciemon/xc
+# 
+# Change log:
+# 2017-06-14
+#         * Improvement: Added python-termcolor python-sh as system
+#                        dependencies.
+#         * New feature: Added TrueType font configuration.
+#         * Improvement: Added configuration to /usr/share/xsessions/xc.desktop
+#                        file.
+#         * New feature: Added auto login configuration to file 
+#                        /usr/share/lightdm/lightdm.conf.d/\
+#                        60-lightdm-gtk-greeter.conf
+# 
+# 2016-05-28
+#         * Scrash version.
+#
+
+ACTION=$1
+DESTINATION=$2
+
+message() {
+  message=$1
+  echo "$message""... \c"
+}
+
+check_return() {
+  return=$1
+  if [ "$return" -eq 0 ]; then
+    echo "Done."
+  else
+    echo "Fail."
+    exit 1
+  fi
+}
+
+install() {
+  # Dependencies
+  message "Installing software dependencies"
+  ssh "$DESTINATION" "apt-get -y install python-pygame python-serial python-termcolor python-sh"
+  check_return $?
+  # Fonts
+  ssh "$DESTINATION" "mkdir ~/.fonts"
+  ssh "$DESTINATION" "ln -s /opt/sciemon/xc/Digirtu_.ttf ~/.fonts"
+  # 
+  message "Copying configuration file"
+  scp -q -r cfg/config.json "$DESTINATION":/opt/sciemon/xc/cfg
+  check_return $?
+  #
+  ssh "$DESTINATION" "sudo sh -c 'cat > /usr/share/xsessions/xc.desktop'
+[Desktop Entry]
+Type=Application
+Exec=/opt/sciemon/xc/xc
+Name=xC
+Comment=Axes Controller
+"
+  #
+  ssh "$DESTINATION" "sudo sh -c 'cat >> /usr/share/lightdm/lightdm.conf.d/60-lightdm-gtk-greeter.conf'
+autologin-user=srackham"
+}
+
+update() {
+  message "Copying files"
+  rsync --include-from rsync_include.txt \
+        --exclude-from rsync_exclude.txt \
+        --verbose --delete --archive ./ \
+        "$DESTINATION"
+  check_return $?
+}
+
+case "$ACTION" in
+  'install')
+    install
+    update
+    ;;
+  'update')
+    update
+    ;;
+  *)
+    echo "Usage:
+setup install xc@192.168.1.11:/opt/sciemon/xc
+setup update sciemon:/opt/sciemon/xc
+setup update /opt/sciemon/xc
+"
+    exit 1
+    ;;
+esac
+exit 0

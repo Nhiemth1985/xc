@@ -1,0 +1,22 @@
+{
+  "information": {
+    "language": "Português",
+    "version": {
+      "number": "2016-05-03 22-45-53",
+      "translator": "Márcio Pessoa",
+      "contact": "marcio.pessoa@sciemon.com"
+    }
+  },
+  "elements": {
+    "0": "OK",
+    "1": "Atenção",
+    "2": "Crítico",
+    "3": "Desconhecido",
+    "4": "Informação",
+    "5": "Dados antigos",
+    "ok": "OK",
+    "warning": "Atenção",
+    "critical": "Crítico",
+    "unknown": "Desconhecido"
+  }
+}
