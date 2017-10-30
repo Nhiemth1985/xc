@@ -1,0 +1,14 @@
+# Place this file in ~/.local/share/applications/
+# Place icon files in ~/.local/share/icons/hicolor/
+
+[Desktop Entry]
+Name=xC
+Comment=aXes Controller
+Exec=/opt/sciemon/xc/xc --debug --config=/home/mex/Development/devices.json --id x2
+Icon=xC.png
+Terminal=true
+Type=Application
+Categories=Development;
+StartupNotify=true
+NoDisplay=true
+Name[en_US]=xc.desktop
