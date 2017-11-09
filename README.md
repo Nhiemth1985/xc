@@ -1,7 +1,7 @@
 # xC - aXis Controller
 ## Dependencies
 Solving dependencies:
-```
+```sh
 sudo apt-get install python-serial
 sudo apt-get install python-termcolor 
 sudo apt-get install python-sh
