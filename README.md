@@ -1,5 +1,13 @@
 # xC - aXis Controller
-
+## Dependencies
+Solving dependencies:
+`
+sudo apt-get install python-serial
+sudo apt-get install python-termcolor 
+sudo apt-get install python-sh
+sudo apt-get install python-pygame
+sudo apt-get install python-psutil
+`
 ## Configuration file
 
 ### Macros
@@ -142,10 +150,3 @@ K_MENU         |       | menu
 K_POWER        |       | power                                               
 K_EURO         |       | Euro                                                
 
-``` sh
-sudo apt-get install python-serial
-sudo apt-get install python-termcolor 
-sudo apt-get install python-sh
-sudo apt-get install python-pygame
-sudo apt-get install python-psutil
-```
