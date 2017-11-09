@@ -1,18 +1,11 @@
-<meta charset="utf-8">
-<meta lang="en" charset="utf-8">
+# xC - aXis Controller
 
-README, xc - aXis Controller, Readme file
+## Configuration file
 
-1. Introduction
-
-5. Configuration file
-
-5.1. Information
-
-5.2. Macros
+### Macros
 I recommend you use underline before macro name. It's usefull to quickly identify a macro.
 
-## Keyboard map
+### Keyboard map
 KeyASCII       | ASCII |                    Common Name                      
 ---------------|-------|-----------------------------------------------------
 K_BACKSPACE    | \b    | backspace                                           
@@ -147,10 +140,12 @@ K_SYSREQ       |       | sysrq
 K_BREAK        |       | break                                               
 K_MENU         |       | menu                                                
 K_POWER        |       | power                                               
-K_EURO         |       | Euro                                                |
+K_EURO         |       | Euro                                                
 
+``` sh
 sudo apt-get install python-serial
 sudo apt-get install python-termcolor 
 sudo apt-get install python-sh
 sudo apt-get install python-pygame
 sudo apt-get install python-psutil
+```
