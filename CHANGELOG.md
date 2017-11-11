@@ -1,6 +1,10 @@
 # CHANGELOG.md
 xc - aXis Controller, Change log file
 
+## [0.48b] - 2017-11-11
+### Changed
+- Supressed copyright messages from --version option.
+
 ## [0.48b] - 2017-07-27
 ### Added
 - Memory information to GUI startup messages.

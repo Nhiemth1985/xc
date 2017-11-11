@@ -1,7 +1,6 @@
 # xC - aXis Controller
-## First steps
-### Dependencies
-Solving dependencies:
+## Installation
+### Solving dependencies
 ```sh
 sudo apt-get install python-serial
 sudo apt-get install python-termcolor 
@@ -9,7 +8,7 @@ sudo apt-get install python-sh
 sudo apt-get install python-pygame
 sudo apt-get install python-psutil
 ```
-### Installation
+### Copying files
 Download xC lastest version:
 ```sh
 wget 
