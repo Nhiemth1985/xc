@@ -5,6 +5,11 @@ Author: Marcio Pessoa <marcio@pessoa.eti.br>
 Contributors: none
 
 Change log:
+2017-11-11
+        * Version: 0.05b
+        * New feature: Terminal line feed and carriage return customization.
+        * New feature: Terminal local echo customization.
+
 2017-06-04
         * Version: 0.04b
         * Bug fix: Fixed program execution check.
@@ -41,11 +46,11 @@ class DevTools:
 
     def __init__(self, id, platform, mark, description, architecture,
                  system_path, system_logs,
-                 device_path, device_speed,
+                 device_path, device_speed, terminal_echo, terminal_end_of_line,
                  network_address,
                  interface=None):
         """docstring"""
-        self.version = '0.04b'
+        self.version = '0.05b'
         self.terminal_program = "miniterm.py"
         self.arduino_program = "arduino"
         #
@@ -59,6 +64,8 @@ class DevTools:
         self.logs = os.path.join(os.environ['HOME'], system_logs)
         self.device_path = device_path
         self.device_speed = device_speed
+        self.terminal_echo = terminal_echo
+        self.terminal_end_of_line = terminal_end_of_line
         self.network_address = network_address
         self.device_port = self.device_path
         self.interface = interface
@@ -89,12 +96,18 @@ class DevTools:
                 erroln("Return code: " + str(ret))
             sys.exit(ret)
         # Connect a terminal to device serial console.
+        local_echo = ''
+        if self.terminal_echo:
+            local_echo = "--echo"
+        echoln(self.terminal_end_of_line)
         infoln("Communication device: " +
                os.popen("readlink -f " + self.device_path).read())
         return_code = os.system(self.terminal_program +
                                 " " + self.device_path +
                                 " " + str(self.device_speed) +
-                                " --echo --quiet")
+                                " --eol " + self.terminal_end_of_line +
+                                " " + local_echo +
+                                " --quiet")
         if return_code != 0:
             erroln("Return code: " + str(return_code))
             if return_code > 127:

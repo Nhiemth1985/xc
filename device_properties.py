@@ -6,6 +6,11 @@ Contributors: none
 
 Change log:
 2017-06-06
+        * Version: 0.08b
+        * New feature: Terminal line feed and carriage return customization.
+        * New feature: Terminal local echo customization.
+
+2017-06-06
         * Version: 0.07b
         * Improvement: Removed Warning messages.
 
@@ -23,8 +28,8 @@ Change log:
 
 2017-02-22
         * Version: 0.03b
-        * Improvement: Removed method DeviceProperties.items_extended()
-        * Net feature: Added method DeviceProperties.is_network_connected()
+        * Improvement: Removed method DeviceProperties.items_extended().
+        * New feature: Added method DeviceProperties.is_network_connected().
 
 2017-02-21
         * Version: 0.02b
@@ -55,7 +60,7 @@ class DeviceProperties:
     Methods:
     """
     def __init__(self, devices_file):
-        self.version = '0.07b'
+        self.version = '0.08b'
         self.devices_file = devices_file
         self.set()
         self.load(devices_file)
@@ -93,6 +98,11 @@ class DeviceProperties:
                 .get('path', self.comm_serial_path)
             self.comm_serial_speed = self.data["device"][id]["comm"]["serial"]\
                 .get('speed', self.comm_serial_speed)
+            self.comm_terminal_echo = self.data["device"][id]["comm"]["serial"]\
+                .get('terminal_echo', self.comm_terminal_echo)
+            self.comm_terminal_end_of_line = \
+                self.data["device"][id]["comm"]["serial"]\
+                .get('terminal_end_of_line', self.comm_terminal_end_of_line)
             self.comm_network_address = (
                 self.data["device"][id]["comm"]
                 ["network"].get('address', self.comm_network_address))
@@ -216,6 +226,8 @@ class DeviceProperties:
         self.system_logs = ""
         self.comm_serial_path = ""
         self.comm_serial_speed = 0
+        self.comm_terminal_echo = True
+        self.comm_terminal_end_of_line = "CRLF"
         self.comm_network_address = None
 
     def detect(self):

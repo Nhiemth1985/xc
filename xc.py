@@ -43,8 +43,8 @@ class UserArgumentParser():
 
     def __init__(self):
         self.program_name = "xc"
-        self.program_version = "0.48b"
-        self.program_date = "2017-07-27"
+        self.program_version = "0.49b"
+        self.program_date = "2017-11-11"
         self.program_description = "xC - aXes Controller"
         self.program_copyright = "Copyright (c) 2014-2017 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
@@ -72,7 +72,7 @@ class UserArgumentParser():
                     '  xc gui --id x2\n' +
                     '  xc cli -i x6 -p file.gcode -r\n')
         version = (self.program_name + " " + self.program_version + " (" +
-                   self.program_date + ")" + '' + '\n' + footer)
+                   self.program_date + ")" + '' + '\n')
         epilog = (examples + '\n' + footer)
         parser = argparse.ArgumentParser(
             prog=self.program_name,
@@ -366,6 +366,8 @@ class UserArgumentParser():
                                 self.device.system_logs,
                                 self.device.comm_serial_path,
                                 self.device.comm_serial_speed,
+                                self.device.comm_terminal_echo,
+                                self.device.comm_terminal_end_of_line,
                                 self.device.comm_network_address,
                                 self.interface)
         if self.interface:
