@@ -1,7 +1,10 @@
 # CHANGELOG.md
-xc - aXis Controller, Change log file
 
-## [0.48b] - 2017-11-11
+## [0.49b] - 2017-11-11
+### Added
+- Terminal line feed and carriage return customization for each project.
+- Terminal local echo customization for each project.
+
 ### Changed
 - Supressed copyright messages from --version option.
 
