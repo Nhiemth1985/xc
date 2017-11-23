@@ -99,7 +99,6 @@ class DevTools:
         local_echo = ''
         if self.terminal_echo:
             local_echo = "--echo"
-        echoln(self.terminal_end_of_line)
         infoln("Communication device: " +
                os.popen("readlink -f " + self.device_path).read())
         return_code = os.system(self.terminal_program +

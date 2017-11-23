@@ -1,4 +1,5 @@
-# CHANGELOG.md
+# Change log
+All notable changes to this project will be documented in this file.
 
 ## [0.49b] - 2017-11-11
 ### Added

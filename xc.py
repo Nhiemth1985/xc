@@ -20,7 +20,7 @@ try:
     import os.path
     import time
     # Ubuntu manually installed modules
-    import serial
+    # import serial
     # Myself modules
     from command_parser import CommandParser
     from device_properties import DeviceProperties
@@ -214,6 +214,9 @@ class UserArgumentParser():
             '-i', '--id',
             help='device ID')
         parser.add_argument(
+            '-d', '--date', action="store_true",
+            help='display date')
+        parser.add_argument(
             '--verbosity', type=int,
             default=1,
             choices=[0, 1, 2, 3, 4],
@@ -221,7 +224,7 @@ class UserArgumentParser():
                  '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
-        self.__dev_tools(args.id)
+        self.__dev_tools(args.id, args.date)
         self.project.verify()
 
     def upload(self):
@@ -344,12 +347,13 @@ class UserArgumentParser():
                            str(self.device.comm_network_address))
                     return True
 
-    def __dev_tools(self, id=None, interface=None):
+    def __dev_tools(self, id=None, date=False, interface=None):
         if id:
             self.id = id
         if interface:
             self.interface = interface
-        infoln('Started at: \'' + time.strftime('%Y-%m-%d %H:%M:%S') + '\'')
+        if date:
+            infoln('Started at: ' + time.strftime('%Y-%m-%d %H:%M:%S'))
         # Load device configuration file
         self.device = DeviceProperties(self.config_file)
         if self.id is None:
