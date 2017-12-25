@@ -102,7 +102,6 @@ if platform.machine() == 'armv7l':
         print("Could not load module. " + str(err))
         sys.exit(True)
 
-SCREEN_SIZE = (800, 480)  # Pixels
 REFRESH_RATE = 60  # Frames per second
 
 xc_path = os.getenv('XC_PATH', '/opt/sciemon/xc')
@@ -616,10 +615,15 @@ class Gui:
         self.clock.tick(REFRESH_RATE)
         pygame.display.flip()
 
-    def start(self, fullscreen=False):
+    def start(self, screen_size):
         global pygame
-        if fullscreen:
-            self.fullscreen = fullscreen
+
+        self.screen_resolution = (800, 600)  # pixels (default resolution)
+        if screen_size == 'Full':
+            self.fullscreen = True
+        else:
+            self.screen_resolution = map(int, screen_size.split('x'))
+            
 
         # Set computer architechture
         infoln("Current system...")
@@ -632,7 +636,7 @@ class Gui:
                "GB (used: " +
                str(virtual_memory().percent) +
                "%)")
-        info("    Operational system: " + platform.system())
+        info("    Operating system: " + platform.system())
         if platform.system() == 'Linux':
             infoln(" (" + platform.linux_distribution()[0] + " " +
                    platform.linux_distribution()[1] + ")")
@@ -662,14 +666,15 @@ class Gui:
 
         # Starting screen
         infoln("Starting screen...")
-        infoln("    Size: " + str(SCREEN_SIZE[0]) + 'x' + str(SCREEN_SIZE[1]))
+        infoln("    Size: " + str(self.screen_resolution[0]) + 'x' +
+               str(self.screen_resolution[1]))
         infoln("    Refresh rate: " + str(REFRESH_RATE) + ' FPS')
         # Positioning
         os.environ['SDL_VIDEO_CENTERED'] = '1'
         # os.environ['SDL_VIDEO_WINDOW_POS'] = "%d, %d" % (200, 200)
         # Initialise screen
         pygame.init()
-        self.screen = pygame.display.set_mode(SCREEN_SIZE, RESIZABLE)
+        self.screen = pygame.display.set_mode(self.screen_resolution, RESIZABLE)
         if self.fullscreen:
             pygame.display.toggle_fullscreen()
         # Define window caption

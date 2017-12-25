@@ -43,8 +43,8 @@ class UserArgumentParser():
 
     def __init__(self):
         self.program_name = "xc"
-        self.program_version = "0.49b"
-        self.program_date = "2017-11-11"
+        self.program_version = "0.50b"
+        self.program_date = "2017-12-25"
         self.program_description = "xC - aXes Controller"
         self.program_copyright = "Copyright (c) 2014-2017 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
@@ -143,8 +143,10 @@ class UserArgumentParser():
             prog=self.program_name + ' gui',
             description='graphical user interface')
         parser.add_argument(
-            '-f', '--fullscreen', action="store_true",
-            help='full screen')
+            '-s', '--screen',
+            default='800x600', metavar='resolution',
+            help='screen resolution (default: 800x600)' +
+                 ', for full screen use -s=Full')
         parser.add_argument(
             '-i', '--id',
             help='device ID')
@@ -179,7 +181,7 @@ class UserArgumentParser():
         gui.config_file = self.config_file
         gui.id = args.id
         gui.interface = args.interface
-        gui.start(args.fullscreen)
+        gui.start(args.screen)
         gui.run()
         sys.exit(False)
 
@@ -235,6 +237,9 @@ class UserArgumentParser():
             '-i', '--id',
             help='device ID')
         parser.add_argument(
+            '-d', '--date', action="store_true",
+            help='display date')
+        parser.add_argument(
             '--interface',
             default='serial',
             choices=['serial', 'network'],
@@ -247,7 +252,7 @@ class UserArgumentParser():
                  '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
-        self.__dev_tools(args.id, args.interface)
+        self.__dev_tools(args.id, args.date, args.interface)
         self.project.upload()
 
     def list(self):

@@ -54,7 +54,7 @@ install() {
   check_return $?
   # Fonts
   ssh "$DESTINATION" "mkdir ~/.fonts"
-  ssh "$DESTINATION" "ln -s /opt/sciemon/xc/Digirtu_.ttf ~/.fonts"
+  ssh "$DESTINATION" "ln -s /opt/sciemon/xc/fonts/Digirtu_.ttf ~/.fonts"
   # 
   message "Copying configuration file"
   scp -q -r cfg/config.json "$DESTINATION":/opt/sciemon/xc/cfg
