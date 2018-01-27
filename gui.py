@@ -5,6 +5,10 @@ Author: Marcio Pessoa <marcio@pessoa.eti.br>
 Contributors: none
 
 Change log:
+2018-01-27
+        * Version: 0.14b
+        * Added: Screen resolution customization.
+
 2017-07-27
         * Version: 0.13b
         * Improvement: Added memory information to startup messages.
@@ -63,11 +67,11 @@ Change log:
 
 2017-04-04
         * Version: 0.02b
-        * New feature: Added Image class to manage images easily.
+        * Added: Image class to manage images easily.
 
 2017-04-01
         * Version: 0.01b
-        * Improvement: Added version information.
+        * Added: Version information.
 
 2016-05-12
         * Version: 0.00b
@@ -112,7 +116,7 @@ class Gui:
     """  """
 
     def __init__(self):
-        self.version = '0.13b'
+        self.version = '0.14b'
         self.window_title = 'xC'
         self.window_caption = 'xC - Axes Controller'
         self.fullscreen = False
@@ -615,15 +619,14 @@ class Gui:
         self.clock.tick(REFRESH_RATE)
         pygame.display.flip()
 
-    def start(self, screen_size):
+    def start(self, screen_size, fullscreen=False):
         global pygame
 
-        self.screen_resolution = (800, 600)  # pixels (default resolution)
-        if screen_size == 'Full':
-            self.fullscreen = True
-        else:
-            self.screen_resolution = map(int, screen_size.split('x'))
-            
+        if fullscreen:
+            self.fullscreen = fullscreen
+
+        self.screen_resolution = (800, 480)  # pixels (default resolution)
+        self.screen_resolution = map(int, screen_size.split('x'))
 
         # Set computer architechture
         infoln("Current system...")
@@ -674,6 +677,7 @@ class Gui:
         # os.environ['SDL_VIDEO_WINDOW_POS'] = "%d, %d" % (200, 200)
         # Initialise screen
         pygame.init()
+        # self.screen = pygame.display.set_mode(self.screen_resolution, RESIZABLE)
         self.screen = pygame.display.set_mode(self.screen_resolution, RESIZABLE)
         if self.fullscreen:
             pygame.display.toggle_fullscreen()

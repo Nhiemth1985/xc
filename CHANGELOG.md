@@ -1,6 +1,10 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## [0.50b] - 2018-01-37
+### Added
+- Screen resolution customization.
+
 ## [0.49b] - 2017-11-11
 ### Added
 - Terminal line feed and carriage return customization for each project.

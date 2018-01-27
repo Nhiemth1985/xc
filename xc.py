@@ -144,9 +144,11 @@ class UserArgumentParser():
             description='graphical user interface')
         parser.add_argument(
             '-s', '--screen',
-            default='800x600', metavar='resolution',
-            help='screen resolution (default: 800x600)' +
-                 ', for full screen use -s=Full')
+            default='800x480', metavar='resolution',
+            help='screen resolution (default: 800x480)')
+        parser.add_argument(
+            '-f', '--fullscreen', action="store_true",
+            help='full screen')
         parser.add_argument(
             '-i', '--id',
             help='device ID')
@@ -181,7 +183,7 @@ class UserArgumentParser():
         gui.config_file = self.config_file
         gui.id = args.id
         gui.interface = args.interface
-        gui.start(args.screen)
+        gui.start(args.screen, args.fullscreen)
         gui.run()
         sys.exit(False)
 
