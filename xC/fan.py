@@ -23,7 +23,7 @@ Change log:
 """
 
 import RPi.GPIO as GPIO
-from timer import Timer
+from xC.timer import Timer
 
 
 class Fan():

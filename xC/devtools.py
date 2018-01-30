@@ -37,7 +37,7 @@ Change log:
 import os.path
 import sys
 import time
-from echo import verbose, level, \
+from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 
 

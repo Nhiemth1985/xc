@@ -51,7 +51,7 @@ import os
 import sh
 from socket import gethostbyname
 import sys
-from echo import verbose, level, \
+from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 
 

@@ -33,8 +33,8 @@ import re
 import sys
 from time import sleep
 # import spur
-from timer import Timer
-from echo import verbose, level, \
+from xC.timer import Timer
+from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 
 

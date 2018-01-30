@@ -9,7 +9,7 @@ sudo apt-get -y install python-serial python-pygame python-termcolor python-sh p
 ### Copying files
 Download xC lastest version:
 ```sh
-wget https://git.sciemon.com/sciemon/xc/archive/0.48b.zip
+wget https://git.sciemon.com/sciemon/xc/archive/0.50b.zip
 ```
 Uncompress:
 ```sh
@@ -25,6 +25,7 @@ Run installer:
 I recommend you use underline before macro name. It's usefull to quickly identify a macro.
 
 ### Keyboard map
+
 | KeyASCII       | ASCII |                    Common Name                      |
 |----------------|-------|-----------------------------------------------------|
 | K_BACKSPACE    | \b    | backspace                                           |

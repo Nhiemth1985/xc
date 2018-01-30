@@ -8,7 +8,7 @@ Copyright (c) 2014-2017 Márcio Pessoa <marcio.pessoa@sciemon.com>
 Author: Marcio Pessoa <marcio@pessoa.eti.br>
 Contributors: none
 
-Change log: Check CHANGELOG file.
+Change log: Check CHANGELOG.md file.
 
 """
 
@@ -22,10 +22,10 @@ try:
     # Ubuntu manually installed modules
     # import serial
     # Myself modules
-    from command_parser import CommandParser
-    from device_properties import DeviceProperties
-    from devtools import DevTools
-    from echo import verbose, level, \
+    from xC.command_parser import CommandParser
+    from xC.device_properties import DeviceProperties
+    from xC.devtools import DevTools
+    from xC.echo import verbose, level, \
         echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 except ImportError as err:
     print("Could not load module. " + str(err))
@@ -178,7 +178,7 @@ class UserArgumentParser():
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
         # Start GUI
-        from gui import Gui
+        from xC.gui import Gui
         gui = Gui()
         gui.config_file = self.config_file
         gui.id = args.id

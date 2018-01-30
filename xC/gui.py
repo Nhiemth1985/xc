@@ -89,13 +89,13 @@ import serial
 import subprocess
 import sys
 import time
-from command_parser import CommandParser
-from device_properties import DeviceProperties
-from devtools import DevTools
-from echo import verbose, level, \
+from xC.command_parser import CommandParser
+from xC.device_properties import DeviceProperties
+from xC.devtools import DevTools
+from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
-from signal_generator import SigGen
-from timer import Timer
+from xC.signal_generator import SigGen
+from xC.timer import Timer
 
 if platform.machine() == 'armv7l':
     try:
@@ -810,16 +810,16 @@ class Image:
         Example:
             Consider a single image, split it into 8 equal pieces, like
             this:
-                ╭───┬───┬───┬───╮
-                │ 1 │ 2 │ 3 │ 4 │
-                ├───┼───┼───┼───┤
-                │ 5 │ 6 │ 7 │ 8 │
-                ╰───┴───┴───┴───╯
+                -----------------
+                | 1 | 2 | 3 | 4 |
+                -----------------
+                | 5 | 6 | 7 | 8 |
+                -----------------
 
             Take a look at one piece, the piece number 7 for example:
-               A╭───╮B
-                │ 7 │
-               D╰───╯C
+               A-----B
+                | 7 |
+               D-----C
 
             All pieces have 4 sides and 4 corners. Each corner can be
             identified by A, B, C and D.

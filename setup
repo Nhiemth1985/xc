@@ -50,7 +50,13 @@ check_return() {
 install() {
   # Dependencies
   message "Installing software dependencies"
-  ssh "$DESTINATION" "apt-get -y install python-pygame python-serial python-termcolor python-sh"
+  ssh "$DESTINATION" "apt-get -y install \
+    python-serial \
+    python-pygame \
+    python-termcolor \
+    python-sh \
+    python-psutil"
+  
   check_return $?
   # Fonts
   ssh "$DESTINATION" "mkdir ~/.fonts"
