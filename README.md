@@ -1,4 +1,8 @@
-# xC - aXis Controller
+# xC - aXes Controller
+
+[Change log](CHANGELOG.md)
+
+[Kanban](KANBAN.md)
 
 ## Installation
 

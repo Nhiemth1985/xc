@@ -1,7 +1,7 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
-## [0.50b] - 2018-01-37
+## [0.50b] - 2018-01-27
 ### Added
 - Screen resolution customization.
 
