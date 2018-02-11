@@ -20,7 +20,7 @@ try:
     import os.path
     import time
     # Ubuntu manually installed modules
-    # import serial
+    import serial
     # Myself modules
     from xC.command_parser import CommandParser
     from xC.device_properties import DeviceProperties
@@ -127,7 +127,7 @@ class UserArgumentParser():
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
         # Start CLI
-        from cli import Cli
+        from xC.cli import Cli
         if self.__connection(args.id, args.interface):
             sys.exit(True)
         # Start G-code parser

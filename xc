@@ -62,5 +62,6 @@ if [ "$#" -eq 0 ]; then
     grep -v 'SDL_'
 else
   python "$WORK_DIR"/"$WORK_FILE" "$@" \
-    --verbosity="$verbosity"
+    --verbosity="$verbosity" | \
+    grep -v 'SDL_'
 fi
