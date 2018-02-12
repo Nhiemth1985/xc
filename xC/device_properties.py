@@ -5,6 +5,10 @@ Author: Marcio Pessoa <marcio@pessoa.eti.br>
 Contributors: none
 
 Change log:
+2018-02-11
+        * Version: 0.09b
+        * New feature: Added is_enable method.
+
 2017-06-06
         * Version: 0.08b
         * New feature: Terminal line feed and carriage return customization.
@@ -60,10 +64,18 @@ class DeviceProperties:
     Methods:
     """
     def __init__(self, devices_file):
-        self.version = '0.08b'
+        self.version = '0.09b'
         self.devices_file = devices_file
         self.set()
         self.load(devices_file)
+
+    def is_enable(self):
+        enable = False
+        try:
+            enable = self.data["device"][self.id].get('enable', True)
+        except:
+            pass
+        return enable
 
     def select(self, id):
         """Set a device to be used.

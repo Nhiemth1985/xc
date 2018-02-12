@@ -27,7 +27,7 @@ readonly WORK_FILE='xc.pyc'
 
 # Default values
 command="gui"
-verbosity=4
+verbosity=3
 arguments="-r"
 
 # Enable full screen mode on xc appliance

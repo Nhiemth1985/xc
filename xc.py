@@ -43,8 +43,8 @@ class UserArgumentParser():
 
     def __init__(self):
         self.program_name = "xc"
-        self.program_version = "0.50b"
-        self.program_date = "2017-12-25"
+        self.program_version = "0.51b"
+        self.program_date = "2018-02-11"
         self.program_description = "xC - aXes Controller"
         self.program_copyright = "Copyright (c) 2014-2017 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
@@ -281,20 +281,26 @@ class UserArgumentParser():
         if args.verbosity >= 2:
             echo(' Id\tName\tMark')
         if args.verbosity >= 3:
-            echo('\tLink')
+            echo('\tDescription')
         if args.verbosity >= 4:
-            echo('\t Description')
+            echo('\t\tLink')
         if args.verbosity > 1:
             echoln('')
+        if args.verbosity >= 2:
+            echo('------------------------')
+        if args.verbosity >= 3:
+            echo('------------------------')
+        if args.verbosity >= 4:
+            echo('--------')
         if args.verbosity > 1:
-            for i in range(args.verbosity):
-                echo("-------------")
             echoln('')
         c = 0
         for id in device.list():
             device.select(id)
-            if args.verbosity >= 3 or args.connected:
-                interface = '-'
+            if not device.is_enable():
+                continue
+            if args.verbosity >= 4 or args.connected:
+                interface = 'Offline'
                 if args.interface == 'serial' or args.interface == 'all':
                     if device.is_serial_connected():
                         interface = "Serial"
@@ -310,9 +316,12 @@ class UserArgumentParser():
                      device.system_plat + "\t" +
                      device.system_mark)
             if args.verbosity >= 3:
-                echo('\t' + interface)
+                echo('\t' + device.system_desc)
+                if len(device.system_desc) < 16:
+                    for i in range(16-len(device.system_desc)):
+                        echo(" ")
             if args.verbosity >= 4:
-                echo('\t ' + device.system_desc)
+                echo('\t' + interface)
             if args.verbosity > 0:
                 echoln('')
             c += 1

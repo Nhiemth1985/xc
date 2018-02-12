@@ -1,6 +1,12 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## [0.51b] - 2018-02-11
+### Added
+- List only enabled devices (new configuration in devices.json).
+### Changed
+- List device link status on debug option 4 (no more 3).
+
 ## [0.50b] - 2018-01-27
 ### Added
 - Screen resolution customization.
