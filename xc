@@ -36,7 +36,7 @@ case "$HOSTNAME" in
     arguments='--fullscreen'
     ;;
   'xcm2')
-    arguments='--screen=480×320'
+    arguments='--screen=480x320'
     ;;
   *)
     ;;
