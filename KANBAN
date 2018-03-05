@@ -1,0 +1,62 @@
+- 'BACKLOG':
+  - (control) Joystick - Ajust speed based on JSON configuration
+  - (control) Keyboard - Ajust delay and interval options based on JSON configuration
+  - (control) Mouse - Ajust speed based on JSON configuration
+  - (control) Voice - Add support
+  - (control) Touch - Add support
+  - (control) Touch - Ajust delay and interval options based on JSON configuration
+  - (gui) 3D model - x1
+  - (gui) 3D model - x2
+  - (gui) 3D model - x6
+  - (gui) 3D model - Escriba
+  - (all) output file - Create this feature
+  - (all) log file - Create this feature
+  - (all) Conectar multiplos dispositivos simultaneamente
+  - (all) Soft limits
+  - (all) Multi language support
+  - (all) Conectar-se ao dispositivo por intermedio do protocolo SSH
+
+- 'TODO':
+  - (all) Devices interaction - Design and definition
+  - (all) DeviceProperties - Add "endup" JSON section
+  - (all) Comando para ejetar dispositivo - Deve executar a sequencia "endup"
+  - (control) Joystick - Auto detect in runtime
+  - (control) Joystick - Hat support
+  - (control) Voice - Add support
+  - (control) Mouse - Buttons - Add support
+  - (control) Mouse - Wheel - Add support
+  - (control) Joystick - Bug #1
+  - (control) Mouse - Bug #2
+  - (control) Joystick - Bug #4
+  - (all) CommandParser.run() - Bug #3
+
+- 'DOING':
+  - (gui) Unified Control System - Join all commands from all controls in a single command (G0 X1 Y4 U19 - G0 X3 W12 = G0 X4 Y4 U19 W12)
+
+- 'TESTING':
+  - (all) Show comments with different colors
+
+- 'DONE':
+  - (SO) NRDP - Communication to server fails over HTTPS
+  - (control) Keyboard - Auto detection
+  - (control) Mouse - Auto detection
+  - (all) CommandParser - Parser comments
+  - (hardware) Status LED - Blink program
+  - (hardware) Status LED - Cooling system
+  - (control) Joystick - Add support
+  - (control) Keyboard - Add support
+  - (control) Mouse - Add support
+  - (SO) Sony DualShock 4 - Integration
+  - (all) File check before open it - Configuration file
+  - (all) File check before open it - Program file
+  - (all) Check and return error when a non configured device is called
+  - (all) File check before open it - Check program before execution
+  - (all) File check before open it - arduino and miniterm.py executables
+  - (all) Auto detect connected devices
+  - (all) CommandParser - Next step is trigged to start when "ok" is received
+  - (all) CommandParser - Skip single line comments ';'
+  - (all) CommandParser - Skip multi lines comments "()"
+  - (gui) Show FPS (Frames Per Second)
+  - (all) Start automatically on GUI mode.
+  - (setup) Create
+  - (SO) WiFi adapter - Configure
