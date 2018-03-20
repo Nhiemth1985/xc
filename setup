@@ -50,32 +50,37 @@ check_return() {
 install() {
   # Dependencies
   message "Installing software dependencies"
-  ssh "$DESTINATION" "apt-get -y install \
+  sudo apt-get -y install \
     python-serial \
     python-pygame \
     python-termcolor \
     python-sh \
-    python-psutil"
-  
+    python-psutil
   check_return $?
+  # Copy files
+  sudo mkdir -p /opt/sciemon/xc
+  check_return $?
+  sudo chown $USER. /opt/sciemon/xc
+  check_return $?
+  update
   # Fonts
-  ssh "$DESTINATION" "mkdir ~/.fonts"
-  ssh "$DESTINATION" "ln -s /opt/sciemon/xc/fonts/Digirtu_.ttf ~/.fonts"
-  # 
+  mkdir ~/.fonts
+  ln -s /opt/sciemon/xc/fonts/Digirtu_.ttf ~/.fonts
+  # Configuration file
   message "Copying configuration file"
-  scp -q -r cfg/config.json "$DESTINATION":/opt/sciemon/xc/cfg
-  check_return $?
+  ln -s /opt/sciemon/xc/devices.json $HOME/.devices.json
+  # check_return $?
   #
-  ssh "$DESTINATION" "sudo sh -c 'cat > /usr/share/xsessions/xc.desktop'
-[Desktop Entry]
-Type=Application
-Exec=/opt/sciemon/xc/xc
-Name=xC
-Comment=Axes Controller
-"
+  # sudo sh -c 'cat > /usr/share/xsessions/xc.desktop'
+# [Desktop Entry]
+# Type=Application
+# Exec=/opt/sciemon/xc/xc
+# Name=xC
+# Comment=Axes Controller
+
   #
-  ssh "$DESTINATION" "sudo sh -c 'cat >> /usr/share/lightdm/lightdm.conf.d/60-lightdm-gtk-greeter.conf'
-autologin-user=srackham"
+  # sudo sh -c 'cat >> /usr/share/lightdm/lightdm.conf.d/60-lightdm-gtk-greeter.conf'
+# autologin-user=srackham"
 }
 
 update() {
@@ -83,23 +88,21 @@ update() {
   rsync --include-from rsync_include.txt \
         --exclude-from rsync_exclude.txt \
         --verbose --delete --archive ./ \
-        "$DESTINATION"
+        /opt/sciemon/xc
   check_return $?
 }
 
 case "$ACTION" in
   'install')
     install
-    update
     ;;
   'update')
     update
     ;;
   *)
     echo "Usage:
-setup install xc@192.168.1.11:/opt/sciemon/xc
-setup update sciemon:/opt/sciemon/xc
-setup update /opt/sciemon/xc
+setup install
+setup update
 "
     exit 1
     ;;
