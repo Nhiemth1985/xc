@@ -6,6 +6,10 @@ Contributors: none
 
 Change log:
 2018-02-11
+        * Version: 0.10b
+        * Changed: Only configured interfaces are shown.
+
+2018-02-11
         * Version: 0.09b
         * New feature: Added is_enable method.
 
@@ -64,7 +68,7 @@ class DeviceProperties:
     Methods:
     """
     def __init__(self, devices_file):
-        self.version = '0.09b'
+        self.version = '0.10b'
         self.devices_file = devices_file
         self.set()
         self.load(devices_file)
@@ -73,7 +77,7 @@ class DeviceProperties:
         enable = False
         try:
             enable = self.data["device"][self.id].get('enable', True)
-        except:
+        except BaseException:
             pass
         return enable
 
@@ -124,7 +128,7 @@ class DeviceProperties:
         # Get IP address from host name
         try:
             self.comm_network_address = gethostbyname(self.comm_network_address)
-        except:
+        except BaseException:
             pass
         return 0
 
@@ -163,7 +167,7 @@ class DeviceProperties:
         try:
             sh.ping(self.comm_network_address, '-c 2 -W 1', _out='/dev/null')
             return True
-        except:
+        except BaseException:
             return False
 
     def load(self, file):
@@ -202,25 +206,25 @@ class DeviceProperties:
     def objects(self):
         try:
             return self.data["device"][self.id]["object"]
-        except:
+        except BaseException:
             return []
 
     def endup(self):
         try:
             return self.data["device"][self.id]["endup"]
-        except:
+        except BaseException:
             return []
 
     def startup(self):
         try:
             return self.data["device"][self.id]["startup"]
-        except:
+        except BaseException:
             return []
 
     def control(self):
         try:
             return self.data["device"][self.id]["control"]
-        except:
+        except BaseException:
             return []
 
     def reset(self):
@@ -282,6 +286,8 @@ class DeviceProperties:
                ' Mark ' + str(self.system_mark) +
                ' (' + str(self.system_desc) + ')')
         infoln('    Connectivity:')
-        infoln('        Serial: ' + str(self.comm_serial_path) + ' (' +
-               str(self.comm_serial_speed) + ' bps)')
-        infoln('        Network: ' + str(self.comm_network_address))
+        if self.comm_serial_path is not None:
+            infoln('        Serial: ' + str(self.comm_serial_path) + ' (' +
+                   str(self.comm_serial_speed) + ' bps)')
+        if self.comm_network_address is not None:
+            infoln('        Network: ' + str(self.comm_network_address))

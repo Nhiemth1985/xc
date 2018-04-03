@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.51b] - 2018-02-11
+### Changed
+- Only configured interfaces are shown in verify or upload cli options.
+
+## [0.51b] - 2018-02-11
 ### Added
 - List only enabled devices (new configuration in devices.json).
 ### Changed
