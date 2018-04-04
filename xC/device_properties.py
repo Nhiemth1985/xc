@@ -5,7 +5,7 @@ Author: Marcio Pessoa <marcio@pessoa.eti.br>
 Contributors: none
 
 Change log:
-2018-02-11
+2018-04-02
         * Version: 0.10b
         * Changed: Only configured interfaces are shown.
 

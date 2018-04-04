@@ -16,7 +16,7 @@
   - (all) Multi language support
   - (all) Conectar-se ao dispositivo por intermedio do protocolo SSH
 
-- 'TODO':
+- 'TO DO':
   - (all) Devices interaction - Design and definition
   - (all) DeviceProperties - Add "endup" JSON section
   - (all) Comando para ejetar dispositivo - Deve executar a sequencia "endup"
