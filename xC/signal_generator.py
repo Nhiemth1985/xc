@@ -15,7 +15,7 @@ Change log:
 
 """
 
-from math import cos, pi
+import math
 from timer import Timer
 
 
@@ -69,7 +69,7 @@ class SigGen():
         Returns
             float: sine signal
         """
-        y = ((-cos((self.step() * pi) * 2.0)) + 1) / 2
+        y = ((-math.cos((self.step() * math.pi) * 2.0)) + 1) / 2
         return y
 
     def square(self):

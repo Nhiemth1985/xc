@@ -29,8 +29,8 @@
 #         * Scrash version.
 #
 
-ACTION=$1
-DESTINATION=$2
+readonly ACTION=$1
+readonly DESTINATION=$2
 
 message() {
   message=$1
@@ -50,7 +50,7 @@ check_return() {
 install() {
   # Dependencies
   message "Installing software dependencies"
-  sudo apt-get -y install \
+  apt-get -y install \
     python-serial \
     python-pygame \
     python-termcolor \
@@ -58,9 +58,9 @@ install() {
     python-psutil
   check_return $?
   # Copy files
-  sudo mkdir -p /opt/sciemon/xc
+  mkdir -p /opt/sciemon/xc
   check_return $?
-  sudo chown $USER. /opt/sciemon/xc
+  chown "$USER". /opt/sciemon/xc
   check_return $?
   update
   # Fonts
@@ -68,10 +68,10 @@ install() {
   ln -s /opt/sciemon/xc/fonts/Digirtu_.ttf ~/.fonts
   # Configuration file
   message "Copying configuration file"
-  ln -s /opt/sciemon/xc/devices.json $HOME/.devices.json
+  ln -s /opt/sciemon/xc/devices.json "$HOME"/.devices.json
   # check_return $?
   #
-  # sudo sh -c 'cat > /usr/share/xsessions/xc.desktop'
+  # sh -c 'cat > /usr/share/xsessions/xc.desktop'
 # [Desktop Entry]
 # Type=Application
 # Exec=/opt/sciemon/xc/xc
@@ -79,7 +79,7 @@ install() {
 # Comment=Axes Controller
 
   #
-  # sudo sh -c 'cat >> /usr/share/lightdm/lightdm.conf.d/60-lightdm-gtk-greeter.conf'
+  # sh -c 'cat >> /usr/share/lightdm/lightdm.conf.d/60-lightdm-gtk-greeter.conf'
 # autologin-user=srackham"
 }
 
