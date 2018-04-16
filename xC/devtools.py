@@ -101,7 +101,7 @@ class DevTools:
             local_echo = "--echo"
         infoln("Communication device: " +
                os.popen("readlink -f " + self.device_path).read())
-        command = "bash -c " + self.terminal_program + \
+        command = self.terminal_program + \
                   " " + self.device_path + \
                   " " + str(self.device_speed) + \
                   " --eol " + self.terminal_end_of_line + \
