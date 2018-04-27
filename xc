@@ -27,8 +27,7 @@ readonly WORK_FILE='xc.pyc'
 
 # Default values
 command="gui"
-verbosity=3
-arguments="-r"
+verbosity=4
 
 # Enable full screen mode on xc appliance
 case "$HOSTNAME" in
@@ -39,6 +38,7 @@ case "$HOSTNAME" in
     arguments='--screen=480x320'
     ;;
   *)
+    arguments="-r"
     ;;
 esac
 

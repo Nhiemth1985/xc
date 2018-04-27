@@ -8,15 +8,15 @@
 
 ### Copying files
 Download xC lastest version:
-```sh
+``` bash
 wget https://git.sciemon.com/sciemon/xc/archive/0.50b.zip
 ```
 Uncompress:
-```sh
+``` bash
 unzip xc.zip
 ```
 Run installer:
-```sh
+``` bash
 ./setup
 ```
 ## Configuration file
