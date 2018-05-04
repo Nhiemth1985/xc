@@ -31,10 +31,10 @@ verbosity=4
 
 # Enable full screen mode on xc appliance
 case "$HOSTNAME" in
-  'xcm1')
+  'xCm1')
     arguments='--fullscreen'
     ;;
-  'xcm2')
+  'xCm2')
     arguments='--screen=480x320'
     ;;
   *)
