@@ -15,15 +15,16 @@
 #   setup update user@computer:/opt/sciemon/xc
 # 
 # Change log:
+# 2018-05-10
+#         * Fixed: Some user output messages.
+#         * Changed: Default output of some commands was suppressed.
+#
 # 2017-06-14
-#         * Improvement: Added python-termcolor python-sh as system
-#                        dependencies.
-#         * New feature: Added TrueType font configuration.
-#         * Improvement: Added configuration to /usr/share/xsessions/xc.desktop
-#                        file.
-#         * New feature: Added auto login configuration to file 
-#                        /usr/share/lightdm/lightdm.conf.d/\
-#                        60-lightdm-gtk-greeter.conf
+#         * Added: Python-termcolor python-sh as system dependencies.
+#         * Added: TrueType font configuration.
+#         * Added: Configuration to /usr/share/xsessions/xc.desktop file.
+#         * Added: Auto login configuration to file 
+#                  /usr/share/lightdm/lightdm.conf.d/60-lightdm-gtk-greeter.conf
 # 
 # 2016-05-28
 #         * Scrash version.
@@ -50,25 +51,29 @@ check_return() {
 install() {
   # Dependencies
   message "Installing software dependencies"
-  apt-get -y install \
+  apt update >/dev/null 2>&1
+  apt -y install \
     python-serial \
     python-pygame \
     python-termcolor \
     python-sh \
-    python-psutil
+    python-psutil \
+    >/dev/null 2>&1
   check_return $?
   # Copy files
+  message "Creating directory structure"
   mkdir -p /opt/sciemon/xc
   check_return $?
-  chown "$USER". /opt/sciemon/xc
+  message "Setting user permissions"
+  chown --recursive "$USER". /opt/sciemon
   check_return $?
   update
   # Fonts
-  mkdir ~/.fonts
-  ln -s /opt/sciemon/xc/fonts/Digirtu_.ttf ~/.fonts
+  mkdir -p ~/.fonts
+  ln -s /opt/sciemon/xc/fonts/Digirtu_.ttf ~/.fonts >/dev/null 2>&1
   # Configuration file
-  message "Copying configuration file"
-  ln -s /opt/sciemon/xc/devices.json "$HOME"/.devices.json
+  # message "Copying configuration file"
+  ln -s /opt/sciemon/xc/devices.json "$HOME"/.devices.json >/dev/null 2>&1
   # check_return $?
   #
   # sh -c 'cat > /usr/share/xsessions/xc.desktop'
@@ -87,7 +92,7 @@ update() {
   message "Copying files"
   rsync --include-from rsync_include.txt \
         --exclude-from rsync_exclude.txt \
-        --verbose --delete --archive ./ \
+        --delete --archive ./ \
         /opt/sciemon/xc
   check_return $?
 }
