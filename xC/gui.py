@@ -658,8 +658,8 @@ class Gui:
             # Cooling system
             self.temperature_timer = Timer(1000)
             self.temperature = 0
-            self.fan = Fan(32, 22, max_speed=2000)
-            self.fan.setLimits(40, 60)
+            #  self.fan = Fan(32, 22, max_speed=2000)
+            #  self.fan.setLimits(40, 60)
 
         # Load device configuration file
         self.device = DeviceProperties(self.config_file)
