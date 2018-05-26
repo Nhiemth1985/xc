@@ -95,8 +95,8 @@ install() {
 
 update() {
   message "Copying files"
-  rsync --include-from rsync_include.txt \
-        --exclude-from rsync_exclude.txt \
+  rsync --include-from .rsync_include.txt \
+        --exclude-from .rsync_exclude.txt \
         $verbose --delete --archive ./ \
         /opt/sciemon/xc
   check_return $?
