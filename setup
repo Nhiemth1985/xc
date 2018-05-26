@@ -11,7 +11,7 @@
 # Example: 
 #   setup install /opt/sciemon/xc
 #   setup install user@computer:/opt/sciemon/xc
-#   setup update /opt/sciemon/xc
+#   setup update /opt/sciemon/xc --verbose
 #   setup update user@computer:/opt/sciemon/xc
 # 
 # Change log:
@@ -31,7 +31,12 @@
 #
 
 readonly ACTION=$1
-readonly DESTINATION=$2
+readonly OPTION=$2
+if [ "$OPTION" = "--verbose" ]; then
+  verbose="--verbose"
+else
+  verbose=""
+fi
 
 message() {
   message=$1
@@ -92,7 +97,7 @@ update() {
   message "Copying files"
   rsync --include-from rsync_include.txt \
         --exclude-from rsync_exclude.txt \
-        --delete --archive ./ \
+        $verbose --delete --archive ./ \
         /opt/sciemon/xc
   check_return $?
 }

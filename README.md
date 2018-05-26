@@ -6,7 +6,6 @@
 
 ## Installation
 
-### Copying files
 Download xC lastest version:
 ``` bash
 wget https://git.sciemon.com/sciemon/xc/archive/0.50b.zip
@@ -17,7 +16,7 @@ unzip xc.zip
 ```
 Run installer:
 ``` bash
-./setup
+sudo ./setup insall
 ```
 ## Configuration file
 
