@@ -699,14 +699,14 @@ class Gui:
         # self.background.fill([0, 0, 0])  # Black
         # Load images
         infoln('    Loading images...')
-        try:
-            file = os.path.join(images_directory, 'background.png')
-            self.background_image = pygame.image.load(file)
-            self.background = pygame.Surface(self.screen.get_size())
-            self.background.blit(self.background_image, [0, 0])
-        except pygame.error:
-            raise SystemExit('Could not load image "%s" %s' %
-                             (file, pygame.get_error()))
+        #  try:
+            #  file = os.path.join(images_directory, 'background.png')
+            #  self.background_image = pygame.image.load(file)
+            #  self.background = pygame.Surface(self.screen.get_size())
+            #  self.background.blit(self.background_image, [0, 0])
+        #  except pygame.error:
+            #  raise SystemExit('Could not load image "%s" %s' %
+                             #  (file, pygame.get_error()))
         self.images_load()
         # Building device objects
         infoln('    Building device objects...')

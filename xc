@@ -35,7 +35,7 @@ case "$HOSTNAME" in
     arguments='--fullscreen'
     ;;
   'xCm2')
-    arguments='--screen=480x320'
+    arguments='--fullscreen --screen=480x320'
     ;;
   *)
     arguments="-r"
@@ -57,7 +57,7 @@ done
 
 # 
 if [ "$#" -eq 0 ]; then
-  python "$WORK_DIR"/"$WORK_FILE" "$command" "$arguments" \
+  python "$WORK_DIR"/"$WORK_FILE" "$command" $(echo "$arguments") \
     --verbosity="$verbosity" | \
     grep -v 'SDL_'
 else

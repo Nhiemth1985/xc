@@ -24,4 +24,4 @@
 */10 * * * *	rsync --verbose --archive --compress --delete sciemon:/opt/sciemon/ /opt/sciemon/ 2>&1 | tee /tmp/rsync_sciemon.log
 */10 * * * *	rsync --verbose --archive --compress --delete sciemon:/home/Development $HOME 2>&1 | tee /tmp/rsync_Development.log
 1 */1 * * *	rsync -a --delete sciemon:/opt/arduino/arm/ /opt/arduino/arm/ 2>&1 | tee /tmp/rsync_arduino.log
-*/5 * * * *	bash -x /opt/sciemon/xc/nrdp.sh 2>&1 | tee /tmp/nrdp.log
+# */5 * * * *	bash -x /opt/sciemon/xc/nrdp.sh 2>&1 | tee /tmp/nrdp.log

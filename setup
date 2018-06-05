@@ -94,10 +94,6 @@ install() {
 }
 
 update() {
-  message "Compiling"
-  for file in $(find . -name "*.py"); do
-    python -m py_compile $file;
-  done
   check_return $?
   message "Copying files"
   rsync --include-from .rsync_include.txt \
