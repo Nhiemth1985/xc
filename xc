@@ -12,6 +12,9 @@
 #   xc -h
 # 
 # Change log:
+# 2018-06-05
+#          * Bug fix: startup on xCm2.
+# 
 # 2017-05-22
 #          * Bug fix: Supress SDL verbose messages.
 # 
