@@ -1,6 +1,10 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## [0.52b] - 2018-06-05
+### Added
+- System Core number.
+
 ## [0.51b] - 2018-04-02
 ### Changed
 - Only configured interfaces are shown in verify or upload cli options.

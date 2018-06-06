@@ -5,6 +5,10 @@ Author: Marcio Pessoa <marcio@pessoa.eti.br>
 Contributors: none
 
 Change log:
+2018-06-05
+        * Version: 0.15b
+        * Added: System Core number.
+
 2018-01-27
         * Version: 0.14b
         * Added: Screen resolution customization.
@@ -116,7 +120,7 @@ class Gui:
     """  """
 
     def __init__(self):
-        self.version = '0.14b'
+        self.version = '0.15b'
         self.window_title = 'xC'
         self.window_caption = 'xC - Axes Controller'
         self.fullscreen = False
@@ -631,9 +635,10 @@ class Gui:
         # Set computer architechture
         infoln("Current system...")
         infoln("    Name: " + platform.node())
-        infoln("    Processor: " + platform.processor())
         infoln("    Machine: " + platform.machine() + " (" +
                platform.architecture()[0] + ")")
+        infoln("    Processor: " + platform.processor())
+        infoln("    Core: " + str(os.sysconf("SC_NPROCESSORS_ONLN")))
         infoln("    Memory: " +
                str(int(round(float(virtual_memory().total)/1024/1024/1024))) +
                "GB (used: " +

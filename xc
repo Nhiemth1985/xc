@@ -14,10 +14,10 @@
 # Change log:
 # 2017-05-22
 #          * Bug fix: Supress SDL verbose messages.
-#
+# 
 # 2017-03-05
 #          * Bug fix: --verbosity option was using an unmutable value (4).
-#
+# 
 # 2017-02-03
 #         * First version.
 #
@@ -32,13 +32,13 @@ verbosity=4
 # Enable full screen mode on xc appliance
 case "$HOSTNAME" in
   'xCm1')
-    arguments='--fullscreen'
+    arguments=(--fullscreen)
     ;;
   'xCm2')
-    arguments='--fullscreen --screen=480x320'
+    arguments=(--fullscreen --screen 480x320)
     ;;
   *)
-    arguments="-r"
+    arguments=()
     ;;
 esac
 
@@ -55,9 +55,9 @@ for (( i = 0; i < ${#args[*]}; i++ )); do
   fi
 done
 
-# 
+# Apply desired command
 if [ "$#" -eq 0 ]; then
-  python "$WORK_DIR"/"$WORK_FILE" "$command" $(echo "$arguments") \
+  python "$WORK_DIR"/"$WORK_FILE" "$command" "${arguments[@]}" \
     --verbosity="$verbosity" | \
     grep -v 'SDL_'
 else
