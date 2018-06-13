@@ -701,7 +701,11 @@ class Gui:
         # Fill background
         self.background = pygame.Surface(self.screen.get_size())
         # self.background = self.background.convert()
-        # self.background.fill([0, 0, 0])  # Black
+        self.background.fill([0, 0, 0])  # Black
+        # Separator
+        pygame.draw.rect(self.background, (0, 29, 0),
+                        (0, self.screen.get_size()[1] - 16, 
+                         self.screen.get_size()[0], 16))
         # Load images
         infoln('    Loading images...')
         #  try:
@@ -740,7 +744,7 @@ class Gui:
         textpos = text.get_rect()
         textpos.bottomleft = self.background.get_rect().bottomleft
         textpos[0] += 3
-        textpos[1] += -2
+        textpos[1] += -1
         self.screen.blit(text, textpos)
 
         # Device connection status
@@ -751,7 +755,7 @@ class Gui:
         textpos = text.get_rect()
         textpos.bottomright = self.background.get_rect().bottomright
         textpos[0] += -3
-        textpos[1] += -2
+        textpos[1] += -1
         self.screen.blit(text, textpos)
 
         # Run Raspberry Pi resources

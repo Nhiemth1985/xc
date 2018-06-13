@@ -3,7 +3,7 @@
 """
 xc.py
 
-Copyright (c) 2014-2017 Márcio Pessoa <marcio.pessoa@sciemon.com>
+Copyright (c) 2014-2018 Márcio Pessoa <marcio.pessoa@sciemon.com>
 
 Author: Marcio Pessoa <marcio@pessoa.eti.br>
 Contributors: none
