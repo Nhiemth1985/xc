@@ -80,7 +80,6 @@ Change log:
 2016-05-12
         * Version: 0.00b
         * Scrach version.
-
 """
 
 import os.path
@@ -704,7 +703,7 @@ class Gui:
         self.background.fill([0, 0, 0])  # Black
         # Separator
         pygame.draw.rect(self.background, (0, 29, 0),
-                        (0, self.screen.get_size()[1] - 16, 
+                        (0, self.screen.get_size()[1] - 16,
                          self.screen.get_size()[0], 16))
         # Load images
         infoln('    Loading images...')
