@@ -1,20 +1,21 @@
 #!/bin/sh
 #
 # setup
-# 
+#
 # Author: Márcio Pessoa <marcio.pessoa@sciemon.com>
 # Contributors: none
-# 
+#
 # Description:
-#   Install or upgrade xC software on device.
-# 
-# Example: 
-#   setup install /opt/sciemon/xc
-#   setup install user@computer:/opt/sciemon/xc
-#   setup update /opt/sciemon/xc --verbose
-#   setup update user@computer:/opt/sciemon/xc
-# 
+#   Install or upgrade xC software.
+#
+# Example:
+#   setup install
+#   setup update
+#
 # Change log:
+# 2018-06-13
+#         * Added: Python compilation before install or update installation.
+#
 # 2018-05-10
 #         * Fixed: Some user output messages.
 #         * Changed: Default output of some commands was suppressed.
@@ -23,9 +24,9 @@
 #         * Added: Python-termcolor python-sh as system dependencies.
 #         * Added: TrueType font configuration.
 #         * Added: Configuration to /usr/share/xsessions/xc.desktop file.
-#         * Added: Auto login configuration to file 
+#         * Added: Auto login configuration to file
 #                  /usr/share/lightdm/lightdm.conf.d/60-lightdm-gtk-greeter.conf
-# 
+#
 # 2016-05-28
 #         * Scrash version.
 #
@@ -94,6 +95,8 @@ install() {
 }
 
 update() {
+  message "Compiling"
+  find . -name "*.py" -exec python -m py_compile {} \;
   check_return $?
   message "Copying files"
   rsync --include-from .rsync_include.txt \

@@ -16,7 +16,7 @@ unzip xc.zip
 ```
 Run installer:
 ``` bash
-sudo ./setup insall
+sudo ./setup install
 ```
 ## Configuration file
 

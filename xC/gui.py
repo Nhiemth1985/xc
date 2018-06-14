@@ -234,7 +234,7 @@ class Gui:
         self.joyicon = Image(self.background,
                              os.path.join(images_directory, 'joystick.png'),
                              [2, 1])
-        self.joyicon.draw([self.control_joystick_enable, 0], [20, 200])
+        self.joyicon.draw([self.control_joystick_enable, 0], [0, 100])
         self.joystick_hat_active = False
         # Detect and start
         joysticks = pygame.joystick.get_count()
@@ -361,7 +361,7 @@ class Gui:
         self.keyboard = Image(self.background,
                               os.path.join(images_directory, 'keyboard.png'),
                               [2, 1])
-        self.keyboard.draw([self.control_keyboard_enable, 0], [20, 100])
+        self.keyboard.draw([self.control_keyboard_enable, 0], [0, 0])
         # Check for device
         check_input = os.path.join(xc_path, 'scripts/check_input.sh')
         cmd = [check_input, 'keyboard']
@@ -434,7 +434,7 @@ class Gui:
         self.mouse = Image(self.background,
                            os.path.join(images_directory, 'mouse.png'),
                            [2, 1])
-        self.mouse.draw([self.control_mouse_enable, 0], [20, 150])
+        self.mouse.draw([self.control_mouse_enable, 0], [0, 50])
         # Check for device
         check_input = os.path.join(xc_path, 'scripts/check_input.sh')
         cmd = [check_input, 'mouse']
@@ -463,7 +463,7 @@ class Gui:
         self.touch = Image(self.background,
                            os.path.join(images_directory, 'touch.png'),
                            [2, 1])
-        self.touch.draw([0, 0], [20, 250])
+        self.touch.draw([0, 0], [0, 150])
         infoln('Not implemented yet.')
         self.control_touch_enable = False
 
@@ -476,7 +476,7 @@ class Gui:
         self.voice = Image(self.background,
                            os.path.join(images_directory, 'voice.png'),
                            [2, 1])
-        self.voice.draw([0, 0], [20, 300])
+        self.voice.draw([0, 0], [0, 200])
         infoln('Not implemented yet.')
         self.control_voice_enable = False
 
@@ -701,10 +701,12 @@ class Gui:
         self.background = pygame.Surface(self.screen.get_size())
         # self.background = self.background.convert()
         self.background.fill([0, 0, 0])  # Black
-        # Separator
+        # Controls
+        # self.controls = pygame.Surface()
+        # Status bar
         pygame.draw.rect(self.background, (0, 29, 0),
-                        (0, self.screen.get_size()[1] - 16,
-                         self.screen.get_size()[0], 16))
+                         (0, self.screen.get_size()[1] - 16,
+                          self.screen.get_size()[0], 16))
         # Load images
         infoln('    Loading images...')
         #  try:
