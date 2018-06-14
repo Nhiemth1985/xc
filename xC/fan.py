@@ -132,9 +132,7 @@ class Fan():
         self.limit_max = max
 
     def autoSpeed(self, x):
-        speed = map(constrain(x,
-                              self.limit_min,
-                              self.limit_max),
+        speed = map(constrain(x, self.limit_min, self.limit_max),
                     self.limit_min, self.limit_max,
                     0, 100)
         self.writeSpeed(speed)
