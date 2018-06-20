@@ -51,7 +51,6 @@ Change log:
 2016-05-12
         * Version: 0.00b
         * Scrach version.
-
 """
 
 import json

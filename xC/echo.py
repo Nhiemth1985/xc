@@ -37,7 +37,6 @@ Change log:
 2017-02-06
         * Version: 0.00b
         * Scrach version.
-
 """
 
 from __future__ import print_function

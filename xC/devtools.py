@@ -31,7 +31,6 @@ Change log:
 2016-02-13
         * Version: 0.00b
         * Scrach version.
-
 """
 
 import os.path

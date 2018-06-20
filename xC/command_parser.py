@@ -26,7 +26,6 @@ Change log:
 2016-02-19
         * Version: 0.00b
         * Scrach version.
-
 """
 
 import re

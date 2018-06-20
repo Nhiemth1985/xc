@@ -43,8 +43,8 @@ class UserArgumentParser():
 
     def __init__(self):
         self.program_name = "xc"
-        self.program_version = "0.52b"
-        self.program_date = "2018-06-05"
+        self.program_version = "0.53b"
+        self.program_date = "2018-06-19"
         self.program_description = "xC - aXes Controller"
         self.program_copyright = "Copyright (c) 2014-2017 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
@@ -144,8 +144,8 @@ class UserArgumentParser():
             description='graphical user interface')
         parser.add_argument(
             '-s', '--screen',
-            default='800x480', metavar='resolution',
-            help='screen resolution (default: 800x480)')
+            default='480x320', metavar='resolution',
+            help='screen resolution (default: 480x320)')
         parser.add_argument(
             '-f', '--fullscreen', action="store_true",
             help='full screen')

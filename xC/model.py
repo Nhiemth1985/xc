@@ -8,7 +8,6 @@ Change log:
 2017-05-19
         * Version: 0.00b
         * Scrach version.
-
 """
 
 import pygame

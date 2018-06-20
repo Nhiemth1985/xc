@@ -19,7 +19,6 @@ Change log:
 2017-06-25
         * Version: 0.00b
         * First version.
-
 """
 
 import RPi.GPIO as GPIO

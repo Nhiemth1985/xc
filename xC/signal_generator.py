@@ -12,7 +12,6 @@ Change log:
 2017-06-28
         * Version: 0.00b
         * First version.
-
 """
 
 import math

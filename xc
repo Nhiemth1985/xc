@@ -41,7 +41,7 @@ case "$HOSTNAME" in
     arguments=(--fullscreen --screen 480x320)
     ;;
   *)
-    arguments=()
+    arguments=(--screen 800x480)
     ;;
 esac
 

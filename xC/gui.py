@@ -5,9 +5,13 @@ Author: Marcio Pessoa <marcio.pessoa@sciemon.com>
 Contributors: none
 
 Change log:
+2018-06-19
+        * Version: 0.16b
+        * Added: Pong easter egg
+
 2018-06-05
         * Version: 0.15b
-        * Added: System Core number.
+        * Added: CPU Core number.
 
 2018-01-27
         * Version: 0.14b
@@ -85,8 +89,8 @@ Change log:
 import os.path
 import os
 import platform
-import pygame
 from psutil import virtual_memory
+import pygame
 from pygame.locals import *
 import serial
 import subprocess
@@ -99,6 +103,7 @@ from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 from xC.signal_generator import SigGen
 from xC.timer import Timer
+from pong import Pong
 
 if platform.machine() == 'armv7l':
     try:
@@ -109,8 +114,7 @@ if platform.machine() == 'armv7l':
         print("Could not load module. " + str(err))
         sys.exit(True)
 
-REFRESH_RATE = 60  # Frames per second
-
+REFRESH_RATE = 30  # Frames per second
 xc_path = os.getenv('XC_PATH', '/opt/sciemon/xc')
 images_directory = os.path.join(xc_path, 'images')
 
@@ -119,7 +123,7 @@ class Gui:
     """  """
 
     def __init__(self):
-        self.version = '0.15b'
+        self.version = '0.16b'
         self.window_title = 'xC'
         self.window_caption = 'xC - Axes Controller'
         self.fullscreen = False
@@ -132,7 +136,7 @@ class Gui:
         self.fan_speed = None
         self.temperature = None
 
-    def ctrl_joystick_end(self):
+    def ctrl_joystick_stop(self):
         pygame.joystick.quit()
 
     def ctrl_joystick_handle(self, event):
@@ -147,7 +151,7 @@ class Gui:
                 if i["control"]["joystick"].split("[")[0] == "button":
                     button = []
                     for j in range(self.joystick.get_numbuttons()):
-                        button.append(self.joystick.get_button(j))
+                        button.appstop(self.joystick.get_button(j))
                         # infoln("button[" + str(j) + "] = " + str(button[j]))
                     if eval(i["control"]["joystick"]):
                         if i["type"] == "push-button":
@@ -172,7 +176,7 @@ class Gui:
                 if i["control"]["joystick"].split("[")[0] == "hat":
                     hat = []
                     for j in range(self.joystick.get_numhats()):
-                        hat.append(self.joystick.get_hat(j))
+                        hat.appstop(self.joystick.get_hat(j))
                         # infoln("hat[" + str(j) + "] = " + str(hat[j]))
                     if 1 in hat[0] or -1 in hat[0]:
                         self.joystick_hat_active = True
@@ -199,7 +203,7 @@ class Gui:
                    i["control"]["joystick"].split("[")[0] == "axis":
                     axis = []
                     for j in range(self.joystick.get_numaxes()):
-                        axis.append(self.joystick.get_axis(j))
+                        axis.appstop(self.joystick.get_axis(j))
                         # infoln("axis[" + str(j) + "] = " + str(axis[j]))
                     if eval(i["control"]["joystick"]):
                         i["state"] = i["on"]["picture"]
@@ -231,7 +235,7 @@ class Gui:
         except:
             self.control_joystick_speed = 1
         # Draw
-        self.joyicon = Image(self.background,
+        self.joyicon = Image(self.controls,
                              os.path.join(images_directory, 'joystick.png'),
                              [2, 1])
         self.joyicon.draw([self.control_joystick_enable, 0], [0, 100])
@@ -261,11 +265,14 @@ class Gui:
         else:
             infoln('None')
 
-    def ctrl_keyboard_end(self):
+    def ctrl_keyboard_stop(self):
         pass
 
     def ctrl_keyboard_handle(self, event):
         # Program behavior
+        if self.pong.running:
+            self.pong.control(event)
+            return False
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:  # Escape
                 self.running = False
@@ -293,6 +300,8 @@ class Gui:
                 self.control_voice_enable = \
                     not self.control_voice_enable
                 self.voice.draw([self.control_voice_enable, 0])
+            if event.key == K_p:  # Pong
+                self.pong.start()
             if event.key == K_LALT:  # Release controls
                 self.control_keyboard_enable = False
                 self.control_mouse_enable = False
@@ -358,7 +367,7 @@ class Gui:
         except:
             self.control_keyboard_delay = 1
         # Draw
-        self.keyboard = Image(self.background,
+        self.keyboard = Image(self.controls,
                               os.path.join(images_directory, 'keyboard.png'),
                               [2, 1])
         self.keyboard.draw([self.control_keyboard_enable, 0], [0, 0])
@@ -377,7 +386,7 @@ class Gui:
             infoln('None')
         pygame.key.set_repeat(1, 100)
 
-    def ctrl_mouse_end(self):
+    def ctrl_mouse_stop(self):
         pygame.mouse.set_visible(True)
         pygame.event.set_grab(False)
 
@@ -431,7 +440,7 @@ class Gui:
         except:
             self.control_mouse_speed = 1
         # Draw
-        self.mouse = Image(self.background,
+        self.mouse = Image(self.controls,
                            os.path.join(images_directory, 'mouse.png'),
                            [2, 1])
         self.mouse.draw([self.control_mouse_enable, 0], [0, 50])
@@ -448,19 +457,19 @@ class Gui:
         else:
             infoln('None')
 
-    def ctrl_touch_end(self):
+    def ctrl_touch_stop(self):
         pass
 
     def ctrl_touch_handle(self, event):
         if self.control_touch_enable is False:
             return
 
-    def ctrl_voice_end(self):
+    def ctrl_voice_stop(self):
         pass
 
     def ctrl_touch_start(self):
         info('    Touch: ')
-        self.touch = Image(self.background,
+        self.touch = Image(self.controls,
                            os.path.join(images_directory, 'touch.png'),
                            [2, 1])
         self.touch.draw([0, 0], [0, 150])
@@ -473,7 +482,7 @@ class Gui:
 
     def ctrl_voice_start(self):
         info('    Voice: ')
-        self.voice = Image(self.background,
+        self.voice = Image(self.controls,
                            os.path.join(images_directory, 'voice.png'),
                            [2, 1])
         self.voice.draw([0, 0], [0, 200])
@@ -541,7 +550,7 @@ class Gui:
                     self.is_connected = False
                     return True
 
-    def device_draw(self):
+    def draw_device(self):
         # Device name
         font = pygame.font.SysFont('Ubuntu', 22)
         text = font.render(self.window_caption, True, (100, 100, 100))
@@ -555,15 +564,15 @@ class Gui:
             while not self.is_ready:
                 self.is_ready = self.session.is_ready()
             for c in self.device.startup()["command"]:
-                self.session.send(c)
+                self.session.sstop(c)
                 self.session.receive()
 
-    def end(self):
-        self.ctrl_joystick_end()
-        self.ctrl_keyboard_end()
-        self.ctrl_mouse_end()
-        self.ctrl_touch_end()
-        self.ctrl_voice_end()
+    def stop(self):
+        self.ctrl_joystick_stop()
+        self.ctrl_keyboard_stop()
+        self.ctrl_mouse_stop()
+        self.ctrl_touch_stop()
+        self.ctrl_voice_stop()
         pygame.quit()
         # Stop Raspberry Pi resources
         if platform.machine() == 'armv7l':
@@ -592,7 +601,7 @@ class Gui:
                          eval(i["picture"]["position"]))
             i["state"] = i["default"]
 
-    def object_draw(self):
+    def draw_object(self):
         for i in self.device.objects():
             i["id"].draw(eval(i["picture"][i["state"]]))
 
@@ -608,30 +617,29 @@ class Gui:
                 self.ctrl_joystick_handle(event)
                 self.ctrl_touch_handle(event)
                 self.ctrl_voice_handle(event)
-            self.screen_draw()
+            self.draw_screen()
             self.device_check()
         infoln("Exiting...")
-        self.end()
+        self.stop()
         return False
 
-    def screen_draw(self):
+    def draw_ctrl(self):
+        self.screen.blit(self.controls, (5, 58))
+
+    def draw_screen(self):
         self.screen.blit(self.background, (0, 0))
-        self.object_draw()
-        self.status_draw()
-        self.device_draw()
+        if self.pong.running:
+            self.pong.run()
+        else:
+            self.draw_ctrl()
+            self.draw_object()
+            self.draw_device()
+            pass
+        self.draw_status()
         self.clock.tick(REFRESH_RATE)
         pygame.display.flip()
 
-    def start(self, screen_size, fullscreen=False):
-        global pygame
-
-        if fullscreen:
-            self.fullscreen = fullscreen
-
-        self.screen_resolution = (800, 480)  # pixels (default resolution)
-        self.screen_resolution = map(int, screen_size.split('x'))
-
-        # Set computer architechture
+    def system_info(self):
         infoln("Current system...")
         infoln("    Name: " + platform.node())
         infoln("    Machine: " + platform.machine() + " (" +
@@ -648,6 +656,25 @@ class Gui:
             infoln(" (" + platform.linux_distribution()[0] + " " +
                    platform.linux_distribution()[1] + ")")
         infoln("    Python: " + platform.python_version())
+
+    def start(self, screen_size, fullscreen=False):
+        global pygame
+
+        if fullscreen:
+            self.fullscreen = fullscreen
+
+        self.screen_resolution = (480, 320)  # pixels (default resolution)
+        self.screen_resolution = map(int, screen_size.split('x'))
+
+        # Check for minimum resolution
+        if (self.screen_resolution[0] < 480) or \
+           (self.screen_resolution[1] < 320):
+            self.screen_resolution = (480, 320)
+        self.screen_resolution[0] -= 1
+        self.screen_resolution[1] -= 1
+    
+        # Show computer architechture
+        self.system_info()
 
         # Initialize Raspberry Pi resources
         if platform.machine() == 'armv7l':
@@ -673,8 +700,8 @@ class Gui:
 
         # Starting screen
         infoln("Starting screen...")
-        infoln("    Size: " + str(self.screen_resolution[0]) + 'x' +
-               str(self.screen_resolution[1]))
+        infoln("    Size: " + str(self.screen_resolution[0] + 1) + 'x' +
+               str(self.screen_resolution[1] + 1))
         infoln("    Refresh rate: " + str(REFRESH_RATE) + ' FPS')
         # Positioning
         os.environ['SDL_VIDEO_CENTERED'] = '1'
@@ -699,34 +726,25 @@ class Gui:
                        ttf_path + ')')
         # Fill background
         self.background = pygame.Surface(self.screen.get_size())
-        # self.background = self.background.convert()
         self.background.fill([0, 0, 0])  # Black
-        # Controls
-        # self.controls = pygame.Surface()
-        # Status bar
-        pygame.draw.rect(self.background, (0, 29, 0),
-                         (0, self.screen.get_size()[1] - 16,
-                          self.screen.get_size()[0], 16))
+        # Controls bar
+        self.controls = pygame.Surface([120, 240])
         # Load images
         infoln('    Loading images...')
-        #  try:
-            #  file = os.path.join(images_directory, 'background.png')
-            #  self.background_image = pygame.image.load(file)
-            #  self.background = pygame.Surface(self.screen.get_size())
-            #  self.background.blit(self.background_image, [0, 0])
-        #  except pygame.error:
-            #  raise SystemExit('Could not load image "%s" %s' %
-                             #  (file, pygame.get_error()))
         self.images_load()
+        # Status bar
+        self.status_bar = pygame.Surface([self.screen.get_size()[0], 16])
         # Building device objects
         infoln('    Building device objects...')
         self.object_build()
         # Clockling
         infoln('    Clockling...')
         self.clock = pygame.time.Clock()
+        # Pong
+        self.pong = Pong(self.screen)
         infoln('    Drawing...')
-        self.screen_draw()
-
+        self.draw_screen()
+        # 
         infoln('Checking for input methods...')
         self.ctrl_keyboard_start()
         self.ctrl_mouse_start()
@@ -737,16 +755,20 @@ class Gui:
         infoln('Starting device...')
         self.device_start()
 
-    def status_draw(self):
+    def draw_status(self):
+        # Status bar
+        pygame.draw.rect(self.status_bar, (0, 29, 0),
+                         (0, 0, self.status_bar.get_size()[0],
+                          self.status_bar.get_size()[1]))
         # Frame rate
         fps = str("FPS: {:1.1f}".format(float(self.clock.get_fps())))
         font = pygame.font.SysFont("Digital Readout Thick Upright", 13)
         text = font.render(fps, True, (32, 128, 32))
         textpos = text.get_rect()
-        textpos.bottomleft = self.background.get_rect().bottomleft
+        textpos.bottomleft = self.status_bar.get_rect().bottomleft
         textpos[0] += 3
         textpos[1] += -1
-        self.screen.blit(text, textpos)
+        self.status_bar.blit(text, textpos)
 
         # Device connection status
         connection = 'Connected' if self.device.is_serial_connected() \
@@ -754,10 +776,10 @@ class Gui:
         font = pygame.font.SysFont("Digital Readout Thick Upright", 13)
         text = font.render(connection, True, (32, 128, 32))
         textpos = text.get_rect()
-        textpos.bottomright = self.background.get_rect().bottomright
+        textpos.bottomright = self.status_bar.get_rect().bottomright
         textpos[0] += -3
         textpos[1] += -1
-        self.screen.blit(text, textpos)
+        self.status_bar.blit(text, textpos)
 
         # Run Raspberry Pi resources
         if platform.machine() == 'armv7l':
@@ -770,15 +792,16 @@ class Gui:
                 self.fan_speed = self.fan.readRPM()
 
         # Fan speed
-        if self.fan_speed is None:
-            return False
-        tmp = str("Temperature: {:1.0f} C".format(float(self.temperature)))
-        rpm = str("Fan: {:1.0f} RPM".format(float(self.fan_speed)))
-        font = pygame.font.SysFont("Digital Readout Thick Upright", 13)
-        text = font.render(tmp + "          " + rpm, True, (32, 128, 32))
-        textpos = text.get_rect()
-        textpos.midbottom = self.background.get_rect().midbottom
-        self.screen.blit(text, textpos)
+        if self.fan_speed is not None:
+            tmp = str("Temperature: {:1.0f} C".format(float(self.temperature)))
+            rpm = str("Fan: {:1.0f} RPM".format(float(self.fan_speed)))
+            font = pygame.font.SysFont("Digital Readout Thick Upright", 13)
+            text = font.render(tmp + "          " + rpm, True, (32, 128, 32))
+            textpos = text.get_rect()
+            textpos.midbottom = self.status_bar.get_rect().midbottom
+            self.status_bar.blit(text, textpos)
+
+        self.screen.blit(self.status_bar, [0, self.screen.get_size()[1] - 16])
 
     def terminal(self):
         self.terminal = pygame.Surface((320, 200))
@@ -820,16 +843,16 @@ class Image:
         Example:
             Consider a single image, split it into 8 equal pieces, like
             this:
-                -----------------
+                |---|---|---|---|
                 | 1 | 2 | 3 | 4 |
-                -----------------
+                |---|---|---|---|
                 | 5 | 6 | 7 | 8 |
-                -----------------
+                |---|---|---|---|
 
             Take a look at one piece, the piece number 7 for example:
-               A-----B
+               A|---|B
                 | 7 |
-               D-----C
+               D|---|C
 
             All pieces have 4 sides and 4 corners. Each corner can be
             identified by A, B, C and D.
