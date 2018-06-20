@@ -126,12 +126,12 @@ class CommandParser:
         # Store comments
         try:
             comment = command[re.search(';', command).span()[0]:]
-        except:
+        except BaseException:
             comment = ''
         if comment == '':
             try:
                 comment = command[re.search('\(', command).span()[0]:]
-            except:
+            except BaseException:
                 comment = ''
         # Remove comments
         command = re.sub(r'(?:_a)?\(([^(]*)$', '\n', command)

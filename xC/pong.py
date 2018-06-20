@@ -5,6 +5,10 @@ Author: Marcio Pessoa <marcio.pessoa@sciemon.com>
 Contributors: none
 
 Change log:
+2018-06-20
+        * Version: 0.02b
+        * Fixed: Ball spawn to never raize balls without angle.
+
 2018-06-19
         * Version: 0.01b
         * Added: Starting this easter egg.
@@ -15,14 +19,13 @@ from pygame.locals import *
 import random
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
-# from xC.timer import Timer
 
 
 class Pong:
     """  """
 
     def __init__(self, screen):
-        self.version = '0.01b'
+        self.version = '0.02b'
         self.screen = screen
         self.running = False
         self.pad_acceleration = 1
@@ -37,7 +40,7 @@ class Pong:
                                          self.court.get_size()[1] - 2],
                                         pygame.SRCALPHA, 32)
         self.play_area.convert_alpha()
-        self.ball_side = 1
+        self.court_side = 1
         self.ball_velocity = [0, 0]
         self.ball_radius = int(self.play_area.get_size()[0] * 0.03 / 2)
         self.pad_height_half = int(self.play_area.get_size()[1] * 0.2 / 2)
@@ -129,17 +132,22 @@ class Pong:
                 self.pad2_vel = 0
                 self.pad2_pressed -= 1
 
-
     def ball_spawn(self):
         # initialize ball_pos and ball_vel for new bal in middle of table
         # if direction is RIGHT, the ball's velocity is upper right, else
         # upper left
         self.ball_position = [self.play_area.get_size()[0] / 2,
                               self.play_area.get_size()[1] / 2]
+        #
+        self.ball_velocity[0] = (random.randrange(120, 240) / 60.0 *
+                                 self.court_side)
+        self.ball_velocity[1] = (random.randrange(-180, 180) / 60.0) * -1
+        # Make sure ball will never run without an angle
+        while self.ball_velocity[1] == 0:
+            self.ball_velocity[1] = (random.randrange(-180, 180) / 60.0) * -1
         # 
-        self.ball_velocity[0] = random.randrange(120, 240) / 60.0 * \
-                                self.ball_side
-        self.ball_velocity[1] = -random.randrange(60, 180) / 60.0
+        if self.ball_velocity[1] >= -0.5 or self.ball_velocity[1] <= 0.5:
+            self.ball_velocity[1] *= 3
 
     def draw_court(self):
         # Clear court
@@ -188,7 +196,7 @@ class Pong:
                 self.ball_velocity[0] *= -1.1
                 self.ball_velocity[1] *= 1.1
             else:
-                self.ball_side = -1
+                self.court_side = -1
                 self.ball_spawn()
                 self.score[1] += 1
         # Bounces off of the right
@@ -201,6 +209,6 @@ class Pong:
                 self.ball_velocity[0] *= -1.1
                 self.ball_velocity[1] *= 1.1
             else:
-                self.ball_side = 1
+                self.court_side = 1
                 self.ball_spawn()
                 self.score[0] += 1

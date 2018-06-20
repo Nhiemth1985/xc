@@ -80,8 +80,8 @@ class Fan():
             #     GPIO.PUD_DOWN: Pull down
             GPIO.setup(self.read_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
             # Add interrupt detection
-            #  GPIO.add_event_detect(self.read_pin, GPIO.RISING,
-                                  #  callback=self.counter, bouncetime=self.bounce)
+            # GPIO.add_event_detect(self.read_pin, GPIO.RISING,
+                                  # callback=self.counter, bouncetime=self.bounce)
 
     """
     Description

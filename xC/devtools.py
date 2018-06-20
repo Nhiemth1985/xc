@@ -100,12 +100,12 @@ class DevTools:
             local_echo = "--echo"
         infoln("Communication device: " +
                os.popen("readlink -f " + self.device_path).read())
-        command = self.terminal_program + \
-                  " " + self.device_path + \
-                  " " + str(self.device_speed) + \
-                  " --eol " + self.terminal_end_of_line + \
-                  " " + local_echo + \
-                  " --quiet"
+        command = (self.terminal_program +
+                   " " + self.device_path +
+                   " " + str(self.device_speed) +
+                   " --eol " + self.terminal_end_of_line +
+                   " " + local_echo +
+                   " --quiet")
         codeln(command)
         return_code = os.system(command)
         if return_code != 0:

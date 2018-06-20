@@ -146,7 +146,7 @@ class Gui:
             for i in self.device.objects():
                 try:
                     i["control"]["joystick"]
-                except:
+                except BaseException:
                     continue
                 if i["control"]["joystick"].split("[")[0] == "button":
                     button = []
@@ -171,7 +171,7 @@ class Gui:
             for i in self.device.objects():
                 try:
                     i["control"]["joystick"]
-                except:
+                except BaseException:
                     continue
                 if i["control"]["joystick"].split("[")[0] == "hat":
                     hat = []
@@ -197,7 +197,7 @@ class Gui:
             for i in self.device.objects():
                 try:
                     i["control"]["joystick"]
-                except:
+                except BaseException:
                     continue
                 if event.type == pygame.JOYAXISMOTION and \
                    i["control"]["joystick"].split("[")[0] == "axis":
@@ -226,13 +226,13 @@ class Gui:
         try:
             self.control_joystick_enable = (self.device.control()
                                             ["joystick"]["enable"])
-        except:
+        except BaseException:
             self.control_joystick_enable = False
         # Is speed configured?
         try:
             self.control_joystick_speed = (self.device.control()
                                            ["joystick"]["speed"])
-        except:
+        except BaseException:
             self.control_joystick_speed = 1
         # Draw
         self.joyicon = Image(self.controls,
@@ -249,7 +249,7 @@ class Gui:
                 self.joystick.init()
                 try:
                     delay = self.device.control()["joystick"]["delay"]
-                except:
+                except BaseException:
                     delay = 100
                 self.joystick_timer = Timer(delay)
                 infoln('        ' + self.joystick.get_name())
@@ -321,7 +321,7 @@ class Gui:
         for i in self.device.objects():
             try:
                 i["control"]["keyboard"]
-            except:
+            except BaseException:
                 continue
             if i["type"] == "push-button":
                 if event.type == KEYDOWN and \
@@ -352,19 +352,19 @@ class Gui:
         try:
             self.control_keyboard_enable = (self.device.control()
                                             ["keyboard"]["enable"])
-        except:
+        except BaseException:
             self.control_keyboard_enable = False
         # Is speed configured?
         try:
             self.control_keyboard_speed = (self.device.control()
                                            ["keyboard"]["speed"])
-        except:
+        except BaseException:
             self.control_keyboard_speed = 1
         # Is delay configured?
         try:
             self.control_keyboard_delay = (self.device.control()
                                            ["keyboard"]["delay"])
-        except:
+        except BaseException:
             self.control_keyboard_delay = 1
         # Draw
         self.keyboard = Image(self.controls,
@@ -404,7 +404,7 @@ class Gui:
             for i in self.device.objects():
                 try:
                     i["control"]["mouse"]
-                except:
+                except BaseException:
                     continue
                 if eval(i["control"]["mouse"]):
                     i["state"] = i["on"]["picture"]
@@ -420,7 +420,7 @@ class Gui:
                                 continue
                             command = i["on"]["command"].replace('*', str(n))
                             self.session.send_wait(command)
-                        except:
+                        except BaseException:
                             pass
                 else:
                     i["state"] = i["off"]["picture"]
@@ -431,13 +431,13 @@ class Gui:
         try:
             self.control_mouse_enable = (self.device.control()
                                          ["mouse"]["enable"])
-        except:
+        except BaseException:
             self.control_mouse_enable = False
         # Is speed configured?
         try:
             self.control_mouse_speed = (self.device.control()
                                         ["mouse"]["speed"])
-        except:
+        except BaseException:
             self.control_mouse_speed = 1
         # Draw
         self.mouse = Image(self.controls,
@@ -531,7 +531,7 @@ class Gui:
                                                 timeout=1)
                         self.session = CommandParser(session)
                         return False
-                    except:
+                    except BaseException:
                         return True
                 else:
                     erroln('Device is not connected.')
@@ -660,19 +660,20 @@ class Gui:
     def start(self, screen_size, fullscreen=False):
         global pygame
 
+        # Set full screen
         if fullscreen:
             self.fullscreen = fullscreen
 
+        # Set screen resolution
         self.screen_resolution = (480, 320)  # pixels (default resolution)
         self.screen_resolution = map(int, screen_size.split('x'))
-
         # Check for minimum resolution
         if (self.screen_resolution[0] < 480) or \
            (self.screen_resolution[1] < 320):
             self.screen_resolution = (480, 320)
         self.screen_resolution[0] -= 1
         self.screen_resolution[1] -= 1
-    
+
         # Show computer architechture
         self.system_info()
 
@@ -680,6 +681,9 @@ class Gui:
         if platform.machine() == 'armv7l':
             # Initialize GPIO interface
             GPIO.setmode(GPIO.BOARD)
+            # Temperature sensor
+            self.temperature_timer = Timer(1000)
+            self.temperature = 0
             # Status LED
             GPIO.setup(33, GPIO.OUT)
             self.status_led = GPIO.PWM(33, 50)
@@ -687,8 +691,6 @@ class Gui:
             self.status_signal = SigGen()
             self.status_signal.period(1000)
             # Cooling system
-            self.temperature_timer = Timer(1000)
-            self.temperature = 0
             self.fan = Fan(32, 22, max_speed=2000)
             self.fan.setLimits(40, 60)
 
@@ -698,7 +700,7 @@ class Gui:
         # Connect to device
         self.device_connect(self.id, self.interface)
 
-        # Starting screen
+        # Start screen
         infoln("Starting screen...")
         infoln("    Size: " + str(self.screen_resolution[0] + 1) + 'x' +
                str(self.screen_resolution[1] + 1))
@@ -708,7 +710,6 @@ class Gui:
         # os.environ['SDL_VIDEO_WINDOW_POS'] = "%d, %d" % (200, 200)
         # Initialise screen
         pygame.init()
-        # self.screen = pygame.display.set_mode(self.screen_resolution, RESIZABLE)
         self.screen = pygame.display.set_mode(self.screen_resolution, RESIZABLE)
         if self.fullscreen:
             pygame.display.toggle_fullscreen()
@@ -744,7 +745,7 @@ class Gui:
         self.pong = Pong(self.screen)
         infoln('    Drawing...')
         self.draw_screen()
-        # 
+        #
         infoln('Checking for input methods...')
         self.ctrl_keyboard_start()
         self.ctrl_mouse_start()

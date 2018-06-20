@@ -43,8 +43,8 @@ class UserArgumentParser():
 
     def __init__(self):
         self.program_name = "xc"
-        self.program_version = "0.53b"
-        self.program_date = "2018-06-19"
+        self.program_version = "0.54b"
+        self.program_date = "2018-06-20"
         self.program_description = "xC - aXes Controller"
         self.program_copyright = "Copyright (c) 2014-2017 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
