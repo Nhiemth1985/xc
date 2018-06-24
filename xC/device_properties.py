@@ -290,3 +290,7 @@ class DeviceProperties:
                    str(self.comm_serial_speed) + ' bps)')
         if self.comm_network_address is not None:
             infoln('        Network: ' + str(self.comm_network_address))
+
+    def control_map(self):
+        for i in self.objects():
+            info(i)["command"]

@@ -25,7 +25,7 @@ I recommend you use underline before macro name. It's usefull to quickly identif
 
 ### Keyboard map
 
- KeyASCII       | ASCII |                    Common Name                      
+ KeyASCII       | ASCII |                    Common Name
 ----------------|-------|-------------------------------------------------------
  K_BACKSPACE    | \b    | backspace
  K_TAB          | \t    | tab

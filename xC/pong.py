@@ -93,8 +93,8 @@ class Pong:
         self.ball_check()
         self.screen.blit(self.court, [0, 0])
         self.screen.blit(self.play_area, [1, 1])
-        codeln("    Position: " + str(self.ball_position))
-        codeln("    Velocity: " + str(self.ball_velocity))
+        # codeln("    Position: " + str(self.ball_position))
+        # codeln("    Velocity: " + str(self.ball_velocity))
         return False
 
     def stop(self):
@@ -145,7 +145,6 @@ class Pong:
         # Make sure ball will never run without an angle
         while self.ball_velocity[1] == 0:
             self.ball_velocity[1] = (random.randrange(-180, 180) / 60.0) * -1
-        # 
         if self.ball_velocity[1] >= -0.5 or self.ball_velocity[1] <= 0.5:
             self.ball_velocity[1] *= 3
 
@@ -171,10 +170,12 @@ class Pong:
                          [self.court.get_size()[0] - 1,
                           self.court.get_size()[1] - 1])
         # Draw mid dashed line
-        pygame.draw.line(self.play_area, (128, 128, 128),
-                         [self.play_area.get_size()[0] / 2, 0],
-                         [self.play_area.get_size()[0] / 2,
-                          self.play_area.get_size()[1]])
+        for y in range(0, self.play_area.get_size()[1], 5):
+            pygame.draw.line(self.play_area, (128, 128, 128),
+                             [self.play_area.get_size()[0] / 2,
+                              4 + (y * 5)],
+                             [self.play_area.get_size()[0] / 2,
+                              16 + (y * 5)])
 
     def ball_check(self):
         # update ball position

@@ -564,7 +564,7 @@ class Gui:
             while not self.is_ready:
                 self.is_ready = self.session.is_ready()
             for c in self.device.startup()["command"]:
-                self.session.sstop(c)
+                self.session.send(c)
                 self.session.receive()
 
     def stop(self):
@@ -593,7 +593,7 @@ class Gui:
 
     def object_build(self):
         for i in self.device.objects():
-            i["id"] = Image(self.screen,
+            i["id"] = Image(self.object_area,
                             os.path.join(images_directory,
                                          i["picture"]["file"]),
                             eval(i["picture"]["split"]))
@@ -604,6 +604,7 @@ class Gui:
     def draw_object(self):
         for i in self.device.objects():
             i["id"].draw(eval(i["picture"][i["state"]]))
+        self.screen.blit(self.object_area, (130, 50))
 
     def run(self):
         infoln('Ready...')
@@ -657,7 +658,7 @@ class Gui:
                    platform.linux_distribution()[1] + ")")
         infoln("    Python: " + platform.python_version())
 
-    def start(self, screen_size, fullscreen=False):
+    def start(self, screen_size="480x320", fullscreen=False):
         global pygame
 
         # Set full screen
@@ -699,6 +700,7 @@ class Gui:
 
         # Connect to device
         self.device_connect(self.id, self.interface)
+        # self.device.control_map()
 
         # Start screen
         infoln("Starting screen...")
@@ -730,11 +732,14 @@ class Gui:
         self.background.fill([0, 0, 0])  # Black
         # Controls bar
         self.controls = pygame.Surface([120, 240])
+        # Status bar
+        self.status_bar = pygame.Surface([self.screen.get_size()[0], 16])
+        # Object area
+        self.object_area = pygame.Surface([self.screen.get_size()[0] - 140,
+                                           self.screen.get_size()[1] - 80])
         # Load images
         infoln('    Loading images...')
         self.images_load()
-        # Status bar
-        self.status_bar = pygame.Surface([self.screen.get_size()[0], 16])
         # Building device objects
         infoln('    Building device objects...')
         self.object_build()
