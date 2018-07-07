@@ -22,8 +22,6 @@ from xC.echo import verbose, level, \
 
 
 class Pong:
-    """  """
-
     def __init__(self, screen):
         self.version = '0.02b'
         self.screen = screen
@@ -33,7 +31,7 @@ class Pong:
     def start(self):
         self.running = True
         infoln('Pong...')
-        infoln('    Starting...')
+        infoln('Starting...', 1)
         self.court = pygame.Surface([self.screen.get_size()[0],
                                      self.screen.get_size()[1] - 16])
         self.play_area = pygame.Surface([self.court.get_size()[0] - 2,
@@ -100,7 +98,7 @@ class Pong:
     def stop(self):
         pygame.event.clear()
         self.running = False
-        infoln("    Exiting...")
+        infoln("Exiting...", 1)
 
     def control(self, event):
         if event.type == KEYDOWN:
@@ -133,15 +131,17 @@ class Pong:
                 self.pad2_pressed -= 1
 
     def ball_spawn(self):
-        # initialize ball_pos and ball_vel for new bal in middle of table
-        # if direction is RIGHT, the ball's velocity is upper right, else
-        # upper left
+        """
+        initialize ball_pos and ball_vel for new bal in middle of table
+        if direction is RIGHT, the ball's velocity is upper right, else
+        upper left
+        """
         self.ball_position = [self.play_area.get_size()[0] / 2,
                               self.play_area.get_size()[1] / 2]
         #
         self.ball_velocity[0] = (random.randrange(120, 240) / 60.0 *
                                  self.court_side)
-        self.ball_velocity[1] = (random.randrange(-180, 180) / 60.0) * -1
+        self.ball_velocity[1] = (random.randrange(-100, 100) / 60.0) * -1
         # Make sure ball will never run without an angle
         while self.ball_velocity[1] == 0:
             self.ball_velocity[1] = (random.randrange(-180, 180) / 60.0) * -1

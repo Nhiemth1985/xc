@@ -43,37 +43,69 @@ from xC.echo import verbose, level, \
 class DevTools:
     """docstring"""
 
-    def __init__(self, id, platform, mark, description, architecture,
-                 system_path, system_logs,
-                 device_path, device_speed, terminal_echo, terminal_end_of_line,
-                 network_address,
-                 interface=None):
+    def __init__(self, data):
         """docstring"""
         self.version = '0.05b'
         self.terminal_program = "miniterm.py"
         self.arduino_program = "arduino"
-        #
+        self.load(data)
+        self.set()
+
+    def load(self, data):
+        self.data = data
+
+    def info(self):
+        infoln('Project...')
+        infoln('    Platform: ' + self.platform)
+        infoln('    Architecture: ' + self.architecture)
+
+    def set(self):
+        self.reset()
         self.id = id
-        self.platform = platform
-        self.mark = mark
-        self.description = description
-        self.architecture = architecture
-        self.path = os.path.join(os.environ['HOME'], system_path)
+        self.platform = self.data["system"].get("plat", self.platform)
+        self.mark = self.data["system"].get("mark", self.mark)
+        self.description = self.data["system"].get("desc", self.description)
+        self.architecture = self.data["system"].get("arch", self.architecture)
+        self.system_path = self.data["system"].get("path", self.system_path)
+        self.path = os.path.join(os.environ['HOME'], self.system_path)
         self.arduino_file = self.path[self.path.rfind("/", 0):] + ".ino"
-        self.logs = os.path.join(os.environ['HOME'], system_logs)
-        self.device_path = device_path
-        self.device_speed = device_speed
-        self.terminal_echo = terminal_echo
-        self.terminal_end_of_line = terminal_end_of_line
-        self.network_address = network_address
-        self.device_port = self.device_path
-        self.interface = interface
-        #
+        self.system_logs = self.data["system"].get("logs", self.system_logs)
+        self.logs = os.path.join(os.environ['HOME'], self.system_logs)
+        self.device_path = self.data["comm"]["serial"].get("path", self.device_path)
+        self.device_speed = self.data["comm"]["serial"].get("speed", self.device_speed)
+        self.terminal_echo = self.data["comm"]\
+            .get("terminal_echo", self.terminal_echo)
+        self.terminal_end_of_line = self.data["comm"]\
+            .get("terminal_end_of_line", self.terminal_end_of_line)
+        self.network_address = self.data["comm"].get("arch",
+                                                     self.network_address)
+        self.device_port = self.data["comm"].get("arch", self.device_port)
+        self.interface = 'serial'
         if self.interface == 'serial':
             self.destination = os.popen("echo -n $(readlink -f " +
                                         self.device_path + ")").read().rstrip()
         elif self.interface == 'network':
             self.destination = self.network_address
+
+    def reset(self):
+        self.id = None
+        self.platform = None
+        self.mark = None
+        self.description = None
+        self.architecture = None
+        self.system_path = None
+        self.system_logs = None
+        self.path = None
+        self.arduino_file = None
+        self.logs = None
+        self.device_path = None
+        self.device_speed = None
+        self.terminal_echo = False
+        self.terminal_end_of_line = 'LF'
+        self.network_address = None
+        self.device_port = None
+        self.interface = 'serial'
+        self.destination = ''
 
     def terminal(self):
         # Check if miniterm.py exists

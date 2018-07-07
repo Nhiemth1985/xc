@@ -43,6 +43,7 @@ from __future__ import print_function
 import sys
 from termcolor import colored, cprint
 
+indent_width = 4
 
 class Echo(object):
     """
@@ -61,12 +62,18 @@ class Echo(object):
         return int(self.verbosity)
 
     @classmethod
-    def echo(self, string, level):
-        self.__print(string, level, '')
+    def echo(self, string, level, indent=0):
+        preffix = ''
+        for i in range(indent * indent_width):
+            preffix += ' '
+        self.__print(preffix + string, level, '')
 
     @classmethod
-    def echoln(self, string, level):
-        self.__print(string, level, '\n')
+    def echoln(self, string, level, indent=0):
+        preffix = ''
+        for i in range(indent * indent_width):
+            preffix += ' '
+        self.__print(preffix + string, level, '\n')
 
     @classmethod
     def __print(self, string, level, trailer):
@@ -83,36 +90,36 @@ def level():
     return Echo.verbose_level()
 
 
-def echo(string):
-    Echo.echo(string, 0)
+def echo(string, indent=0):
+    Echo.echo(string, 0, indent)
 
 
-def echoln(string):
-    Echo.echoln(string, 0)
+def echoln(string, indent=0):
+    Echo.echoln(string, 0, indent)
 
 
-def erro(string):
-    Echo.echo('Error: ' + string, 1)
+def erro(string, indent=0):
+    Echo.echo('Error: ' + string, 1, indent)
 
 
-def erroln(string):
-    Echo.echoln('Error: ' + string, 1)
+def erroln(string, indent=0):
+    Echo.echoln('Error: ' + string, 1, indent)
 
 
-def warn(string):
-    Echo.echo('Warning: ' + string, 2)
+def warn(string, indent=0):
+    Echo.echo('Warning: ' + string, 2, indent)
 
 
-def warnln(string):
-    Echo.echoln('Warning: ' + string, 2)
+def warnln(string, indent=0):
+    Echo.echoln('Warning: ' + string, 2, indent)
 
 
-def info(string):
-    Echo.echo(string, 3)
+def info(string, indent=0):
+    Echo.echo(string, 3, indent)
 
 
-def infoln(string):
-    Echo.echoln(string, 3)
+def infoln(string, indent=0):
+    Echo.echoln(string, 3, indent)
 
 
 def code(string, color=None, attrs=None):

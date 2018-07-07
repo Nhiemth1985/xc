@@ -5,7 +5,6 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Pong easter egg: Ball spawn to never raize balls without angle.
 
-
 ## [0.53b] - 2018-06-19
 ### Added
 - Pong easter egg.

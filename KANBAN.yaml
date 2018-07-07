@@ -31,9 +31,10 @@
   - (control) Mouse - Bug #2
   - (control) Joystick - Bug #4
   - (all) CommandParser.run() - Bug #3
+  - (gui) Unified Control System - Join all commands from all controls in a single command (G0 X1 Y4 U19 - G0 X3 W12 = G0 X4 Y4 U19 W12)
 
 - 'DOING':
-  - (gui) Unified Control System - Join all commands from all controls in a single command (G0 X1 Y4 U19 - G0 X3 W12 = G0 X4 Y4 U19 W12)
+  - (gui) Status - Display temeperature for x86 hosts
 
 - 'TESTING':
   - (all) Show comments with different colors

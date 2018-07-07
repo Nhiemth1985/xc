@@ -1,5 +1,5 @@
 """
-deviceproperties.py
+device_properties.py
 
 Author: Marcio Pessoa <marcio@pessoa.eti.br>
 Contributors: none
@@ -55,8 +55,6 @@ Change log:
 
 import json
 import os
-import sh
-from socket import gethostbyname
 import sys
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
@@ -66,11 +64,13 @@ class DeviceProperties:
     """
     Methods:
     """
-    def __init__(self, devices_file):
+    def __init__(self, data):
         self.version = '0.10b'
-        self.devices_file = devices_file
-        self.set()
-        self.load(devices_file)
+        self.load(data)
+        self.reset()
+
+    def load(self, data):
+        self.data = data
 
     def is_enable(self):
         enable = False
@@ -80,7 +80,10 @@ class DeviceProperties:
             pass
         return enable
 
-    def select(self, id):
+    def get(self):
+        return self.data["device"][self.id]
+
+    def set(self, id):
         """Set a device to be used.
 
         Used to set a device and import all elements.
@@ -107,35 +110,6 @@ class DeviceProperties:
         except KeyError as err:
             erroln('Mandatory key is absent: %s' % (err))
             sys.exit(True)
-        # Check secondary keys.
-        try:
-            self.comm_serial_path = self.data["device"][id]["comm"]["serial"]\
-                .get('path', self.comm_serial_path)
-            self.comm_serial_speed = self.data["device"][id]["comm"]["serial"]\
-                .get('speed', self.comm_serial_speed)
-            self.comm_terminal_echo = self.data["device"][id]["comm"]["serial"]\
-                .get('terminal_echo', self.comm_terminal_echo)
-            self.comm_terminal_end_of_line = \
-                self.data["device"][id]["comm"]["serial"]\
-                .get('terminal_end_of_line', self.comm_terminal_end_of_line)
-            self.comm_network_address = (
-                self.data["device"][id]["comm"]
-                ["network"].get('address', self.comm_network_address))
-        except KeyError as err:
-            # warnln('Absent key: %s' % (err))
-            pass
-        # Get IP address from host name
-        try:
-            self.comm_network_address = gethostbyname(self.comm_network_address)
-        except BaseException:
-            pass
-        return 0
-
-    def select_auto(self):
-        self.id = self.detect()
-        if self.id:
-            self.select(self.id)
-        return self.id
 
     def list(self):
         """Fetches device IDs from a dictionary.
@@ -157,50 +131,11 @@ class DeviceProperties:
         elements.sort()
         return elements
 
-    def is_serial_connected(self):
-        return os.path.exists(self.comm_serial_path)
-
-    def is_network_connected(self):
-        if self.comm_network_address is None:
-            return False
+    def comm(self):
         try:
-            sh.ping(self.comm_network_address, '-c 2 -W 1', _out='/dev/null')
-            return True
+            return self.data["device"][self.id]["comm"]
         except BaseException:
-            return False
-
-    def load(self, file):
-        """Load and parse configuration.
-
-        Args:
-            file: Absolute path to JSON file.
-
-        Returns:
-            0: OK
-            1: File error (file not found or access denied)
-            2: Can't parse JSON data
-
-        Raises:
-            IOError: An error occurred accessing the bigtable.Table object.
-        """
-        # Open JSON devices file
-        infoln('Loading configuration file...')
-        try:
-            f = open(file).read()
-        except IOError as err:
-            infoln('Failed.')
-            erroln(str(err))
-            sys.exit(True)
-        # Import JSON data
-        infoln('Parsing JSON...')
-        try:
-            self.data = json.loads(f)
-        except ValueError as err:
-            infoln('Failed')
-            erroln(str(err))
-            infoln('Ops... there\'s something strange in your neighborhood.')
-            sys.exit(True)
-        return False
+            return []
 
     def objects(self):
         try:
@@ -228,68 +163,32 @@ class DeviceProperties:
 
     def reset(self):
         """Reset device default properties"""
-        self.set()
-
-    def set(self):
-        """Set device default properties"""
-        self.id = ""
+        self.id = None
         self.system_plat = ""
         self.system_mark = ""
         self.system_desc = ""
         self.system_arch = ""
         self.system_path = ""
         self.system_logs = ""
-        self.comm_serial_path = ""
-        self.comm_serial_speed = 0
-        self.comm_terminal_echo = True
-        self.comm_terminal_end_of_line = "CRLF"
-        self.comm_network_address = None
 
-    def detect(self):
-        """
+    def set_interface(self, interface):
+        self.interface = interface
 
-        Args:
-            None.
-
-        Returns:
-            False: No device connected
-            True: A list containing all connected devices ID.
-            Str: a string containing a device ID.
-
-        Raises:
-            IOError: An error occurred accessing the bigtable.Table object.
-        """
-        ids = []
-        for i in self.list():
-            self.select(i)
-            if self.is_serial_connected():
-                ids.append(i)
-        self.reset()
-        if len(ids) == 1:
-            self.id = ids[0]
-            return self.id
-        elif len(ids) > 1:
-            erroln('Too much connected devices.')
-            infoln('Use -h option and select just one of these devices:')
-            for i in ids:
-                infoln('  ' + str(i))
-            sys.exit(True)
-        elif len(ids) < 1:
-            return False
-
-    def presentation(self):
+    def info(self):
         """ """
         infoln('Device...')
-        infoln('    ID: ' + str(self.id))
-        infoln('    Project: ' + str(self.system_plat) +
-               ' Mark ' + str(self.system_mark) +
-               ' (' + str(self.system_desc) + ')')
-        infoln('    Connectivity:')
-        if self.comm_serial_path is not None:
-            infoln('        Serial: ' + str(self.comm_serial_path) + ' (' +
-                   str(self.comm_serial_speed) + ' bps)')
-        if self.comm_network_address is not None:
-            infoln('        Network: ' + str(self.comm_network_address))
+        infoln('ID: ' + str(self.id), 1)
+        if not self.id:
+            return
+        infoln('Name: ' + str(self.system_plat) +
+               ' Mark ' + str(self.system_mark), 1)
+        infoln('Description: ' + str(self.system_desc), 1)
+        # infoln('    Connectivity:')
+        # if self.comm_serial_path is not None:
+            # infoln('        Serial: ' + str(self.comm_serial_path))
+            # infoln('        Speed: ' + str(self.comm_serial_speed) + ' bps')
+        # if self.comm_network_address is not None:
+            # infoln('        Network: ' + str(self.comm_network_address))
 
     def control_map(self):
         for i in self.objects():

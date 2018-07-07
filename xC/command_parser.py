@@ -1,5 +1,5 @@
 """
-commandparser.py
+command_parser.py
 
 Author: Marcio Pessoa <marcio@pessoa.eti.br>
 Contributors: none
@@ -238,4 +238,8 @@ class CommandParser:
         pass
 
     def pause(self):
+        pass
+
+    def info(self):
+        infoln('Parser...')
         pass

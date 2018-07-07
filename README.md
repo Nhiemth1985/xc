@@ -4,6 +4,17 @@
 
 [Kanban](KANBAN.md)
 
+# Introduction
+
+## Topology
+![Topology](Documents/xC.png)
+
+## Terminology 
+- xC: aXes Controller, this software
+- Host: The computer system running xC software
+- Device: The device that will be controlled by xC, such as a robot, CNC, 3D Printer, and much more.
+- User: It's you!
+
 ## Installation
 
 Download xC lastest version:

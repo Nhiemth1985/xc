@@ -33,17 +33,17 @@ command="gui"
 verbosity=4
 
 # Enable full screen mode on xc appliance
-case "$HOSTNAME" in
-  'xCm1')
-    arguments=(--fullscreen)
-    ;;
-  'xCm2')
-    arguments=(--fullscreen --screen 480x320)
-    ;;
-  *)
-    arguments=(--screen 800x480)
-    ;;
-esac
+#case "$HOSTNAME" in
+  #'xCm1')
+    #arguments=(--fullscreen)
+    #;;
+  #'xCm2')
+    #arguments=(--fullscreen --screen 480x320)
+    #;;
+  #*)
+    #arguments=(--screen 800x480)
+    #;;
+#esac
 
 # Identify user defined verbosity
 declare -a args=($@)
@@ -60,7 +60,8 @@ done
 
 # Apply desired command
 if [ "$#" -eq 0 ]; then
-  python "$WORK_DIR"/"$WORK_FILE" "$command" "${arguments[@]}" \
+  #python "$WORK_DIR"/"$WORK_FILE" "$command" "${arguments[@]}" 
+  python "$WORK_DIR"/"$WORK_FILE" "$command" \
     --verbosity="$verbosity" | \
     grep -v 'SDL_'
 else

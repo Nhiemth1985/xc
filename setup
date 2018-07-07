@@ -57,14 +57,14 @@ check_return() {
 install() {
   # Dependencies
   message "Installing software dependencies"
-  apt update >/dev/null 2>&1
-  apt -y install \
-    python-serial \
-    python-pygame \
-    python-termcolor \
-    python-sh \
-    python-psutil \
-    >/dev/null 2>&1
+  apt update >/dev/null 2>&1 && \
+    apt -y install \
+      python-serial \
+      python-pygame \
+      python-termcolor \
+      python-sh \
+      python-psutil \
+      >/dev/null 2>&1
   check_return $?
   # Copy files
   message "Creating directory structure"
@@ -79,7 +79,7 @@ install() {
   ln -s /opt/sciemon/xc/fonts/Digirtu_.ttf ~/.fonts >/dev/null 2>&1
   # Configuration file
   # message "Copying configuration file"
-  ln -s /opt/sciemon/xc/devices.json "$HOME"/.devices.json >/dev/null 2>&1
+  ln -s /opt/sciemon/xc/xC.json "$HOME"/.xC.json >/dev/null 2>&1
   # check_return $?
   #
   # sh -c 'cat > /usr/share/xsessions/xc.desktop'
