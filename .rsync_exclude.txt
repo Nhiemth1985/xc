@@ -1,6 +1,7 @@
 ~*
 *~
 *.py
+*.dia
 *.svg
 *.bmp
 *.BMP
@@ -10,8 +11,9 @@ rsync_exclude.txt
 rsync_include.txt
 .git
 .gitignore
-HOURS
-KANBAN
-Documents/
+HOURS.yaml
+KANBAN.yaml
+KANBAN.md
 setup
 __pycache__/
+*.hjson

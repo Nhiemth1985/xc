@@ -345,7 +345,7 @@ class UserArgumentParser():
             self.interface = interface
             infoln("Connecting...")
             if self.interface == 'serial':
-                if self.device.is_serial_connected():
+                if self.session.is_connected_serial():
                     self.ser = serial.Serial(
                         self.device.comm_serial_path,
                         self.device.comm_serial_speed,

@@ -80,7 +80,7 @@ class DeviceProperties:
             pass
         return enable
 
-    def get(self):
+    def get_id(self):
         return self.data["device"][self.id]
 
     def set(self, id):
@@ -131,31 +131,31 @@ class DeviceProperties:
         elements.sort()
         return elements
 
-    def comm(self):
+    def get_comm(self):
         try:
             return self.data["device"][self.id]["comm"]
         except BaseException:
             return []
 
-    def objects(self):
+    def get_objects(self):
         try:
             return self.data["device"][self.id]["object"]
         except BaseException:
             return []
 
-    def endup(self):
+    def get_endup(self):
         try:
             return self.data["device"][self.id]["endup"]
         except BaseException:
             return []
 
-    def startup(self):
+    def get_startup(self):
         try:
             return self.data["device"][self.id]["startup"]
         except BaseException:
             return []
 
-    def control(self):
+    def get_control(self):
         try:
             return self.data["device"][self.id]["control"]
         except BaseException:
@@ -190,6 +190,6 @@ class DeviceProperties:
         # if self.comm_network_address is not None:
             # infoln('        Network: ' + str(self.comm_network_address))
 
-    def control_map(self):
+    def get_control_map(self):
         for i in self.objects():
             info(i)["command"]

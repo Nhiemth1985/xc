@@ -133,7 +133,7 @@ class Gui:
         if self.control_joystick_enable is not True:
             return
         if (event.type == JOYBUTTONDOWN or event.type == JOYBUTTONUP):
-            for i in self.device.objects():
+            for i in self.device.get_objects():
                 try:
                     i["control"]["joystick"]
                 except BaseException:
@@ -158,7 +158,7 @@ class Gui:
                             if self.session.is_connected():
                                 self.session.send_wait(command)
         if (event.type == JOYHATMOTION or self.joystick_hat_active):
-            for i in self.device.objects():
+            for i in self.device.get_objects():
                 try:
                     i["control"]["joystick"]
                 except BaseException:
@@ -184,7 +184,7 @@ class Gui:
             if self.joystick_timer.check() is not True:
                 return
             # Search for configured axes
-            for i in self.device.objects():
+            for i in self.device.get_objects():
                 try:
                     i["control"]["joystick"]
                 except BaseException:
@@ -214,13 +214,13 @@ class Gui:
         info('Joystick: ', 1)
         # Is enable?
         try:
-            self.control_joystick_enable = (self.device.control()
+            self.control_joystick_enable = (self.device.get_control()
                                             ["joystick"]["enable"])
         except BaseException:
             self.control_joystick_enable = False
         # Is speed configured?
         try:
-            self.control_joystick_speed = (self.device.control()
+            self.control_joystick_speed = (self.device.get_control()
                                            ["joystick"]["speed"])
         except BaseException:
             self.control_joystick_speed = 1
@@ -238,7 +238,7 @@ class Gui:
                 self.joystick = pygame.joystick.Joystick(i)
                 self.joystick.init()
                 try:
-                    delay = self.device.control()["joystick"]["delay"]
+                    delay = self.device.get_control()["joystick"]["delay"]
                 except BaseException:
                     delay = 100
                 self.joystick_timer = Timer(delay)
@@ -305,7 +305,7 @@ class Gui:
         # Object behavior
         if self.control_keyboard_enable is False:
             return
-        for i in self.device.objects():
+        for i in self.device.get_objects():
             try:
                 i["control"]["keyboard"]
             except BaseException:
@@ -337,19 +337,19 @@ class Gui:
         info('Keyboard: ', 1)
         # Is enable?
         try:
-            self.control_keyboard_enable = (self.device.control()
+            self.control_keyboard_enable = (self.device.get_control()
                                             ["keyboard"]["enable"])
         except BaseException:
             self.control_keyboard_enable = False
         # Is speed configured?
         try:
-            self.control_keyboard_speed = (self.device.control()
+            self.control_keyboard_speed = (self.device.get_control()
                                            ["keyboard"]["speed"])
         except BaseException:
             self.control_keyboard_speed = 1
         # Is delay configured?
         try:
-            self.control_keyboard_delay = (self.device.control()
+            self.control_keyboard_delay = (self.device.get_control()
                                            ["keyboard"]["delay"])
         except BaseException:
             self.control_keyboard_delay = 1
@@ -390,7 +390,7 @@ class Gui:
             if x == 0 and y == 0:
                 return
             #
-            for i in self.device.objects():
+            for i in self.device.get_objects():
                 try:
                     i["control"]["mouse"]
                 except BaseException:
@@ -418,13 +418,13 @@ class Gui:
         info('Mouse: ', 1)
         # Is enable?
         try:
-            self.control_mouse_enable = (self.device.control()
+            self.control_mouse_enable = (self.device.get_control()
                                          ["mouse"]["enable"])
         except BaseException:
             self.control_mouse_enable = False
         # Is speed configured?
         try:
-            self.control_mouse_speed = (self.device.control()
+            self.control_mouse_speed = (self.device.get_control()
                                         ["mouse"]["speed"])
         except BaseException:
             self.control_mouse_speed = 1
@@ -505,7 +505,7 @@ class Gui:
         self.parser.info()
 
     def start_session(self):
-        self.session = Session(self.device.comm())
+        self.session = Session(self.device.get_comm())
         self.session.info()
         self.session.start()
 
@@ -536,7 +536,7 @@ class Gui:
         self.helpscreen.position(position=imgpos)
 
     def draw_object(self):
-        for i in self.device.objects():
+        for i in self.device.get_objects():
             i["id"].draw(eval(i["picture"][i["state"]]))
         self.screen.blit(self.object_area, (130, 50))
 
@@ -593,7 +593,7 @@ class Gui:
     def start_objects(self):
         infoln('Objects...')
         counter = 0
-        for i in self.device.objects():
+        for i in self.device.get_objects():
             i["id"] = Image(self.object_area,
                             os.path.join(images_directory,
                                          i["picture"]["file"]),
