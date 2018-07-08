@@ -15,10 +15,10 @@ Change log:
 
 """
 
+import sys
 import json
 import os
 from socket import gethostbyname
-import sys
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 

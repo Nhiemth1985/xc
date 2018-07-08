@@ -10,10 +10,10 @@ Change log:
         * Scrach version.
 """
 
-import pygame
-from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
+import pygame
+from pygame.locals import *
 from echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 from timer import Timer

@@ -16,20 +16,18 @@ try:
     # Ubuntu default modules
     import sys
     import argparse
-    # import getopt
     import os.path
     import time
     # Ubuntu manually installed modules
     import serial
     # Myself modules
-    from xC.command_parser import CommandParser
-    from xC.file_management import FileManagement
-    from xC.device_properties import DeviceProperties
-    from xC.session import Session
-    from xC.host_properties import HostProperties
-    from xC.devtools import DevTools
+    from xC.device import DeviceProperties
     from xC.echo import verbose, level, \
         echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
+    from xC.file import FileManagement
+    from xC.host import HostProperties
+    from xC.session import Session
+    from xC.tools import DevTools
 except ImportError as err:
     print("Could not load module. " + str(err))
     sys.exit(True)
@@ -174,13 +172,11 @@ class UserArgumentParser():
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
         config = FileManagement(self.config_file)
-        self.device = DeviceProperties(config.get())
-        if args.id:
-            self.device.set(args.id)
         # Start GUI
         from xC.gui import Gui
         gui = Gui(config.get())
-        gui.device_load(self.device)
+        if args.id:
+            gui.device_set(args.id)
         gui.start()
         gui.run()
         sys.exit(False)

@@ -26,7 +26,6 @@ class Pong:
         self.version = '0.02b'
         self.screen = screen
         self.running = False
-        self.pad_acceleration = 1
 
     def start(self):
         self.running = True
@@ -38,20 +37,29 @@ class Pong:
                                          self.court.get_size()[1] - 2],
                                         pygame.SRCALPHA, 32)
         self.play_area.convert_alpha()
-        self.court_side = 1
-        self.ball_velocity = [0, 0]
         self.ball_radius = int(self.play_area.get_size()[0] * 0.03 / 2)
         self.pad_height_half = int(self.play_area.get_size()[1] * 0.2 / 2)
         self.pad_width = int(self.play_area.get_size()[0] * 0.015)
         self.pad_height = self.pad_height_half * 2
-        self.pad1_pressed = False
-        self.pad2_pressed = False
-        self.pad1_vel = 0
-        self.pad2_vel = 0
+        self.reset()
+        self.set()
+        self.ball_spawn()
+
+    def set(self):
         self.pad1_position = int(self.play_area.get_size()[1] / 2)
         self.pad2_position = int(self.play_area.get_size()[1] / 2)
+        self.pad1_vel = 0
+        self.pad2_vel = 0
+        self.ball_velocity = [0, 0]
+        self.pad1_pressed = False
+        self.pad2_pressed = False
+        self.ball_position = [self.play_area.get_size()[0] / 2,
+                              self.play_area.get_size()[1] / 2]
+
+    def reset(self):
         self.score = [0, 0]
-        self.ball_spawn()
+        self.pad_acceleration = 1
+        self.court_side = 1
 
     def draw_ball(self):
         pygame.draw.rect(self.play_area, (200, 200, 200),
@@ -136,9 +144,7 @@ class Pong:
         if direction is RIGHT, the ball's velocity is upper right, else
         upper left
         """
-        self.ball_position = [self.play_area.get_size()[0] / 2,
-                              self.play_area.get_size()[1] / 2]
-        #
+        self.set()
         self.ball_velocity[0] = (random.randrange(120, 240) / 60.0 *
                                  self.court_side)
         self.ball_velocity[1] = (random.randrange(-100, 100) / 60.0) * -1
@@ -200,6 +206,7 @@ class Pong:
                 self.court_side = -1
                 self.ball_spawn()
                 self.score[1] += 1
+                echoln("Score: " + str(self.score), 2)
         # Bounces off of the right
         if self.ball_position[0] + self.ball_radius > \
            self.play_area.get_size()[0] - self.pad_width:
@@ -213,3 +220,4 @@ class Pong:
                 self.court_side = 1
                 self.ball_spawn()
                 self.score[0] += 1
+                echoln("Score: " + str(self.score), 2)

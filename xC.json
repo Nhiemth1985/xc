@@ -5,6 +5,11 @@
         "size": "480x320",
         "full": false,
         "rate": 50
+      },
+      "control": {
+        "mouse": {
+          "visible": true
+        }
       }
     },
     "t1": {
@@ -48,6 +53,11 @@
       "comm": {
         "network": {
           "address": "192.168.0.102"
+        }
+      },
+      "control": {
+        "mouse": {
+          "visible": false
         }
       },
       "system": {
@@ -448,6 +458,9 @@
         "mouse": {
           "enable": false,
           "speed": 0.1
+        },
+        "touch": {
+          "enable": true
         }
       },
       "endup": {

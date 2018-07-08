@@ -1,43 +1,46 @@
 - 'BACKLOG':
-  - (control) Joystick - Ajust speed based on JSON configuration
-  - (control) Keyboard - Ajust delay and interval options based on JSON configuration
-  - (control) Mouse - Ajust speed based on JSON configuration
-  - (control) Voice - Add support
-  - (control) Touch - Add support
-  - (control) Touch - Ajust delay and interval options based on JSON configuration
-  - (gui) 3D model - x1
-  - (gui) 3D model - x2
-  - (gui) 3D model - x6
-  - (gui) 3D model - Escriba
+  - (all) Multi language support
   - (all) output file - Create this feature
   - (all) log file - Create this feature
-  - (all) Conectar multiplos dispositivos simultaneamente
-  - (all) Soft limits
-  - (all) Multi language support
-  - (all) Conectar-se ao dispositivo por intermedio do protocolo SSH
-
-- 'TO DO':
-  - (SO) Fix start up xc script
-  - (gui) Remove border when running in full screen
-  - (all) Devices interaction - Design and definition
-  - (all) DeviceProperties - Add "endup" JSON section
   - (all) Comando para ejetar dispositivo - Deve executar a sequencia "endup"
+  - (gui) Centralizar objetos na tela
+  - (gui) Colocar do lado direito da tela opcoes para mudar device e ejetar device
   - (control) Joystick - Auto detect in runtime
-  - (control) Joystick - Hat support
-  - (control) Voice - Add support
   - (control) Mouse - Buttons - Add support
   - (control) Mouse - Wheel - Add support
+  - (control) Joystick - Hat support
   - (control) Joystick - Bug #1
   - (control) Mouse - Bug #2
   - (control) Joystick - Bug #4
   - (all) CommandParser.run() - Bug #3
   - (gui) Unified Control System - Join all commands from all controls in a single command (G0 X1 Y4 U19 - G0 X3 W12 = G0 X4 Y4 U19 W12)
+  - (gui) 3D model - Design class
+  - (gui) 3D model - x1
+  - (gui) 3D model - x2
+  - (gui) 3D model - x6
+  - (gui) 3D model - Escriba
+  - (all) Soft limits
+  - (all) Conectar-se ao dispositivo por intermedio do protocolo SSH
+  - (all) Conectar multiplos dispositivos simultaneamente
+  - (all) Devices interaction - Design and definition
+  - (control) Voice - Add support
+
+- 'TO DO':
+  - (control) Touch - Add support
+  - (control) Touch - Ajust delay and interval options based on JSON configuration
+  - (control) Joystick - Ajust speed based on JSON configuration
+  - (control) Keyboard - Ajust delay and interval options based on JSON configuration
+  - (control) Mouse - Ajust speed based on JSON configuration
 
 - 'DOING':
+  - (all) Session - Auto detect connected devices
   - (gui) Status - Display temeperature for x86 hosts
+  - (SO) Fix start up xc script
 
 - 'TESTING':
   - (all) Show comments with different colors
+  - (all) DeviceProperties - Add "endup" JSON section
+  - (gui) Remove border
 
 - 'DONE':
   - (SO) NRDP - Communication to server fails over HTTPS

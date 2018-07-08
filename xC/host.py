@@ -10,12 +10,12 @@ Change log:
         * Added: Parse host properties from JSON file.
 """
 
+import sys
 import json
 import os
+import platform
 from psutil import virtual_memory
 from socket import gethostbyname
-import platform
-import sys
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 from xC.timer import Timer
@@ -110,7 +110,7 @@ class HostProperties:
         # Temperature sensor
         try:
             if self.data[self.name]["resources"]["temperature_sensor"]:
-                self.temperature = str("{:1.1f} C".
+                self.temperature = str("{:1.0f} C".
                                        format(float(CPUTemperature().
                                                     temperature)))
         except BaseException:
@@ -191,6 +191,12 @@ class HostProperties:
     def get_screen(self):
         try:
             return self.data[self.name]["screen"]
+        except BaseException:
+            pass
+
+    def get_control(self):
+        try:
+            return self.data[self.name]["control"]
         except BaseException:
             pass
 

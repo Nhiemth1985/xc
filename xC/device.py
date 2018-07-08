@@ -53,9 +53,9 @@ Change log:
         * Scrach version.
 """
 
+import sys
 import json
 import os
-import sys
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 
@@ -75,13 +75,13 @@ class DeviceProperties:
     def is_enable(self):
         enable = False
         try:
-            enable = self.data["device"][self.id].get('enable', True)
+            enable = self.data[self.id].get('enable', True)
         except BaseException:
             pass
         return enable
 
     def get_id(self):
-        return self.data["device"][self.id]
+        return self.data[self.id]
 
     def set(self, id):
         """Set a device to be used.
@@ -92,21 +92,23 @@ class DeviceProperties:
             element: An element name (like x1, x2, x6, etc.).
         """
         self.reset()
+        if not id:
+            return
         self.id = id
         # Is device present in configuration file?
         try:
-            check_id = self.data["device"][id]
+            check_id = self.data[id]
         except KeyError:
             erroln('Device is not present in configuration file.')
             sys.exit(True)
         # Check mandatory keys.
         try:
-            self.system_plat = self.data["device"][id]["system"]["plat"]
-            self.system_mark = self.data["device"][id]["system"]["mark"]
-            self.system_desc = self.data["device"][id]["system"]["desc"]
-            self.system_arch = self.data["device"][id]["system"]["arch"]
-            self.system_path = self.data["device"][id]["system"]['path']
-            self.system_logs = self.data["device"][id]["system"]['logs']
+            self.system_plat = self.data[id]["system"]["plat"]
+            self.system_mark = self.data[id]["system"]["mark"]
+            self.system_desc = self.data[id]["system"]["desc"]
+            self.system_arch = self.data[id]["system"]["arch"]
+            self.system_path = self.data[id]["system"]['path']
+            self.system_logs = self.data[id]["system"]['logs']
         except KeyError as err:
             erroln('Mandatory key is absent: %s' % (err))
             sys.exit(True)
@@ -126,38 +128,44 @@ class DeviceProperties:
             None
         """
         elements = []
-        for i in self.data["device"]:
+        for i in self.data:
             elements.append(i)
         elements.sort()
         return elements
 
     def get_comm(self):
         try:
-            return self.data["device"][self.id]["comm"]
+            return self.data[self.id]["comm"]
         except BaseException:
             return []
 
     def get_objects(self):
         try:
-            return self.data["device"][self.id]["object"]
+            return self.data[self.id]["object"]
         except BaseException:
             return []
 
     def get_endup(self):
         try:
-            return self.data["device"][self.id]["endup"]
+            return self.data[self.id]["endup"]
         except BaseException:
             return []
 
     def get_startup(self):
         try:
-            return self.data["device"][self.id]["startup"]
+            return self.data[self.id]["startup"]
+        except BaseException:
+            return []
+
+    def get_endup(self):
+        try:
+            return self.data[self.id]["endup"]
         except BaseException:
             return []
 
     def get_control(self):
         try:
-            return self.data["device"][self.id]["control"]
+            return self.data[self.id]["control"]
         except BaseException:
             return []
 
