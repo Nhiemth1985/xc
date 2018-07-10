@@ -36,16 +36,16 @@ import sh
 from socket import gethostbyname
 import sys
 from time import sleep
-from device import DeviceProperties
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 from xC.timer import Timer
 
 
 class Session:
-    def __init__(self):
+    def __init__(self, data):
         self.version = '0.05b'
         self.reset()
+        self.load(data)
 
     def reset(self):
         self.data = None
@@ -93,35 +93,6 @@ class Session:
             pass
         return 0
 
-    def detect(self, list):
-        """
-        Set a list with all possible devices connected
-        
-        Args:
-            List: With all devices to be checked.
-        
-        Return:
-            List: With connected devices.
-            False: If no device connected.
-        """
-        ids = []
-        for i in self.list():
-            self.select(i)
-            if self.is_connected_serial():
-                ids.append(i)
-        self.reset()
-        if len(ids) == 1:
-            self.id = ids[0]
-            return self.id
-        elif len(ids) > 1:
-            erroln('Too much connected devices.', 1)
-            infoln('Use -h option and select just one of these devices:', 1)
-            for i in ids:
-                infoln('  ' + str(i))
-            sys.exit(True)
-        elif len(ids) < 1:
-            return False
-
     def is_connected(self):
         if self.is_connected_serial() or self.is_connected_network():
             return True
@@ -140,12 +111,6 @@ class Session:
 
     def stop(self):
         pass
-
-    def select_auto(self):
-        self.id = self.detect()
-        if self.id:
-            self.select(self.id)
-        return self.id
 
     def start(self):
         if not self.data:
@@ -185,14 +150,6 @@ class Session:
         if self.session.is_connected() is False:
             if self.device.detect():
                 self.start()
-
-        # self.device_connect(self.id, self.interface)
-        # if self.session.is_connected():
-            # while not self.session.is_ready():
-                # pass
-            # for c in self.device.startup()["command"]:
-                # self.session.send(c)
-                # self.session.receive()
 
     def run(self):
         infoln('Running program...')
@@ -295,7 +252,7 @@ class Session:
     def receive(self):
         """Just receive a message"""
         try:
-            received = self.connection.readline().rstrip()
+            received = self.session.readline().rstrip()
         except IOError as err:
             return True
         if received == "" or received == "\n" or received == "\r":
@@ -335,7 +292,7 @@ class Session:
         code(command, attrs=['bold'])
         codeln('  ' + comment)
         try:
-            self.connection.write((command + '\n').encode())
+            self.session.write((command + '\n').encode())
         except IOError as err:
             return True
         return False

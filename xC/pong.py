@@ -41,6 +41,8 @@ class Pong:
         self.pad_height_half = int(self.play_area.get_size()[1] * 0.2 / 2)
         self.pad_width = int(self.play_area.get_size()[0] * 0.015)
         self.pad_height = self.pad_height_half * 2
+        self.pad_acceleration = 1
+        self.court_side = 1
         self.reset()
         self.set()
         self.ball_spawn()
@@ -58,8 +60,6 @@ class Pong:
 
     def reset(self):
         self.score = [0, 0]
-        self.pad_acceleration = 1
-        self.court_side = 1
 
     def draw_ball(self):
         pygame.draw.rect(self.play_area, (200, 200, 200),

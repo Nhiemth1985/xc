@@ -292,7 +292,7 @@ class UserArgumentParser():
         c = 0
         for id in device.list():
             device.set(id)
-            session = Session(device.comm())
+            session = Session(device.get_comm())
             if not device.is_enable():
                 continue
             if args.verbosity >= 4 or args.connected:
@@ -367,15 +367,19 @@ class UserArgumentParser():
             infoln('Started at: ' + time.strftime('%Y-%m-%d %H:%M:%S'))
         # Load device configuration file
         config = FileManagement(self.config_file)
+        infoln('Device...')
         self.device = DeviceProperties(config.get())
         if self.id is None:
-            self.id = self.device.select_auto()
+            self.id = self.device.detect()
         else:
             self.device.set(self.id)
+        if not self.id:
+            erroln('Device not selected.', 1)
+            sys.exit(True)
         self.device.info()
-        self.project = DevTools(self.device.get())
+        self.project = DevTools(self.device.get_id())
         self.project.info()
-        self.session = Session(self.device.comm())
+        self.session = Session(self.device.get_comm())
         self.session.info()
         if self.interface:
             infoln("Connecting...", 1)

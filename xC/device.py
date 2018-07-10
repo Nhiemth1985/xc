@@ -58,6 +58,7 @@ import json
 import os
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
+from xC.session import Session
 
 
 class DeviceProperties:
@@ -75,13 +76,13 @@ class DeviceProperties:
     def is_enable(self):
         enable = False
         try:
-            enable = self.data[self.id].get('enable', True)
+            enable = self.data["device"][self.id].get('enable', True)
         except BaseException:
             pass
         return enable
 
     def get_id(self):
-        return self.data[self.id]
+        return self.data["device"][self.id]
 
     def set(self, id):
         """Set a device to be used.
@@ -97,18 +98,18 @@ class DeviceProperties:
         self.id = id
         # Is device present in configuration file?
         try:
-            check_id = self.data[id]
+            check_id = self.data["device"][id]
         except KeyError:
             erroln('Device is not present in configuration file.')
             sys.exit(True)
         # Check mandatory keys.
         try:
-            self.system_plat = self.data[id]["system"]["plat"]
-            self.system_mark = self.data[id]["system"]["mark"]
-            self.system_desc = self.data[id]["system"]["desc"]
-            self.system_arch = self.data[id]["system"]["arch"]
-            self.system_path = self.data[id]["system"]['path']
-            self.system_logs = self.data[id]["system"]['logs']
+            self.system_plat = self.data["device"][id]["system"]["plat"]
+            self.system_mark = self.data["device"][id]["system"]["mark"]
+            self.system_desc = self.data["device"][id]["system"]["desc"]
+            self.system_arch = self.data["device"][id]["system"]["arch"]
+            self.system_path = self.data["device"][id]["system"]['path']
+            self.system_logs = self.data["device"][id]["system"]['logs']
         except KeyError as err:
             erroln('Mandatory key is absent: %s' % (err))
             sys.exit(True)
@@ -128,44 +129,44 @@ class DeviceProperties:
             None
         """
         elements = []
-        for i in self.data:
+        for i in self.data["device"]:
             elements.append(i)
         elements.sort()
         return elements
 
     def get_comm(self):
         try:
-            return self.data[self.id]["comm"]
+            return self.data["device"][self.id]["comm"]
         except BaseException:
             return []
 
     def get_objects(self):
         try:
-            return self.data[self.id]["object"]
+            return self.data["device"][self.id]["object"]
         except BaseException:
             return []
 
     def get_endup(self):
         try:
-            return self.data[self.id]["endup"]
+            return self.data["device"][self.id]["endup"]
         except BaseException:
             return []
 
     def get_startup(self):
         try:
-            return self.data[self.id]["startup"]
+            return self.data["device"][self.id]["startup"]
         except BaseException:
             return []
 
     def get_endup(self):
         try:
-            return self.data[self.id]["endup"]
+            return self.data["device"][self.id]["endup"]
         except BaseException:
             return []
 
     def get_control(self):
         try:
-            return self.data[self.id]["control"]
+            return self.data["device"][self.id]["control"]
         except BaseException:
             return []
 
@@ -184,20 +185,38 @@ class DeviceProperties:
 
     def info(self):
         """ """
-        infoln('Device...')
         infoln('ID: ' + str(self.id), 1)
         if not self.id:
             return
         infoln('Name: ' + str(self.system_plat) +
                ' Mark ' + str(self.system_mark), 1)
         infoln('Description: ' + str(self.system_desc), 1)
-        # infoln('    Connectivity:')
-        # if self.comm_serial_path is not None:
-            # infoln('        Serial: ' + str(self.comm_serial_path))
-            # infoln('        Speed: ' + str(self.comm_serial_speed) + ' bps')
-        # if self.comm_network_address is not None:
-            # infoln('        Network: ' + str(self.comm_network_address))
 
     def get_control_map(self):
         for i in self.objects():
             info(i)["command"]
+
+    def detect(self):
+        info('Detected: ', 1)
+        ids = []
+        for id in self.list():
+            self.set(id)
+            session = Session(self.get_comm())
+            if not self.is_enable():
+                continue
+            if session.is_connected_serial():
+                ids.append(str(id).encode("utf-8"))
+        if len(ids) > 1:
+            self.id = None
+            infoln(str(ids))
+            warnln('Too much connected devices.', 1)
+            infoln('Please, connect only one device.', 1)
+            return None
+        elif len(ids) == 1:
+            self.id = ids[0]
+            infoln(str(ids))
+            return self.id
+        else:
+            self.id = None
+            infoln(str(self.id))
+            return self.id

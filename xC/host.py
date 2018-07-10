@@ -166,7 +166,7 @@ class HostProperties:
         status = 'Absent'
         try:
             if self.data[self.name]["resources"]["status_led"]:
-                from xC.signal_generator import SigGen
+                from xC.signal import SigGen
                 GPIO.setup(33, GPIO.OUT)
                 self.status_led = GPIO.PWM(33, 50)
                 self.status_led.start(0)

@@ -46,7 +46,8 @@ class DevTools:
     def __init__(self, data):
         """docstring"""
         self.version = '0.05b'
-        self.terminal_program = "miniterm.py"
+        self.terminal_program = \
+            "/usr/lib/python2.7/dist-packages/serial/tools/miniterm.py"
         self.arduino_program = "arduino"
         self.load(data)
         self.set()
@@ -71,8 +72,10 @@ class DevTools:
         self.arduino_file = self.path[self.path.rfind("/", 0):] + ".ino"
         self.system_logs = self.data["system"].get("logs", self.system_logs)
         self.logs = os.path.join(os.environ['HOME'], self.system_logs)
-        self.device_path = self.data["comm"]["serial"].get("path", self.device_path)
-        self.device_speed = self.data["comm"]["serial"].get("speed", self.device_speed)
+        self.device_path = self.data["comm"]["serial"]\
+            .get("path", self.device_path)
+        self.device_speed = self.data["comm"]["serial"]\
+            .get("speed", self.device_speed)
         self.terminal_echo = self.data["comm"]\
             .get("terminal_echo", self.terminal_echo)
         self.terminal_end_of_line = self.data["comm"]\
