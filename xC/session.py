@@ -136,6 +136,7 @@ class Session:
         if self.comm_serial_path is not None:
             infoln('Serial: ' + str(self.comm_serial_path), 1)
             infoln('Speed: ' + str(self.comm_serial_speed) + ' bps', 1)
+            infoln('Startup delay: ' + str(self.comm_serial_delay) + ' ms', 1)
         if self.comm_network_address is not None:
             infoln('Network: ' + str(self.comm_network_address), 1)
 

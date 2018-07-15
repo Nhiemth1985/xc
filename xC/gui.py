@@ -99,7 +99,6 @@ import subprocess
 import time
 from xC.device import DeviceProperties
 from xC.host import HostProperties
-# from xC.tools import DevTools
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 from xC.session import Session
@@ -121,7 +120,6 @@ class Gui:
         self.screen_full = False
         self.screen_size = "480x320"
         self.screen_rate = 30
-        self.mouse_visible = True
         self.device_id = None
 
     def load(self, data):
@@ -142,7 +140,7 @@ class Gui:
                 if i["control"]["joystick"].split("[")[0] == "button":
                     button = []
                     for j in range(self.joystick.get_numbuttons()):
-                        button.appstop(self.joystick.get_button(j))
+                        button.append(self.joystick.get_button(j))
                         # infoln("button[" + str(j) + "] = " + str(button[j]))
                     if eval(i["control"]["joystick"]):
                         if i["type"] == "push-button":
@@ -167,7 +165,7 @@ class Gui:
                 if i["control"]["joystick"].split("[")[0] == "hat":
                     hat = []
                     for j in range(self.joystick.get_numhats()):
-                        hat.appstop(self.joystick.get_hat(j))
+                        hat.append(self.joystick.get_hat(j))
                         # infoln("hat[" + str(j) + "] = " + str(hat[j]))
                     if 1 in hat[0] or -1 in hat[0]:
                         self.joystick_hat_active = True
@@ -194,7 +192,7 @@ class Gui:
                    i["control"]["joystick"].split("[")[0] == "axis":
                     axis = []
                     for j in range(self.joystick.get_numaxes()):
-                        axis.appstop(self.joystick.get_axis(j))
+                        axis.append(self.joystick.get_axis(j))
                         # infoln("axis[" + str(j) + "] = " + str(axis[j]))
                     if eval(i["control"]["joystick"]):
                         i["state"] = i["on"]["picture"]
@@ -229,8 +227,8 @@ class Gui:
         self.joyicon = Image(self.controls,
                              os.path.join(images_directory, 'joystick.png'),
                              [2, 1])
-        self.joystick_button = Button(self.joyicon, [0, 100], [5, 58],
-                                      self.control_joystick_enable)
+        self.control_joystick_button = Button(self.joyicon, [0, 100], [5, 58],
+                                              self.control_joystick_enable)
         self.joystick_hat_active = False
         # Detect and start
         joysticks = pygame.joystick.get_count()
@@ -270,38 +268,25 @@ class Gui:
             if event.key == K_F1:  # Help screen
                 help_screen_on = True
             if event.key == K_F8:  # Keyboard grab
-                self.keyboard_button.toggle()
+                self.control_keyboard_button.toggle()
             if event.key == K_F9:  # Mouse grab
-                self.control_mouse_enable = \
-                    not self.control_mouse_enable
-                pygame.mouse.set_visible((not self.control_mouse_enable) and
-                                         self.mouse_visible)
-                pygame.event.set_grab(self.control_mouse_enable)
-                self.mouse.draw([self.control_mouse_enable, 0])
+                self.control_mouse_button.toggle()
             if event.key == K_F10:  # Joystick grab
-                self.joystick_button.toggle()
+                self.control_joystick_button.toggle()
             if event.key == K_F11:  # Touch grab
-                self.touch_button.toggle()
+                self.control_touch_button.toggle()
             if event.key == K_F12:  # Voice grab
-                self.voice_button.toggle()
+                self.control_voice_button.toggle()
             if event.key == K_p:  # Pong
                 self.pong.start()
             if event.key == K_LALT:  # Release controls
-                self.control_keyboard_enable = False
-                self.control_mouse_enable = False
-                self.control_joystick_enable = False
-                self.control_touch_enable = False
-                self.control_voice_enable = False
-                pygame.mouse.set_visible((not self.control_mouse_enable) and
-                                         self.mouse_visible)
-                pygame.event.set_grab(self.control_mouse_enable)
-                self.keyboard.draw([0, 0])
-                self.mouse.draw([0, 0])
-                self.joyicon.draw([0, 0])
-                self.touch.draw([0, 0])
-                self.voice.draw([0, 0])
+                self.control_keyboard_button.off()
+                self.control_mouse_button.off()
+                self.control_joystick_button.off()
+                self.control_touch_button.off()
+                self.control_voice_button.off()
         # Object behavior
-        if not self.control_keyboard_enable:
+        if not self.control_keyboard_button.get_state():
             return
         for i in self.device.get_objects():
             try:
@@ -338,10 +323,10 @@ class Gui:
         info('Keyboard: ', 1)
         # Is enable?
         try:
-            self.control_keyboard_enable = (self.device.get_control()
-                                            ["keyboard"]["enable"])
+            control_keyboard_enable = (self.device.get_control()
+                                       ["keyboard"]["enable"])
         except BaseException:
-            self.control_keyboard_enable = False
+            control_keyboard_enable = False
         # Is speed configured?
         try:
             self.control_keyboard_speed = (self.device.get_control()
@@ -358,8 +343,8 @@ class Gui:
         self.keyboard = Image(self.controls,
                               os.path.join(images_directory, 'keyboard.png'),
                               [2, 1])
-        self.keyboard_button = Button(self.keyboard, [0, 0], [5, 58],
-                                      self.control_keyboard_enable)
+        self.control_keyboard_button = Button(self.keyboard, [0, 0], [5, 58],
+                                              control_keyboard_enable)
         # Check for device
         check_input = os.path.join(xc_path, 'scripts/check_input.sh')
         cmd = [check_input, 'keyboard']
@@ -368,7 +353,7 @@ class Gui:
         if return_code == 0:
             infoln('Found')
             info('Enable: ', 2)
-            infoln(str(self.control_keyboard_enable))
+            infoln(str(self.control_keyboard_button.get_state()))
             infoln('Speed: ' + str(self.control_keyboard_speed) +
                    'ms', 2)
             infoln('Delay: ' + str(self.control_keyboard_delay) +
@@ -381,8 +366,24 @@ class Gui:
         pygame.mouse.set_visible(True)
         pygame.event.set_grab(False)
 
+    def ctrl_mouse_cursor(self, state):
+        off = ("        ",  # sized 8x8
+               "        ",
+               "        ",
+               "        ",
+               "        ",
+               "        ",
+               "        ",
+               "        ")
+        curs, mask = pygame.cursors.compile(off, ".", "X")
+        cursor = ((8, 8), (5, 1), curs, mask)
+        if state:
+            pygame.mouse.set_cursor(*pygame.cursors.arrow)
+        else:
+            pygame.mouse.set_cursor(*cursor)
+
     def ctrl_mouse_handle(self, event):
-        if self.control_mouse_enable is False:
+        if not self.control_mouse_button.get_state():
             return
         if event.type == MOUSEMOTION:
             r = pygame.mouse.get_rel()
@@ -416,24 +417,22 @@ class Gui:
         info('Mouse: ', 1)
         # Is enable?
         try:
-            self.control_mouse_enable = (self.device.get_control()
-                                         ["mouse"]["enable"])
+            control_mouse_enable = (self.device.get_control()
+                                    ["mouse"]["enable"])
         except BaseException:
-            self.control_mouse_enable = False
+            control_mouse_enable = False
         # Is speed configured?
         try:
             self.control_mouse_speed = (self.device.get_control()
                                         ["mouse"]["speed"])
         except BaseException:
             self.control_mouse_speed = 100
-        # Is visible?
-        pygame.mouse.set_visible(self.mouse_visible)
         # Draw
         self.mouse = Image(self.controls,
                            os.path.join(images_directory, 'mouse.png'),
                            [2, 1])
-        self.mouse_button = Button(self.mouse, [0, 50], [5, 58],
-                                   self.control_mouse_enable)
+        self.control_mouse_button = Button(self.mouse, [0, 50], [5, 58],
+                                           control_mouse_enable)
         # Check for device
         check_input = os.path.join(xc_path, 'scripts/check_input.sh')
         cmd = [check_input, 'mouse']
@@ -442,37 +441,29 @@ class Gui:
         if return_code == 0:
             infoln('Found')
             info('Enable: ', 2)
-            infoln(str(self.control_mouse_enable))
+            infoln(str(self.control_mouse_button.get_state()))
             infoln('Speed: ' + str(self.control_mouse_speed) + '%', 2)
-            pygame.mouse.set_visible((not self.control_mouse_enable) and
-                                     self.mouse_visible)
-            pygame.event.set_grab(self.control_mouse_enable)
-            infoln('Visible: ' + str(self.mouse_visible), 2)
         else:
             infoln('None')
 
     def ctrl_touch_stop(self):
-        pass
+        pygame.mouse.set_visible(True)
 
     def ctrl_touch_handle(self, event):
         # Program behavior
         if event.type == MOUSEBUTTONUP:
-            self.keyboard_button.check(pygame.mouse.get_pos())
-            self.mouse_button.check(pygame.mouse.get_pos())
-            self.joystick_button.check(pygame.mouse.get_pos())
-            self.touch_button.check(pygame.mouse.get_pos())
-            self.voice_button.check(pygame.mouse.get_pos())
+            self.control_keyboard_button.check(pygame.mouse.get_pos())
+            self.control_mouse_button.check(pygame.mouse.get_pos())
+            self.control_joystick_button.check(pygame.mouse.get_pos())
+            self.control_touch_button.check(pygame.mouse.get_pos())
+            self.control_voice_button.check(pygame.mouse.get_pos())
         # Object behavior
-        if not self.touch_button.get_state():
+        if not self.control_touch_button.get_state():
             return
         for i in self.device.get_objects():
             if i["type"] == 'push-button':
                 if event.type == MOUSEBUTTONDOWN:
                     i["button"].check(pygame.mouse.get_pos())
-                    if self.session.is_connected() and \
-                       i["button"].get_state():
-                        command = i["on"]["command"] .replace('*', '1')
-                        self.session.send_wait(command)
                 if event.type == MOUSEBUTTONUP:
                     i["button"].off()
             elif i["type"] == 'switch':
@@ -484,8 +475,7 @@ class Gui:
                             cu = 'off'
                         else:
                             cu = 'on'
-                        command = i[cu]["command"]\
-                        .replace('*', '1')
+                        command = i[cu]["command"].replace('*', '1')
                         self.session.send_wait(command)
 
     def ctrl_voice_stop(self):
@@ -501,13 +491,13 @@ class Gui:
             self.control_touch_enable = False
         try:
             self.control_touch_speed = (self.device.get_control()
-                                           ["touch"]["speed"])
+                                        ["touch"]["speed"])
         except BaseException:
             self.control_touch_speed = 1
         # Delay
         try:
             self.control_touch_delay = (self.device.get_control()
-                                           ["touch"]["delay"])
+                                        ["touch"]["delay"])
         except BaseException:
             self.control_touch_delay = 1
         self.ctrl_touch_delay = Timer(self.control_touch_delay)
@@ -516,8 +506,8 @@ class Gui:
         self.touch = Image(self.controls,
                            os.path.join(images_directory, 'touch.png'),
                            [2, 1])
-        self.touch_button = Button(self.touch, [0, 150], [5, 58],
-                                   self.control_touch_enable)
+        self.control_touch_button = Button(self.touch, [0, 150], [5, 58],
+                                           self.control_touch_enable)
 
     def ctrl_voice_handle(self, event):
         if self.control_voice_enable is False:
@@ -532,8 +522,8 @@ class Gui:
         self.voice = Image(self.controls,
                            os.path.join(images_directory, 'voice.png'),
                            [2, 1])
-        self.voice_button = Button(self.voice, [0, 200], [5, 58],
-                                   self.control_voice_enable)
+        self.control_voice_button = Button(self.voice, [0, 200], [5, 58],
+                                           self.control_voice_enable)
 
     def start_session(self):
         self.session = Session(self.device.get_comm())
@@ -574,6 +564,9 @@ class Gui:
         self.helpscreen.position(position=imgpos)
 
     def draw_object(self):
+        self.object_area.fill([0, 0, 0])  # Black
+        for i in self.device.get_objects():
+            i["button"].draw()
         self.screen.blit(self.object_area, [130, 50])
 
     def run(self):
@@ -584,11 +577,34 @@ class Gui:
                 if event.type == pygame.QUIT:
                     self.running = False
                 self.ctrl_check(event)
+            self.ctrl_handle()
             self.draw()
             self.device_check()
         infoln("Exiting...")
         self.stop()
         return False
+
+    def ctrl_handle(self):
+        # Mouse visible
+        if self.control_mouse_button.get_state() or \
+           self.control_touch_button.get_state():
+            self.ctrl_mouse_cursor(False)
+        else:
+            self.ctrl_mouse_cursor(True)
+        # Mouse grab
+        if self.control_mouse_button.get_state():
+            pygame.event.set_grab(True)
+        else:
+            pygame.event.set_grab(False)
+        # Objects
+        for i in self.device.get_objects():
+            # Push button (pulse)
+            if i["type"] == 'push-button' and \
+               i["button"].get_state() and \
+               i["timer"].check() and \
+               self.session.is_connected():
+                    command = i["on"]["command"].replace('*', '1')
+                    self.session.send_wait(command)
 
     def ctrl_check(self, event):
         self.ctrl_keyboard_handle(event)
@@ -596,8 +612,15 @@ class Gui:
         self.ctrl_joystick_handle(event)
         self.ctrl_touch_handle(event)
         self.ctrl_voice_handle(event)
+        self.ctrl_handle()
 
     def draw_ctrl(self):
+        self.controls.fill([0, 0, 0])  # Black
+        self.control_keyboard_button.draw()
+        self.control_mouse_button.draw()
+        self.control_joystick_button.draw()
+        self.control_touch_button.draw()
+        self.control_voice_button.draw()
         self.screen.blit(self.controls, (5, 58))
 
     def draw(self):
@@ -623,11 +646,6 @@ class Gui:
             self.screen_rate = self.host.get_screen()["rate"]
         except BaseException:
             pass
-        # Get Control parameters
-        try:
-            self.mouse_visible = self.host.get_control()["mouse"]["visible"]
-        except BaseException:
-            pass
 
     def start_objects(self):
         infoln('Objects...')
@@ -640,8 +658,10 @@ class Gui:
                                  eval(i["picture"]["position"]),
                                  [130, 50],
                                  0)
-            # i["id"].draw(eval(i["picture"][i["default"]]),
-                         # eval(i["picture"]["position"]))
+            try:
+                i["timer"] = Timer(i["delay"])
+            except BaseException:
+                i["timer"] = Timer(20)
             i["state"] = i["default"]
         infoln('Imported: ' + str(len(self.device.get_objects())), 1)
 
@@ -735,7 +755,7 @@ class Gui:
         infoln('Loading images...', 1)
         self.images_load()
 
-    def start_input(self):
+    def start_ctrl(self):
         infoln('Input...')
         self.ctrl_keyboard_start()
         self.ctrl_mouse_start()
@@ -747,7 +767,7 @@ class Gui:
         self.start_host()
         self.start_screen()
         self.start_device()
-        self.start_input()
+        self.start_ctrl()
         self.start_objects()
         self.start_session()
 
@@ -756,7 +776,6 @@ class Gui:
         pygame.draw.rect(self.status_bar, (0, 29, 0),
                          (0, 0, self.status_bar.get_size()[0],
                           self.status_bar.get_size()[1]))
-
         font = pygame.font.SysFont("Digital Readout Thick Upright", 13)
 
         # Frame rate
@@ -765,7 +784,6 @@ class Gui:
         textpos = text.get_rect()
         textpos.bottomleft = self.status_bar.get_rect().bottomleft
         textpos[0] += 3
-        textpos[1] += -1
         self.status_bar.blit(text, textpos)
 
         # Device connection status
@@ -775,7 +793,6 @@ class Gui:
         textpos = text.get_rect()
         textpos.bottomright = self.status_bar.get_rect().bottomright
         textpos[0] += -3
-        textpos[1] += -1
         self.status_bar.blit(text, textpos)
 
         # General information
@@ -884,22 +901,18 @@ class Button:
         self.click = [0, 0]
         self.click[0] = position[0] + surface[0]
         self.click[1] = position[1] + surface[1]
-        self.draw()
 
     def on(self):
         self.state = True
-        self.draw()
 
     def off(self):
         self.state = False
-        self.draw()
 
     def draw(self):
         self.image.draw([self.state, 0], self.position)
 
     def toggle(self):
         self.state = not self.state
-        self.draw()
 
     def check(self, mouse):
         if mouse[0] >= self.click[0] and \

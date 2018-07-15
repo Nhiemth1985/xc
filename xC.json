@@ -5,11 +5,6 @@
         "size": "480x320",
         "full": false,
         "rate": 50
-      },
-      "control": {
-        "mouse": {
-          "visible": true
-        }
       }
     },
     "t1": {
@@ -53,11 +48,6 @@
       "comm": {
         "network": {
           "address": "192.168.0.102"
-        }
-      },
-      "control": {
-        "mouse": {
-          "visible": true
         }
       },
       "system": {
@@ -223,7 +213,7 @@
             "picture": "off"
           },
           "on": {
-            "command": "G0 Y10",
+            "command": "G0 Y*",
             "expects": "ok",
             "picture": "on"
           },
@@ -248,7 +238,7 @@
             "picture": "off"
           },
           "on": {
-            "command": "G0 Y-10",
+            "command": "G0 Y-*",
             "expects": "ok",
             "picture": "on"
           },
@@ -273,7 +263,7 @@
             "picture": "off"
           },
           "on": {
-            "command": "G0 X-10",
+            "command": "G0 X-*",
             "expects": "ok",
             "picture": "on"
           },
@@ -298,7 +288,7 @@
             "picture": "off"
           },
           "on": {
-            "command": "G0 X10",
+            "command": "G0 X*",
             "expects": "ok",
             "picture": "on"
           },
@@ -433,7 +423,7 @@
       },
       "system": {
         "arch": "arduino:avr:mega:cpu=atmega2560",
-        "desc": "Marlon 3D Printer",
+        "desc": "3D Printer",
         "logs": "Development/Marlon/Mark_I",
         "mark": "I",
         "path": "Development/Marlon/Mark_I/Marlin/Marlin",
@@ -585,7 +575,7 @@
         },
         "mouse": {
           "enable": false,
-          "speed": 0.1
+          "speed": 10
         },
         "touch": {
           "enable": true,
