@@ -77,8 +77,7 @@ class Session:
                 .get('delay', self.comm_serial_delay)
             self.comm_serial_terminal_echo = self.data["serial"]\
                 .get('terminal_echo', self.comm_serial_terminal_echo)
-            self.comm_serial_terminal_end_of_line = \
-                self.data["serial"]\
+            self.comm_serial_terminal_end_of_line = self.data["serial"]\
                 .get('terminal_end_of_line',
                      self.comm_serial_terminal_end_of_line)
         except KeyError as err:
@@ -117,13 +116,15 @@ class Session:
             return
         infoln("Connecting...", 1)
         if self.is_connected_serial():
+            sleep(self.comm_serial_delay / 1000)
             try:
-                sleep(self.comm_serial_delay / 1000)
                 self.session = Serial(self.comm_serial_path,
                                       self.comm_serial_speed,
                                       timeout=1)
+                infoln('Speed: ' + str(self.comm_serial_speed) + ' bps', 2)
             except BaseException:
-                return True
+                warnln('Operation not completed.', 2)
+                return False
             return self.session
         else:
             warnln('Device is not connected.', 2)
@@ -135,7 +136,6 @@ class Session:
             return
         if self.comm_serial_path is not None:
             infoln('Serial: ' + str(self.comm_serial_path), 1)
-            infoln('Speed: ' + str(self.comm_serial_speed) + ' bps', 1)
             infoln('Startup delay: ' + str(self.comm_serial_delay) + ' ms', 1)
         if self.comm_network_address is not None:
             infoln('Network: ' + str(self.comm_network_address), 1)
@@ -319,27 +319,10 @@ class Session:
             if self.receive() == "":
                 return 0
 
-    # def load(self, gcode_file):
-        # """Load and parse G-Code file.
-
-        # Args:
-            # file: Absolute path to G-Code file.
-
-        # Returns:
-            # 0: OK
-            # 1: Error (file not found or access denied)
-
-        # Raises:
-            # IOError: An error occurred accessing the bigtable.Table object.
-        # """
-        # infoln('Loading program file...')
-        # if gcode_file is None or gcode_file == '':
-            # erroln('Please define G-code program file.')
-            # sys.exit(True)
-        # try:
-            # f = open(gcode_file)
-            # self.gcode = f.readlines()
-            # f.close()
-        # except IOError as err:
-            # return True
-        # return False
+    def set_program(self, data):
+        """Set G-Code.
+        """
+        if not data or data == '':
+            erroln('Invalid G-code file.')
+            sys.exit(True)
+        self.gcode = data

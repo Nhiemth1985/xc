@@ -26,6 +26,7 @@
   - (control) Voice - Add support
 
 - 'TO DO':
+  - (development) Tests - Create automation
   - (control) Touch - Add support
   - (control) Touch - Ajust delay and interval options based on JSON configuration
   - (control) Joystick - Ajust speed based on JSON configuration

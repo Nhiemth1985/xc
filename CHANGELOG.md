@@ -1,6 +1,10 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## [0.55b] - 2018-07-18
+### Fixed
+- List: Was showing all devices when required to return only connected devices.
+
 ## [0.54b] - 2018-06-20
 ### Fixed
 - Pong easter egg: Ball spawn to never raize balls without angle.

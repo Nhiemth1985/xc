@@ -114,13 +114,18 @@ class Gui:
 
     def __init__(self, data):
         self.version = '0.17b'
-        self.window_title = 'xC'
-        self.window_caption = 'xC - Axes Controller'
         self.load(data)
         self.screen_full = False
         self.screen_size = "480x320"
         self.screen_rate = 30
-        self.device_id = None
+        self.reset()
+
+    def reset(self):
+        self.window_title = 'xC'
+        self.window_caption = 'xC - Axes Controller'
+        self.was_connected = False
+        self.device = DeviceProperties(self.data)
+        self.device_timer = Timer(1000)
 
     def load(self, data):
         self.data = data
@@ -529,13 +534,13 @@ class Gui:
         self.session = Session(self.device.get_comm())
         self.session.info()
         self.session.start()
-
-        if self.session.is_connected():
+        if self.session.is_connected_serial():
             while not self.session.is_ready():
                 pass
             for c in self.device.get_startup()["command"]:
                 self.session.send(c)
                 self.session.receive()
+            self.was_connected = True
 
     def draw_device(self):
         # Device name
@@ -648,7 +653,6 @@ class Gui:
             pass
 
     def start_objects(self):
-        infoln('Objects...')
         for i in self.device.get_objects():
             i["id"] = Image(self.object_area,
                             os.path.join(images_directory,
@@ -663,32 +667,40 @@ class Gui:
             except BaseException:
                 i["timer"] = Timer(20)
             i["state"] = i["default"]
-        infoln('Imported: ' + str(len(self.device.get_objects())), 1)
+        if len(self.device.get_objects()):
+            infoln('Objects...')
+            infoln('Imported: ' + str(len(self.device.get_objects())), 1)
 
     def device_set(self, id):
-        self.device_id = id
-
-    def device_load(self, device):
-        self.device = device
+        self.device.set(id)
 
     def device_check(self):
-        pass
+        if not self.device_timer.check():
+            return False
+        if not self.session.is_connected_serial() and self.was_connected:
+            self.reset()
+            self.start_device()
+            self.start_ctrl()
+            self.start_objects()
+            self.session.reset()
+        if not self.device.get_id() and self.device.detect():
+            self.reset()
+            self.start_device()
+            self.start_ctrl()
+            self.start_objects()
+            self.start_session()
 
     def start_device(self):
         infoln("Device...")
-        self.device = DeviceProperties(self.data)
-        if not self.device_id:
-            self.device_id = self.device.detect()
-        if not self.device_id:
-            return
-        self.device.set(self.device_id)
+        if not self.device.get_id():
+            self.device.detect()
         self.device.info()
-        #
-        self.window_title = self.device.system_plat + ' Mark ' + \
-            self.device.system_mark
-        self.window_caption = self.device.system_plat + ' Mark ' + \
-            self.device.system_mark + ' - ' + \
-            self.device.system_desc
+        if self.device.get_id():
+            self.window_title = self.device.system_plat + ' Mark ' + \
+                self.device.system_mark
+            self.window_caption = self.device.system_plat + ' Mark ' + \
+                self.device.system_mark + ' - ' + \
+                self.device.system_desc
 
     def start_screen(self):
         global pygame

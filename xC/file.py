@@ -5,9 +5,9 @@ Author: Marcio Pessoa <marcio@pessoa.eti.br>
 Contributors: none
 
 Change log:
-2018-07-04
+2018-07-18
         * Version: 0.02b
-        * Added:
+        * Added: Support to G-code files.
 
 2018-06-29
         * Version: 0.01b
@@ -18,44 +18,88 @@ Change log:
 import sys
 import json
 import os
+import re
 from socket import gethostbyname
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 
 
-class FileManagement:
-    def __init__(self, config):
-        self.version = '0.01b'
-        self.check()
-        self.load(config)
-        self.info()
+class File:
+    def __init__(self):
+        self.version = '0.02b'
+        self.reset()
 
-    def load(self, config):
-        self.config = config
-        # Open JSON configuration file
-        infoln('Loading configuration...')
+    def reset(self):
+        self.data = None
+
+    def load(self, file, type):
+        infoln('File: ' + str(file), 1)
+        # Open file
+        if not file:
+            erroln('File definition missing.')
+            sys.exit(True)
         try:
-            infoln('File: ' + self.config, 1)
-            f = open(self.config).read()
+            f = open(file, 'r')
         except IOError as err:
             infoln('Failed.')
             erroln(str(err))
             sys.exit(True)
-        # Import JSON data
-        infoln('Parsing JSON...')
-        try:
-            self.data = json.loads(f)
-        except ValueError as err:
-            infoln('Failed')
-            erroln(str(err))
-            infoln('Ops... there\'s something strange in your neighborhood.')
-            sys.exit(True)
-        return False
+        # Set file type and format
+        if type == 'json':
+            data = f.read()
+            self.json_load(data)
+            self.json_check()
+            self.json_info()
+        elif type == 'gcode':
+            data = f.readlines()
+            self.gcode_load(data)
+            self.gcode_check()
+            self.gcode_info()
+        f.close()
 
     def get(self):
         return self.data
 
-    def info(self):
+    def gcode_load(self, data):
+        self.reset()
+        infoln('Parsing G-code...', 1)
+        self.data = data
+
+    def gcode_check(self):
+        self.line_empty = 0
+        self.line_command = 0
+        self.line_comment = 0
+        self.line_total = 0
+        self.char_total = 0
+        for line in self.data:
+            try:
+                comment = line[re.search(';', line).span()[0]:]
+            except BaseException:
+                pass
+            if comment:
+                self.line_command += 1
+            else:
+                self.line_comment += 1
+            comment = None
+        self.line_total = len(self.data)
+        self.char_total = len(''.join(self.data))
+
+    def gcode_info(self):
+        infoln('Commands: ' + str(self.line_command) + ' lines', 2)
+        infoln('Comments: ' + str(self.line_comment) + ' lines', 2)
+        info('Total: ' + str(self.line_total) + ' lines', 2)
+        infoln(' (characters: ' + str(self.char_total) + ')')
+
+    def json_load(self, data):
+        self.reset()
+        infoln('Parsing JSON...', 1)
+        try:
+            self.data = json.loads(data)
+        except ValueError as err:
+            erroln(str(err))
+            sys.exit(True)
+
+    def json_info(self):
         hosts = 0
         devices = 0
         try:
@@ -66,8 +110,8 @@ class FileManagement:
             devices = len(self.data["device"])
         except BaseException:
             pass
-        infoln('Hosts: ' + str(hosts), 1)
-        infoln('Devices: ' + str(devices), 1)
+        infoln('Hosts: ' + str(hosts), 2)
+        infoln('Devices: ' + str(devices), 2)
 
-    def check(self):
+    def json_check(self):
         pass

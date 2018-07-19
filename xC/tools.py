@@ -75,9 +75,9 @@ class DevTools:
             .get("path", self.device_path)
         self.device_speed = self.data["comm"]["serial"]\
             .get("speed", self.device_speed)
-        self.terminal_echo = self.data["comm"]\
+        self.terminal_echo = self.data["comm"]["serial"]\
             .get("terminal_echo", self.terminal_echo)
-        self.terminal_end_of_line = self.data["comm"]\
+        self.terminal_end_of_line = self.data["comm"]["serial"]\
             .get("terminal_end_of_line", self.terminal_end_of_line)
         self.network_address = self.data["comm"].get("arch",
                                                      self.network_address)

@@ -18,13 +18,11 @@ try:
     import argparse
     import os.path
     import time
-    # Ubuntu manually installed modules
-    import serial
     # Myself modules
     from xC.device import DeviceProperties
     from xC.echo import verbose, level, \
         echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
-    from xC.file import FileManagement
+    from xC.file import File
     from xC.host import HostProperties
     from xC.session import Session
     from xC.tools import DevTools
@@ -44,8 +42,8 @@ class UserArgumentParser():
 
     def __init__(self):
         self.program_name = "xc"
-        self.program_version = "0.54b"
-        self.program_date = "2018-06-20"
+        self.program_version = "0.55b"
+        self.program_date = "2018-07-18"
         self.program_description = "xC - aXes Controller"
         self.program_copyright = "Copyright (c) 2014-2018 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
@@ -57,10 +55,10 @@ class UserArgumentParser():
         header = ('xc <command> [<args>]\n\n' +
                   'commands:\n' +
                   '  gui            graphical user interface\n' +
-                  '  cli            command line interface\n' +
                   '  terminal       connect to device terminal\n' +
                   '  verify         check firmware code sintax\n' +
                   '  upload         upload firmware to device\n' +
+                  '  run            run a program\n' +
                   '  list           list devices\n\n')
         footer = (self.program_copyright + '\n' +
                   'License: ' + self.program_license + '\n' +
@@ -69,9 +67,9 @@ class UserArgumentParser():
         examples = ('examples:\n' +
                     '  xc list\n' +
                     '  xc verify --id x6 --verbosity=3\n' +
-                    '  xc upload -i envmon --interface=network\n' +
+                    '  xc upload\n' +
                     '  xc gui --id x2\n' +
-                    '  xc cli -i x6 -p file.gcode -r\n')
+                    '  xc run -i x6 -p file.gcode\n')
         version = (self.program_name + " " + self.program_version + " (" +
                    self.program_date + ")" + '' + '\n')
         epilog = (examples + '\n' + footer)
@@ -95,18 +93,18 @@ class UserArgumentParser():
             sys.exit(True)
         getattr(self, args.command)()
 
-    def cli(self):
+    def run(self):
         parser = argparse.ArgumentParser(
-            prog=self.program_name + ' cli',
+            prog=self.program_name + ' run',
             description='connect to device terminal')
         parser.add_argument(
             '-i', '--id',
             help='device ID')
-        parser.add_argument(
-            '--interface',
-            default='serial',
-            choices=['serial', 'network'],
-            help='communication interface (default: serial)')
+        # parser.add_argument(
+            # '--interface',
+            # default='serial',
+            # choices=['serial', 'network'],
+            # help='communication interface (default: serial)')
         # parser.add_argument(
             # '-l', '--log', metavar='file',
             # help='log file')
@@ -120,23 +118,20 @@ class UserArgumentParser():
             # '-r', '--run', action="store_true",
             # help='run program')
         parser.add_argument(
-            '--verbosity', type=int,
+            '-v', '--verbosity', type=int,
             default=1,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
                  '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
-        # Start CLI
-        from xC.cli import Cli
-        if self.__connection(args.id, args.interface):
-            sys.exit(True)
-        # Start G-code parser
-        gcode = CommandParser(self.ser)
-        if gcode.load(args.program):
-            erroln("Fail reading file: " + args.program)
-            sys.exit(True)
-        gcode.run()
+        self.__load_configuration()
+        infoln('Loading program...')
+        program = File()
+        program.load(args.program, 'gcode')
+        self.__connection(args.id, 'serial')
+        self.session.set_program(program.get())
+        self.session.run()
         sys.exit(False)
 
     def gui(self):
@@ -146,11 +141,11 @@ class UserArgumentParser():
         parser.add_argument(
             '-i', '--id',
             help='device ID')
-        parser.add_argument(
-            '--interface',
-            default='serial',
-            choices=['serial', 'network'],
-            help='communication interface (default: serial)')
+        # parser.add_argument(
+            # '--interface',
+            # default='serial',
+            # choices=['serial', 'network'],
+            # help='communication interface (default: serial)')
         # parser.add_argument(
             # '-l', '--log', metavar='file',
             # help='log file')
@@ -164,19 +159,17 @@ class UserArgumentParser():
             # '-r', '--run', action="store_true",
             # help='run program')
         parser.add_argument(
-            '--verbosity', type=int,
+            '-v', '--verbosity', type=int,
             default=1,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
                  '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
-        config = FileManagement(self.config_file)
-        # Start GUI
         from xC.gui import Gui
-        gui = Gui(config.get())
-        if args.id:
-            gui.device_set(args.id)
+        self.__load_configuration()
+        gui = Gui(self.config.get())
+        gui.device_set(args.id)
         gui.start()
         gui.run()
         sys.exit(False)
@@ -194,7 +187,7 @@ class UserArgumentParser():
             choices=['serial', 'network'],
             help='communication interface (default: serial)')
         parser.add_argument(
-            '--verbosity', type=int,
+            '-v', '--verbosity', type=int,
             default=1,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
@@ -215,7 +208,7 @@ class UserArgumentParser():
             '-d', '--date', action="store_true",
             help='display date')
         parser.add_argument(
-            '--verbosity', type=int,
+            '-v', '--verbosity', type=int,
             default=1,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
@@ -241,7 +234,7 @@ class UserArgumentParser():
             choices=['serial', 'network'],
             help='communication interface (default: serial)')
         parser.add_argument(
-            '--verbosity', type=int,
+            '-v', '--verbosity', type=int,
             default=1,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
@@ -258,21 +251,21 @@ class UserArgumentParser():
         parser.add_argument(
             '-c', '--connected', action="store_true",
             help='show only connected devices')
+        # parser.add_argument(
+            # '--interface',
+            # default='all',
+            # choices=['all', 'serial', 'network'],
+            # help='communication interface (default: all)')
         parser.add_argument(
-            '--interface',
-            default='all',
-            choices=['all', 'serial', 'network'],
-            help='communication interface (default: all)')
-        parser.add_argument(
-            '--verbosity', type=int,
+            '-v', '--verbosity', type=int,
             default=1,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
                  '0 Quiet (return number of devices), 1 IDs (default),' +
                  ' 2 Names, 3 Status, 4 Description')
         args = parser.parse_args(sys.argv[2:])
-        config = FileManagement(self.config_file)
-        device = DeviceProperties(config.get())
+        self.__load_configuration()
+        device = DeviceProperties(self.config.get())
         if args.verbosity >= 2:
             echo(' Id\tName\tMark')
         if args.verbosity >= 3:
@@ -297,13 +290,14 @@ class UserArgumentParser():
                 continue
             if args.verbosity >= 4 or args.connected:
                 interface = 'Offline'
+                args.interface = 'serial'  # ***** Remove ASAP *****
                 if args.interface == 'serial' or args.interface == 'all':
                     if session.is_connected_serial():
                         interface = "Serial"
                 if args.interface == 'network' or args.interface == 'all':
                     if session.is_connected_network():
                         interface = "Network"
-            if args.connected and interface == '-':
+            if args.connected and interface == 'Offline':
                 continue
             if args.verbosity >= 1:
                 echo(id)
@@ -323,66 +317,58 @@ class UserArgumentParser():
             c += 1
         sys.exit(c)
 
+    def __load_configuration(self):
+        infoln('Loading configuration...')
+        self.config = File()
+        self.config.load(self.config_file, 'json')
+
     def __connection(self, id=None, interface=None):
-        # Load device configuration file
-        config = FileManagement(self.config_file)
-        self.device = DeviceProperties(config.get())
-        # Select device
-        if id:
-            self.id = id
-            self.device.select(self.id)
-        else:
-            if self.device.select_auto():
-                self.device.info()
-            else:
-                return False
-        # Connect to device
+        self.__device_select(id)
         if interface:
             self.interface = interface
-            infoln("Connecting...")
+            self.session = Session(self.device.get_comm())
+            self.session.info()
             if self.interface == 'serial':
                 if self.session.is_connected_serial():
-                    self.ser = serial.Serial(
-                        self.device.comm_serial_path,
-                        self.device.comm_serial_speed,
-                        timeout=1)
+                    self.session.start()
                 else:
                     warnln('Device is not connected.', 1)
-                    return True
+                    sys.exit(True)
             elif self.interface == 'network':
                 if self.device.comm_network_address is None:
                     erroln("Interface not configured for this device.")
-                    return True
+                    sys.exit(True)
                 if not self.device.is_network_connected():
                     erroln('Device is not reacheable: ' +
                            str(self.device.comm_network_address))
-                    return True
+                    sys.exit(True)
 
-    def __dev_tools(self, id=None, date=False, interface=None):
+    def __device_select(self, id=None):
+        infoln('Device...')
+        self.device = DeviceProperties(self.config.get())
         if id:
             self.id = id
-        if interface:
-            self.interface = interface
-        if date:
-            infoln('Started at: ' + time.strftime('%Y-%m-%d %H:%M:%S'))
-        # Load device configuration file
-        config = FileManagement(self.config_file)
-        infoln('Device...')
-        self.device = DeviceProperties(config.get())
-        if self.id is None:
-            self.id = self.device.detect()
-        else:
             self.device.set(self.id)
+        else:
+            self.id = self.device.detect()
         if not self.id:
             erroln('Device not selected.', 1)
             sys.exit(True)
         self.device.info()
+
+    def __dev_tools(self, id=None, date=False, interface=None):
+        if date:
+            infoln('Started at: ' + time.strftime('%Y-%m-%d %H:%M:%S'))
+        if interface:
+            self.interface = interface
+        self.__load_configuration()
+        self.__device_select(id)
         self.project = DevTools(self.device.get_id())
         self.project.info()
         self.session = Session(self.device.get_comm())
         self.session.info()
         if self.interface:
-            infoln("Connecting...", 1)
+            # infoln("Connecting...", 1)
             if self.interface == 'serial':
                 if not self.session.is_connected_serial():
                     erroln('Serial device is not connected.', 2)

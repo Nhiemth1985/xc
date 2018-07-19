@@ -12,9 +12,10 @@
 #   xc -h
 # 
 # Change log:
-# 2018-06-05
-#          * Bug fix: startup on xCm2.
-# 
+# 2018-07-18
+#          * Bug fix: Not returning the xc.pyc exit status.
+#          * Bug fix: Not undestanding -v option.
+#
 # 2017-05-22
 #          * Bug fix: Supress SDL verbose messages.
 # 
@@ -32,23 +33,10 @@ readonly WORK_FILE='xc.pyc'
 command="gui"
 verbosity=4
 
-# Enable full screen mode on xc appliance
-#case "$HOSTNAME" in
-  #'xCm1')
-    #arguments=(--fullscreen)
-    #;;
-  #'xCm2')
-    #arguments=(--fullscreen --screen 480x320)
-    #;;
-  #*)
-    #arguments=(--screen 800x480)
-    #;;
-#esac
-
 # Identify user defined verbosity
 declare -a args=($@)
 for (( i = 0; i < ${#args[*]}; i++ )); do
-  if [ "${args[$i]}" == "--verbosity" ]; then
+  if [ "${args[$i]}" == "--verbosity" ] || [ "${args[$i]}" == "-v" ]; then
     verbosity=${args[$i+1]}
     break
   fi
@@ -60,12 +48,13 @@ done
 
 # Apply desired command
 if [ "$#" -eq 0 ]; then
-  #python "$WORK_DIR"/"$WORK_FILE" "$command" "${arguments[@]}" 
   python "$WORK_DIR"/"$WORK_FILE" "$command" \
     --verbosity="$verbosity" | \
     grep -v 'SDL_'
+  exit ${PIPESTATUS[0]}
 else
   python "$WORK_DIR"/"$WORK_FILE" "$@" \
     --verbosity="$verbosity" | \
     grep -v 'SDL_'
+  exit ${PIPESTATUS[0]}
 fi

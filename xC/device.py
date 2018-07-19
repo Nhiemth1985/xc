@@ -82,7 +82,10 @@ class DeviceProperties:
         return enable
 
     def get_id(self):
-        return self.data["device"][self.id]
+        try:
+            return self.data["device"][self.id]
+        except BaseException:
+            return None
 
     def set(self, id):
         """Set a device to be used.
@@ -93,9 +96,9 @@ class DeviceProperties:
             element: An element name (like x1, x2, x6, etc.).
         """
         self.reset()
-        if not id:
-            return
         self.id = id
+        if not self.id:
+            return
         # Is device present in configuration file?
         try:
             check_id = self.data["device"][id]
@@ -104,12 +107,12 @@ class DeviceProperties:
             sys.exit(True)
         # Check mandatory keys.
         try:
-            self.system_plat = self.data["device"][id]["system"]["plat"]
-            self.system_mark = self.data["device"][id]["system"]["mark"]
-            self.system_desc = self.data["device"][id]["system"]["desc"]
-            self.system_arch = self.data["device"][id]["system"]["arch"]
-            self.system_path = self.data["device"][id]["system"]['path']
-            self.system_logs = self.data["device"][id]["system"]['logs']
+            self.system_plat = self.data["device"][self.id]["system"]["plat"]
+            self.system_mark = self.data["device"][self.id]["system"]["mark"]
+            self.system_desc = self.data["device"][self.id]["system"]["desc"]
+            self.system_arch = self.data["device"][self.id]["system"]["arch"]
+            self.system_path = self.data["device"][self.id]["system"]['path']
+            self.system_logs = self.data["device"][self.id]["system"]['logs']
         except KeyError as err:
             erroln('Mandatory key is absent: %s' % (err))
             sys.exit(True)
@@ -158,12 +161,6 @@ class DeviceProperties:
         except BaseException:
             return []
 
-    def get_endup(self):
-        try:
-            return self.data["device"][self.id]["endup"]
-        except BaseException:
-            return []
-
     def get_control(self):
         try:
             return self.data["device"][self.id]["control"]
@@ -197,7 +194,7 @@ class DeviceProperties:
             info(i)["command"]
 
     def detect(self):
-        info('Detected: ', 1)
+        self.reset()
         ids = []
         for id in self.list():
             self.set(id)
@@ -206,17 +203,10 @@ class DeviceProperties:
                 continue
             if session.is_connected_serial():
                 ids.append(str(id).encode("utf-8"))
-        if len(ids) > 1:
-            self.id = None
-            infoln(str(ids))
-            warnln('Too much connected devices.', 1)
-            infoln('Please, connect only one device.', 1)
-            return None
-        elif len(ids) == 1:
-            self.id = ids[0]
-            infoln(str(ids))
-            return self.id
+            else:
+                session.reset()
+        if len(ids) == 1:
+            self.set(ids[0])
         else:
-            self.id = None
-            infoln(str(self.id))
-            return self.id
+            self.set(None)
+        return ids

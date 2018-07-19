@@ -94,7 +94,7 @@
           "speed": 115200,
           "terminal_echo": true,
           "terminal_end_of_line": "LF",
-          "delay": 1500
+          "delay": 400
         }
       },
       "control": {
@@ -559,12 +559,14 @@
         "serial": {
           "path": "/dev/serial/by-id/usb-Arduino_LLC_Arduino_Leonardo-if00",
           "speed": 9600,
-          "delay": 200
+          "delay": 200,
+          "terminal_echo": true,
+          "terminal_end_of_line": "LF"
         }
       },
       "control": {
         "joystick": {
-          "enable": true,
+          "enable": false,
           "delay": 100,
           "speed": 10
         },
@@ -578,7 +580,7 @@
           "speed": 10
         },
         "touch": {
-          "enable": true,
+          "enable": false,
           "delay": 100,
           "speed": 10
         }
@@ -719,8 +721,9 @@
       "startup": {
         "command": [
           "M111  ; Debug mode",
-          "M80  ; Power on",
-          "G91  ; Relative programming"
+          "G91  ; Relative programming",
+          "M15  ; System information",
+          "M81  ; Power on"
         ]
       },
       "system": {
@@ -738,7 +741,7 @@
         "serial": {
           "path": "/dev/serial/by-id/usb-RLRduino__www.rlrobotics.ind.br__06f8_741363339323512171F0-if00",
           "speed": 115200,
-          "delay": 2000
+          "delay": 200
         }
       },
       "control": {
