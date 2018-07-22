@@ -46,7 +46,7 @@ class DevTools:
     def __init__(self, data):
         """docstring"""
         self.version = '0.05b'
-        self.terminal_program = "miniterm"
+        self.terminal_program = "miniterm.py"
         self.arduino_program = "arduino"
         self.load(data)
         self.set()

@@ -5,11 +5,15 @@
         "size": "480x320",
         "full": false,
         "rate": 50
+      },
+      "screensaver": {
+        "time": 120,
+        "type": "black"
       }
     },
     "t1": {
       "screen": {
-        "size": "800x480",
+        "size": "480x320",
         "full": false,
         "rate": 60
       }
@@ -44,6 +48,10 @@
         "size": "480x320",
         "full": true,
         "rate": 30
+      },
+      "screensaver": {
+        "time": 60,
+        "type": "random"
       },
       "comm": {
         "network": {
@@ -125,6 +133,10 @@
             "command": "M2  ; Program end",
             "expects": "ok"
           }
+        ],
+        "command": [
+          "G28  ; Go to home position",
+          "M2  ; Program end"
         ]
       },
       "object": [

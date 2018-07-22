@@ -101,6 +101,7 @@ from xC.device import DeviceProperties
 from xC.host import HostProperties
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
+from xC.screensaver import Screensaver
 from xC.session import Session
 from xC.timer import Timer
 from xC.pong import Pong
@@ -115,17 +116,23 @@ class Gui:
     def __init__(self, data):
         self.version = '0.17b'
         self.load(data)
+        self.set()
+
+    def set(self):
+        self.reset()
         self.screen_full = False
         self.screen_size = "480x320"
         self.screen_rate = 30
-        self.reset()
+        self.screensaver_time = 60
+        self.screensaver_type = 'black'
+        self.device_timer = Timer(1000)
+        self.device = DeviceProperties(self.data)
 
     def reset(self):
         self.window_title = 'xC'
         self.window_caption = 'xC - Axes Controller'
         self.was_connected = False
-        self.device = DeviceProperties(self.data)
-        self.device_timer = Timer(1000)
+        self.connected_devices = 0
 
     def load(self, data):
         self.data = data
@@ -368,7 +375,6 @@ class Gui:
         pygame.key.set_repeat(1, 100)
 
     def ctrl_mouse_stop(self):
-        pygame.mouse.set_visible(True)
         pygame.event.set_grab(False)
 
     def ctrl_mouse_cursor(self, state):
@@ -452,7 +458,7 @@ class Gui:
             infoln('None')
 
     def ctrl_touch_stop(self):
-        pygame.mouse.set_visible(True)
+        pass
 
     def ctrl_touch_handle(self, event):
         # Program behavior
@@ -536,10 +542,10 @@ class Gui:
         self.session.start()
         if self.session.is_connected_serial():
             while not self.session.is_ready():
-                pass
+                continue
             for c in self.device.get_startup()["command"]:
-                self.session.send(c)
-                self.session.receive()
+                self.session.send_wait(c)
+                self.session.clear()
             self.was_connected = True
 
     def draw_device(self):
@@ -551,12 +557,29 @@ class Gui:
         textpos[1] += 10
         self.screen.blit(text, textpos)
 
-    def stop(self):
+    def stop_session(self):
+        if not self.session.is_connected_serial():
+            return
+        infoln('Session...')
+        while not self.session.is_ready():
+            continue
+        infoln('Terminating...', 1)
+        for c in self.device.get_endup()["command"]:
+            self.session.send_wait(c)
+            self.session.clear()
+        self.session.stop()
+        self.was_connected = False
+
+    def stop_ctrl(self):
         self.ctrl_joystick_stop()
         self.ctrl_keyboard_stop()
         self.ctrl_mouse_stop()
         self.ctrl_touch_stop()
         self.ctrl_voice_stop()
+
+    def stop(self):
+        self.stop_ctrl()
+        self.stop_session()
         self.host.stop()
         pygame.quit()
 
@@ -612,6 +635,10 @@ class Gui:
                     self.session.send_wait(command)
 
     def ctrl_check(self, event):
+        self.screensaver_timer.reset()
+        if self.screensaver.running:
+            self.screensaver.stop()
+            return
         self.ctrl_keyboard_handle(event)
         self.ctrl_mouse_handle(event)
         self.ctrl_joystick_handle(event)
@@ -628,6 +655,13 @@ class Gui:
         self.control_voice_button.draw()
         self.screen.blit(self.controls, (5, 58))
 
+    def draw_screensaver(self):
+        if self.screensaver_timer.check() and not self.screensaver.running:
+            self.screensaver.set_type(self.screensaver_type)
+            self.screensaver.start()
+        if self.screensaver.running:
+            self.screensaver.run()
+
     def draw(self):
         self.screen.blit(self.background, (0, 0))
         if self.pong.running:
@@ -637,6 +671,7 @@ class Gui:
             self.draw_object()
             self.draw_device()
         self.draw_status()
+        self.draw_screensaver()
         self.clock.tick(self.screen_rate)
         pygame.display.flip()
 
@@ -649,6 +684,14 @@ class Gui:
             self.screen_full = self.host.get_screen()["full"]
             self.screen_size = self.host.get_screen()["size"]
             self.screen_rate = self.host.get_screen()["rate"]
+        except BaseException:
+            pass
+        # Get Screensaver parameters
+        try:
+            self.screensaver_time = self.host.get_screensaver() \
+                                        .get('time', self.screensaver_time)
+            self.screensaver_type = self.host.get_screensaver() \
+                                        .get('type', self.screensaver_type)
         except BaseException:
             pass
 
@@ -677,18 +720,29 @@ class Gui:
     def device_check(self):
         if not self.device_timer.check():
             return False
+        # Reset all data if device was unpluged.
         if not self.session.is_connected_serial() and self.was_connected:
             self.reset()
             self.start_device()
             self.start_ctrl()
             self.start_objects()
             self.session.reset()
-        if not self.device.get_id() and self.device.detect():
-            self.reset()
-            self.start_device()
-            self.start_ctrl()
-            self.start_objects()
-            self.start_session()
+        if self.device.get_id() is None:
+            # How many devices are connected?
+            n = self.device.detect()
+            # If is just one...
+            if len(n) == 1:
+                # Confiure a new device.
+                self.start_device()
+                self.start_ctrl()
+                self.start_objects()
+                self.start_session()
+                return
+            # Abort if are more than one.
+            elif len(n) > 1 and (len(n) != self.connected_devices):
+                self.connected_devices = len(n)
+                infoln('Too many connected devices: ' + str(n), 1)
+                return
 
     def start_device(self):
         infoln("Device...")
@@ -762,6 +816,11 @@ class Gui:
 
         # Pong
         self.pong = Pong(self.screen)
+
+        # Screensaver
+        self.screensaver = Screensaver(self.screen)
+        self.screensaver_timer = Timer(1000 * self.screensaver_time,
+                                       type='COUNTDOWN')
 
         # Images
         infoln('Loading images...', 1)

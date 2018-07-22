@@ -145,14 +145,14 @@ class Pong:
         upper left
         """
         self.set()
-        self.ball_velocity[0] = (random.randrange(120, 240) / 60.0 *
+        self.ball_velocity[0] = (random.randrange(100, 200) / 60.0 *
                                  self.court_side)
-        self.ball_velocity[1] = (random.randrange(-100, 100) / 60.0) * -1
+        self.ball_velocity[1] = 0
         # Make sure ball will never run without an angle
         while self.ball_velocity[1] == 0:
-            self.ball_velocity[1] = (random.randrange(-180, 180) / 60.0) * -1
+            self.ball_velocity[1] = (random.randrange(-100, 100) / 60.0) * -1
         if self.ball_velocity[1] >= -0.5 or self.ball_velocity[1] <= 0.5:
-            self.ball_velocity[1] *= 3
+            self.ball_velocity[1] *= 2
 
     def draw_court(self):
         # Clear court

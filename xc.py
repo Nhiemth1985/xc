@@ -42,8 +42,8 @@ class UserArgumentParser():
 
     def __init__(self):
         self.program_name = "xc"
-        self.program_version = "0.55b"
-        self.program_date = "2018-07-18"
+        self.program_version = "0.56b"
+        self.program_date = "2018-07-22"
         self.program_description = "xC - aXes Controller"
         self.program_copyright = "Copyright (c) 2014-2018 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
@@ -70,8 +70,8 @@ class UserArgumentParser():
                     '  xc upload\n' +
                     '  xc gui --id x2\n' +
                     '  xc run -i x6 -p file.gcode\n')
-        version = (self.program_name + " " + self.program_version + " (" +
-                   self.program_date + ")" + '' + '\n')
+        self.version = (self.program_name + " " + self.program_version + " (" +
+                        self.program_date + ")")
         epilog = (examples + '\n' + footer)
         parser = argparse.ArgumentParser(
             prog=self.program_name,
@@ -81,7 +81,7 @@ class UserArgumentParser():
             usage=header)
         parser.add_argument('command', help='command to run')
         parser.add_argument('-v', '--version', action='version',
-                            version=version,
+                            version=self.version,
                             help='show version information and exit')
         if len(sys.argv) < 2:
             self.gui()
@@ -125,6 +125,7 @@ class UserArgumentParser():
                  '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
+        infoln(self.version)
         self.__load_configuration()
         infoln('Loading program...')
         program = File()
@@ -166,6 +167,7 @@ class UserArgumentParser():
                  '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
+        infoln(self.version)
         from xC.gui import Gui
         self.__load_configuration()
         gui = Gui(self.config.get())
@@ -194,6 +196,7 @@ class UserArgumentParser():
                  '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
+        infoln(self.version)
         self.__dev_tools(args.id, args.interface)
         self.project.terminal()
 
@@ -215,6 +218,7 @@ class UserArgumentParser():
                  '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
+        infoln(self.version)
         self.__dev_tools(args.id, args.date)
         self.project.verify()
 
@@ -241,6 +245,7 @@ class UserArgumentParser():
                  '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
+        infoln(self.version)
         self.__dev_tools(args.id, args.date, args.interface)
         self.project.upload()
 
@@ -290,7 +295,7 @@ class UserArgumentParser():
                 continue
             if args.verbosity >= 4 or args.connected:
                 interface = 'Offline'
-                args.interface = 'serial'  # ***** Remove ASAP *****
+                args.interface = 'serial'  # TODO: ***** Remove ASAP *****
                 if args.interface == 'serial' or args.interface == 'all':
                     if session.is_connected_serial():
                         interface = "Serial"
@@ -349,12 +354,19 @@ class UserArgumentParser():
         if id:
             self.id = id
             self.device.set(self.id)
-        else:
-            self.id = self.device.detect()
-        if not self.id:
-            erroln('Device not selected.', 1)
+            self.device.info()
+            return
+        n = self.device.detect()
+        if len(n) < 1:
+            erroln('Device not connected.', 1)
             sys.exit(True)
-        self.device.info()
+        if len(n) > 1:
+            erroln('Too many connected devices: ' + str(n), 1)
+            sys.exit(True)
+        if len(n) == 1:
+            self.id = self.device.get_id()
+            self.device.info()
+            return
 
     def __dev_tools(self, id=None, date=False, interface=None):
         if date:

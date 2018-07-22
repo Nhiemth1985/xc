@@ -109,22 +109,22 @@ class Session:
             return False
 
     def stop(self):
-        pass
+        self.reset()
 
     def start(self):
         if not self.data:
             return
         infoln("Connecting...", 1)
         if self.is_connected_serial():
-            sleep(self.comm_serial_delay / 1000)
             try:
                 self.session = Serial(self.comm_serial_path,
                                       self.comm_serial_speed,
                                       timeout=1)
-                infoln('Speed: ' + str(self.comm_serial_speed) + ' bps', 2)
             except BaseException:
                 warnln('Operation not completed.', 2)
                 return False
+            sleep(self.comm_serial_delay / 1000)
+            infoln('Speed: ' + str(self.comm_serial_speed) + ' bps', 2)
             return self.session
         else:
             warnln('Device is not connected.', 2)
@@ -256,7 +256,7 @@ class Session:
             received = self.session.readline().rstrip()
         except IOError as err:
             return True
-        if received == "" or received == "\n" or received == "\r":
+        if received == "":  # or received == "\n" or received == "\r":
             return False
         # Change color based on device response ('ok' or 'nok')
         if re.search('nok', str(received)):
@@ -315,9 +315,8 @@ class Session:
 
     def clear(self):
         """ Clear message buffer """
-        while True:
-            if self.receive() == "":
-                return 0
+        while self.receive():
+            continue
 
     def set_program(self, data):
         """Set G-Code.

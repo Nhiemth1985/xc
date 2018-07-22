@@ -2,7 +2,6 @@
   - (all) Multi language support
   - (all) output file - Create this feature
   - (all) log file - Create this feature
-  - (all) Comando para ejetar dispositivo - Deve executar a sequencia "endup"
   - (gui) Centralizar objetos na tela
   - (gui) Colocar do lado direito da tela opcoes para mudar device e ejetar device
   - (control) Joystick - Auto detect in runtime
@@ -27,23 +26,25 @@
 
 - 'TO DO':
   - (development) Tests - Create automation
-  - (control) Touch - Add support
-  - (control) Touch - Ajust delay and interval options based on JSON configuration
   - (control) Joystick - Ajust speed based on JSON configuration
   - (control) Keyboard - Ajust delay and interval options based on JSON configuration
   - (control) Mouse - Ajust speed based on JSON configuration
 
 - 'DOING':
-  - (all) Session - Auto detect connected devices
   - (gui) Status - Display temeperature for x86 hosts
-  - (SO) Fix start up xc script
 
 - 'TESTING':
+  - (gui) Screen saver - Add screen saver function
+  - (control) All - Run "endup" sequence when eject or terminate xc.
+
+- 'DONE':
+  - (control) Touch - Ajust delay and interval options based on JSON configuration
+  - (control) Touch - Add support
+  - (all) Session - Auto detect connected devices
+  - (SO) Fix start up xc script
   - (all) Show comments with different colors
   - (all) DeviceProperties - Add "endup" JSON section
   - (gui) Remove border
-
-- 'DONE':
   - (SO) NRDP - Communication to server fails over HTTPS
   - (control) Keyboard - Auto detection
   - (control) Mouse - Auto detection

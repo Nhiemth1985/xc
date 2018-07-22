@@ -194,6 +194,12 @@ class HostProperties:
         except BaseException:
             pass
 
+    def get_screensaver(self):
+        try:
+            return self.data[self.name]["screensaver"]
+        except BaseException:
+            pass
+
     def get_control(self):
         try:
             return self.data[self.name]["control"]

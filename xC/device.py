@@ -207,6 +207,8 @@ class DeviceProperties:
                 session.reset()
         if len(ids) == 1:
             self.set(ids[0])
-        else:
+        elif len(ids) < 1:
             self.set(None)
+        elif len(ids) > 1:
+            self.set(False)
         return ids
