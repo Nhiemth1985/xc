@@ -9,6 +9,9 @@
       "screensaver": {
         "time": 120,
         "type": "black"
+      },
+      "resources": {
+        "temperature_sensor": true
       }
     },
     "t1": {

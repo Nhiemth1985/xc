@@ -14,7 +14,8 @@ import sys
 import json
 import os
 import platform
-from psutil import virtual_memory
+from psutil import virtual_memory, sensors_temperatures
+import re
 from socket import gethostbyname
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
@@ -92,10 +93,39 @@ class HostProperties:
     def run(self):
         if self.machine == 'armv7l':
             self.run_armv7l()
+        if self.machine == 'x86_64':
+            self.run_x86_64()
+
+    def start_x86_64(self):
+        self.timer = Timer(1000)
+        # Temperature sensor
+        status = 'Absent'
+        try:
+            if self.data[self.name]["resources"]["temperature_sensor"]:
+                self.temperature = 0
+                status = 'Present'
+        except BaseException:
+            pass
+        infoln('Temperature sensor: ' + status, 1)
 
     def start(self):
         if self.machine == 'armv7l':
             self.start_armv7l()
+        if self.machine == 'x86_64':
+            self.start_x86_64()
+
+    def run_x86_64(self):
+        if not self.timer.check():
+            return False
+        # Temperature sensor
+        try:
+            if self.data[self.name]["resources"]["temperature_sensor"]:
+                payload = str(sensors_temperatures()['acpitz']).split(',')[1]
+                temperature = re.sub(r' [a-z]*=', '', payload)
+                self.temperature = str("{:1.0f} C".
+                                       format(float(temperature)))
+        except BaseException:
+            pass
 
     def run_armv7l(self):
         # Blink Status LED
@@ -141,9 +171,21 @@ class HostProperties:
             pass
         return status
 
+    def status_x86_64(self):
+        status = ''
+        self.run_x86_64()
+        try:
+            if self.data[self.name]["resources"]["temperature_sensor"]:
+                status = self.temperature
+        except BaseException:
+            pass
+        return status
+
     def status(self):
         if self.machine == 'armv7l':
             return self.status_armv7l()
+        if self.machine == 'x86_64':
+            return self.status_x86_64()
         return ''
 
     def start_armv7l(self):
@@ -209,6 +251,11 @@ class HostProperties:
     def stop(self):
         if self.machine == 'armv7l':
             self.stop_armv7l()
+        if self.machine == 'x86_64':
+            self.stop_x86_64()
+
+    def stop_x86_64(self):
+        pass
 
     def stop_armv7l(self):
         try:
