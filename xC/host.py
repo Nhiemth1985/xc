@@ -5,9 +5,13 @@ Author: Marcio Pessoa <marcio@pessoa.eti.br>
 Contributors: none
 
 Change log:
+2018-07-22
+        * Version: 0.02b
+        * Added: Suport to x86_64.
+
 2018-06-30
         * Version: 0.01b
-        * Added: Parse host properties from JSON file.
+        * Added: First version.
 """
 
 import sys
@@ -31,7 +35,7 @@ except BaseException:
 
 class HostProperties:
     def __init__(self, data):
-        self.version = '0.01b'
+        self.version = '0.02b'
         self.load(data)
         self.set()
 
