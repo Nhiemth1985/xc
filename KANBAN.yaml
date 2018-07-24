@@ -1,17 +1,18 @@
+---
 - 'BACKLOG':
+  - (control) Joystick - Ajust speed based on JSON configuration
+  - (control) Keyboard - Ajust delay and interval based on JSON configuration
+  - (control) Mouse - Ajust speed based on JSON configuration
   - (all) Multi language support
-  - (all) output file - Create this feature
-  - (all) log file - Create this feature
   - (gui) Centralizar objetos na tela
-  - (gui) Colocar do lado direito da tela opcoes para mudar device e ejetar device
   - (control) Joystick - Auto detect in runtime
   - (control) Mouse - Buttons - Add support
   - (control) Mouse - Wheel - Add support
   - (control) Joystick - Hat support
-  - (control) Joystick - Bug #1
-  - (control) Mouse - Bug #2
-  - (control) Joystick - Bug #4
-  - (all) CommandParser.run() - Bug #3
+  - (control) Joystick - Bug 1
+  - (control) Mouse - Bug 2
+  - (control) Joystick - Bug 4
+  - (all) CommandParser.run() - Bug 3
   - (gui) Unified Control System - Join all commands from all controls in a single command (G0 X1 Y4 U19 - G0 X3 W12 = G0 X4 Y4 U19 W12)
   - (gui) 3D model - Design class
   - (gui) 3D model - x1
@@ -25,20 +26,20 @@
   - (control) Voice - Add support
 
 - 'TO DO':
+  - (gui) Colocar do lado direito da tela para mudar device e ejetar device
   - (development) Tests - Create automation
-  - (control) Joystick - Ajust speed based on JSON configuration
-  - (control) Keyboard - Ajust delay and interval options based on JSON configuration
-  - (control) Mouse - Ajust speed based on JSON configuration
 
 - 'DOING':
-  - (gui) Status - Display temeperature for x86 hosts
+  - (all) output file - Create this feature
+  - (all) log file - Create this feature
 
 - 'TESTING':
+  - (gui) Status - Display temeperature for x86 hosts
   - (gui) Screen saver - Add screen saver function
   - (control) All - Run "endup" sequence when eject or terminate xc.
 
 - 'DONE':
-  - (control) Touch - Ajust delay and interval options based on JSON configuration
+  - (control) Touch - Ajust delay and interval based on JSON configuration
   - (control) Touch - Add support
   - (all) Session - Auto detect connected devices
   - (SO) Fix start up xc script
