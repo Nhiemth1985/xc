@@ -18,7 +18,6 @@ Change log:
 import sys
 import json
 import os
-import re
 from socket import gethostbyname
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
@@ -66,29 +65,12 @@ class File:
         self.data = data
 
     def gcode_check(self):
-        self.line_empty = 0
-        self.line_command = 0
-        self.line_comment = 0
-        self.line_total = 0
-        self.char_total = 0
-        for line in self.data:
-            try:
-                comment = line[re.search(';', line).span()[0]:]
-            except BaseException:
-                pass
-            if comment:
-                self.line_command += 1
-            else:
-                self.line_comment += 1
-            comment = None
         self.line_total = len(self.data)
         self.char_total = len(''.join(self.data))
 
     def gcode_info(self):
-        infoln('Commands: ' + str(self.line_command) + ' lines', 2)
-        infoln('Comments: ' + str(self.line_comment) + ' lines', 2)
-        info('Total: ' + str(self.line_total) + ' lines', 2)
-        infoln(' (characters: ' + str(self.char_total) + ')')
+        infoln('Lines: ' + str(self.line_total), 2)
+        infoln('Characters: ' + str(self.char_total), 2)
 
     def json_load(self, data):
         self.reset()

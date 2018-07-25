@@ -246,12 +246,6 @@ class HostProperties:
         except BaseException:
             pass
 
-    def get_control(self):
-        try:
-            return self.data[self.name]["control"]
-        except BaseException:
-            pass
-
     def stop(self):
         if self.machine == 'armv7l':
             self.stop_armv7l()

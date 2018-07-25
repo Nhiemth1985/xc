@@ -238,8 +238,13 @@ rock_group = set()
 missile_group = set()
 explosion_group = set()
 
-messages = ["May the Force be with you", "Great!", "Rocks are moving faster", "Good job", "Dead or alive you're coming with me", "Keep calm and carry a towel", "Is it better to be feared or respected? And I say: Is it too much to ask both?"]
+messages_corage = ["May the Force be with you.", "Rocks are moving faster!", "Dead or alive you're coming with me", "Keep calm and carry a towel", "Is it better to be feared or respected? And I say: Is it too much to ask both?"]
+messages_sorry = ["Try again!"]
+messages_congratulations = ["Great!", "Good job."]
+
 message_id = 0
+
+
 
 class ImageInfo:
     def __init__(self, center, size, radius = 0, lifespan = None, animated = False):

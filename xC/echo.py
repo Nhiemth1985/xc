@@ -45,6 +45,7 @@ from termcolor import colored, cprint
 
 indent_width = 4
 
+
 class Echo(object):
     """
     """

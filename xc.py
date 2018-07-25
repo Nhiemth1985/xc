@@ -100,23 +100,9 @@ class UserArgumentParser():
         parser.add_argument(
             '-i', '--id',
             help='device ID')
-        # parser.add_argument(
-            # '--interface',
-            # default='serial',
-            # choices=['serial', 'network'],
-            # help='communication interface (default: serial)')
-        # parser.add_argument(
-            # '-l', '--log', metavar='file',
-            # help='log file')
-        # parser.add_argument(
-            # '-o', '--out', metavar='file',
-            # help='output file')
         parser.add_argument(
             '-p', '--program', metavar='file',
             help='load G-code file')
-        # parser.add_argument(
-            # '-r', '--run', action="store_true",
-            # help='run program')
         parser.add_argument(
             '-v', '--verbosity', type=int,
             default=1,
@@ -142,23 +128,6 @@ class UserArgumentParser():
         parser.add_argument(
             '-i', '--id',
             help='device ID')
-        # parser.add_argument(
-            # '--interface',
-            # default='serial',
-            # choices=['serial', 'network'],
-            # help='communication interface (default: serial)')
-        # parser.add_argument(
-            # '-l', '--log', metavar='file',
-            # help='log file')
-        # parser.add_argument(
-            # '-o', '--out', metavar='file',
-            # help='output file')
-        # parser.add_argument(
-            # '-p', '--program', metavar='file',
-            # help='load G-code file')
-        # parser.add_argument(
-            # '-r', '--run', action="store_true",
-            # help='run program')
         parser.add_argument(
             '-v', '--verbosity', type=int,
             default=1,
@@ -256,11 +225,6 @@ class UserArgumentParser():
         parser.add_argument(
             '-c', '--connected', action="store_true",
             help='show only connected devices')
-        # parser.add_argument(
-            # '--interface',
-            # default='all',
-            # choices=['all', 'serial', 'network'],
-            # help='communication interface (default: all)')
         parser.add_argument(
             '-v', '--verbosity', type=int,
             default=1,
