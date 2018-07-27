@@ -1,6 +1,10 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## [0.56b] - 2017-07-27
+### Added
+- Program run: Featured colours to 'ok' and 'nok' received strings.
+
 ## [0.55b] - 2018-07-18
 ### Fixed
 - List: Was showing all devices when required to return only connected devices.

@@ -493,8 +493,7 @@ class Gui:
         pass
 
     def ctrl_touch_start(self):
-        info('Touch: ', 1)
-        infoln('Not implemented yet.')
+        infoln('Touch: ', 1)
         try:
             self.control_touch_enable = (self.device.get_control()
                                          ["touch"]["enable"])
@@ -543,9 +542,9 @@ class Gui:
         if self.session.is_connected_serial():
             while not self.session.is_ready():
                 continue
+            # self.session.clear()
             for c in self.device.get_startup()["command"]:
                 self.session.send_wait(c)
-                self.session.clear()
             self.was_connected = True
 
     def draw_device(self):
@@ -566,7 +565,7 @@ class Gui:
         infoln('Terminating...', 1)
         for c in self.device.get_endup()["command"]:
             self.session.send_wait(c)
-            self.session.clear()
+            # self.session.clear()
         self.session.stop()
         self.was_connected = False
 

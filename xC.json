@@ -603,7 +603,7 @@
       "endup": {
         "command": [
           "G28  ; Home axis",
-          "M81  ; Power off"
+          "M82  ; Power off"
         ]
       },
       "object": [

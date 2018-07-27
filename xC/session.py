@@ -5,6 +5,10 @@ Author: Marcio Pessoa <marcio@pessoa.eti.br>
 Contributors: none
 
 Change log:
+2017-07-27
+        * Version: 0.05b
+        * New feature: Featured colours to 'ok' and 'nok' received strings.
+
 2017-06-04
         * Version: 0.04b
         * New feature: Added comment parser to '()'
@@ -109,6 +113,8 @@ class Session:
             return False
 
     def stop(self):
+        if self.session:
+            self.session.close()
         self.reset()
 
     def start(self):
@@ -260,12 +266,14 @@ class Session:
             return False
         # Change color based on device response ('ok' or 'nok')
         if re.search('nok', str(received)):
-            color = 'red'
+            codeln(received, 'red', attrs=['bold'])
+            return received
+        elif re.search('ok', str(received)):
+            codeln(received, 'green', attrs=['bold'])
+            return received
         else:
-            color = 'green'
-        # Display device response
-        codeln(received, color)
-        return received
+            codeln(received, 'green')
+            return received
 
     def send(self, command):
         """Just send a message"""
