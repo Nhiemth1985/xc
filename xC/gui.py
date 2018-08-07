@@ -308,28 +308,14 @@ class Gui:
             if i["type"] == "push-button":
                 if event.type == KEYDOWN and \
                    event.key == eval(i["control"]["keyboard"]):
-                    i["state"] = i["on"]["picture"]
                     i["button"].on()
-                    if self.session.is_connected():
-                        command = i["on"]["command"] .replace('*', '1')
-                        self.session.send_wait(command)
                 if event.type == KEYUP and \
                    event.key == eval(i["control"]["keyboard"]):
                     i["button"].off()
-                    i["state"] = i["off"]["picture"]
             elif i["type"] == "switch":
                 if event.type == KEYDOWN and \
                    event.key == eval(i["control"]["keyboard"]):
-                    state = True if i["state"] == "on" else False
-                    state = not state
                     i["button"].toggle()
-                    i["state"] = "on" if state else "off"
-                    if self.session.is_connected():
-                        command = i[i["state"]]["command"].replace('*', '1')
-                        self.session.send_wait(command)
-                if event.type == KEYUP and \
-                   event.key == eval(i["control"]["keyboard"]):
-                    pass
 
     def ctrl_keyboard_start(self):
         info('Keyboard: ', 1)
@@ -480,14 +466,6 @@ class Gui:
             elif i["type"] == 'switch':
                 if event.type == MOUSEBUTTONUP:
                     i["button"].check(pygame.mouse.get_pos())
-                    if self.session.is_connected() and \
-                       i["button"].get_state():
-                        if i["button"].get_state():
-                            cu = 'off'
-                        else:
-                            cu = 'on'
-                        command = i[cu]["command"].replace('*', '1')
-                        self.session.send_wait(command)
 
     def ctrl_voice_stop(self):
         pass
@@ -594,7 +572,7 @@ class Gui:
         self.object_area.fill([0, 0, 0])  # Black
         for i in self.device.get_objects():
             i["button"].draw()
-        self.screen.blit(self.object_area, [130, 50])
+        self.screen.blit(self.object_area, [65, 50])
 
     def run(self):
         infoln('Ready...')
@@ -631,6 +609,12 @@ class Gui:
                i["timer"].check() and \
                self.session.is_connected():
                     command = i["on"]["command"].replace('*', '1')
+                    self.session.send_wait(command)
+            elif i["type"] == 'switch' and \
+                 i["button"].get_change() and\
+                 self.session.is_connected():
+                    i["state"] = 'on' if i["button"].get_state() else 'off'
+                    command = i[i["state"]]["command"].replace('*', '1')
                     self.session.send_wait(command)
 
     def ctrl_check(self, event):
@@ -696,14 +680,16 @@ class Gui:
 
     def start_objects(self):
         for i in self.device.get_objects():
-            i["id"] = Image(self.object_area,
-                            os.path.join(images_directory,
-                                         i["picture"]["file"]),
-                            eval(i["picture"]["split"]))
-            i["button"] = Button(i["id"],
+            i["image"] = Image(self.object_area,
+                               os.path.join(images_directory,
+                                            i["picture"]["file"]),
+                               eval(i["picture"]["split"]))
+            i["boolean"] = True if i["default"] == "on" else False
+            # infoln('ID: ' + str(i["id"]) + ", default: " + str(i["default"]))
+            i["button"] = Button(i["image"],
                                  eval(i["picture"]["position"]),
-                                 [130, 50],
-                                 0)
+                                 [65, 50],
+                                 i["boolean"])
             try:
                 i["timer"] = Timer(i["delay"])
             except BaseException:
@@ -801,11 +787,13 @@ class Gui:
         # Background
         self.background = pygame.Surface(self.screen.get_size())
         self.background.fill([0, 0, 0])  # Black
-        # Controls bar
+
+        # Controls area
         self.controls = pygame.Surface([120, 240])
+
         # Object area
-        self.object_area = pygame.Surface([self.screen.get_size()[0] - 140,
-                                           self.screen.get_size()[1] - 80])
+        self.object_area = pygame.Surface([self.screen.get_size()[0] - 65,
+                                           self.screen.get_size()[1] - 70])
         # Status bar
         self.status_bar = pygame.Surface([self.screen.get_size()[0], 16])
 
@@ -967,6 +955,7 @@ class Button:
         self.image = image
         self.size = self.image.get_size()
         self.state = state
+        self.state_before = self.state
         self.position = position
         self.click = [0, 0]
         self.click[0] = position[0] + surface[0]
@@ -993,3 +982,9 @@ class Button:
 
     def get_state(self):
         return self.state
+
+    def get_change(self):
+        if self.state != self.state_before:
+            self.state_before = self.state
+            return True
+        return False

@@ -18,7 +18,7 @@ import sys
 import json
 import os
 import platform
-from psutil import virtual_memory, sensors_temperatures
+from psutil import virtual_memory
 import re
 from socket import gethostbyname
 from xC.echo import verbose, level, \
@@ -124,6 +124,7 @@ class HostProperties:
         # Temperature sensor
         try:
             if self.data[self.name]["resources"]["temperature_sensor"]:
+                from psutil import sensors_temperatures
                 payload = str(sensors_temperatures()['acpitz']).split(',')[1]
                 temperature = re.sub(r' [a-z]*=', '', payload)
                 self.temperature = str("{:1.0f} C".

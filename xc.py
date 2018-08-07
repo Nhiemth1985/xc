@@ -80,7 +80,7 @@ class UserArgumentParser():
             add_help=True,
             usage=header)
         parser.add_argument('command', help='command to run')
-        parser.add_argument('-v', '--version', action='version',
+        parser.add_argument('-V', '--version', action='version',
                             version=self.version,
                             help='show version information and exit')
         if len(sys.argv) < 2:
