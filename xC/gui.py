@@ -207,6 +207,7 @@ class Gui:
                         axis.append(self.joystick.get_axis(j))
                         # infoln("axis[" + str(j) + "] = " + str(axis[j]))
                     if eval(i["control"]["joystick"]):
+                        i["button"].on()
                         i["state"] = i["on"]["picture"]
                         if self.session.is_connected():
                             # Get joystick axis number from JSON device file and
@@ -216,10 +217,11 @@ class Gui:
                             n = int(round(n))
                             if int(n) == 0:
                                 continue
-                            command = i["on"]["command"].replace('*', str(n))
-                            self.session.send_wait(command)
+                            # command = i["on"]["command"].replace('*', str(n))
+                            # self.session.send_wait(command)
                     else:
-                        i["state"] = i["off"]["picture"]
+                        # i["state"] = i["off"]["picture"]
+                        i["button"].off()
 
     def ctrl_joystick_start(self):
         info('Joystick: ', 1)
@@ -401,14 +403,16 @@ class Gui:
                             n = eval(i["control"]["mouse"].split(" ")[0])
                             n = abs(n * self.control_mouse_speed)
                             n = int(round(n))
+                            i["button"].on()
                             if int(n) == 0:
                                 continue
-                            command = i["on"]["command"].replace('*', str(n))
-                            self.session.send_wait(command)
+                            # command = i["on"]["command"].replace('*', str(n))
+                            # self.session.send_wait(command)
                         except BaseException:
                             pass
                 else:
-                    i["state"] = i["off"]["picture"]
+                    # i["state"] = i["off"]["picture"]
+                    i["button"].off()
 
     def ctrl_mouse_start(self):
         info('Mouse: ', 1)
