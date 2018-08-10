@@ -84,7 +84,10 @@ class HostProperties:
         infoln("Name: " + self.name, 1)
         infoln("Machine: " + self.machine + " (" + self.architecture + ")", 1)
         infoln("Processor: " + self.processor, 1)
-        infoln("Core: " + str(self.core), 1)
+        info("Core", 1)
+        if self.core > 1:
+            info("s")
+        infoln(": " + str(self.core))
         infoln("Memory: " +
                str(self.memory) + "GB (used: " +
                str(self.memory_used) + "%)", 1)

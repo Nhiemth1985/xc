@@ -1071,7 +1071,7 @@
           "enable": true
         },
         "touch": {
-          "enable": true
+          "enable": false
         },
         "mouse": {
           "enable": false,
@@ -1113,7 +1113,8 @@
         },
         {
           "control": {
-            "keyboard": "K_SPACE"
+            "keyboard": "K_SPACE",
+            "joystick": "button[10] == 1"
           },
           "default": "off",
           "id": "stop",
