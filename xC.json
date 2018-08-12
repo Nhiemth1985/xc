@@ -1288,7 +1288,7 @@
         {
           "control": {
             "joystick": "hat[0] == (0, 1)",
-            "keyboard": "K_KP_MINUS"
+            "keyboard": "K_KP8"
           },
           "default": "off",
           "id": "axis_z_add",
@@ -1312,7 +1312,7 @@
         {
           "control": {
             "joystick": "hat[0] == (0, -1)",
-            "keyboard": "K_KP_PLUS"
+            "keyboard": "K_KP2"
           },
           "default": "off",
           "id": "axis_z_rid",
@@ -1384,7 +1384,7 @@
         {
           "control": {
             "joystick": "axis[5] < 0",
-            "keyboard": "K_KP8"
+            "keyboard": "K_KP_MINUS"
           },
           "default": "off",
           "id": "axis_v_add",
@@ -1408,7 +1408,7 @@
         {
           "control": {
             "joystick": "axis[5] > 0",
-            "keyboard": "K_KP2"
+            "keyboard": "K_KP_PLUS"
           },
           "default": "off",
           "id": "axis_v_rid",
@@ -1480,7 +1480,7 @@
         {
           "control": {
             "joystick": "hat[0] == (1, 0)",
-            "keyboard": "K_KP_MULTIPLY"
+            "keyboard": "K_KP0"
           },
           "default": "off",
           "id": "axis_t_add",
@@ -1488,7 +1488,7 @@
             "picture": "off"
           },
           "on": {
-            "command": "G0 T-*  ; Open tool",
+            "command": "G0 T-*  ; Close tool",
             "expects": "ok",
             "picture": "on"
           },
@@ -1504,7 +1504,7 @@
         {
           "control": {
             "joystick": "hat[0] == (-1, 0)",
-            "keyboard": "K_KP_DIVIDE"
+            "keyboard": "K_KP_PERIOD"
           },
           "default": "off",
           "id": "axis_t_rid",
@@ -1512,7 +1512,7 @@
             "picture": "off"
           },
           "on": {
-            "command": "G0 T*  ; Close tool",
+            "command": "G0 T*  ; Open tool",
             "expects": "ok",
             "picture": "on"
           },

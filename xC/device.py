@@ -82,10 +82,7 @@ class DeviceProperties:
         return enable
 
     def get_id(self):
-        try:
-            return self.data["device"][self.id]
-        except BaseException:
-            return None
+        return self.id
 
     def set(self, id):
         """Set a device to be used.
@@ -101,7 +98,7 @@ class DeviceProperties:
             return
         # Is device present in configuration file?
         try:
-            check_id = self.data["device"][id]
+            check_id = self.data["device"][self.id]
         except KeyError:
             erroln('Device is not present in configuration file.')
             sys.exit(True)

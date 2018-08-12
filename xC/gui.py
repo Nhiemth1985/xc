@@ -736,16 +736,19 @@ class Gui:
         # Reset all data if device was unpluged.
         if not self.session.is_connected_serial() and self.was_connected:
             self.reset()
+            self.device.reset()
             self.start_device()
             self.start_ctrl()
             self.start_objects()
             self.session.reset()
+            self.start_session()
         if self.device.get_id() is None:
             # How many devices are connected?
             n = self.device.detect()
             # If is just one...
             if len(n) == 1:
                 # Confiure a new device.
+                self.session.reset()
                 self.start_device()
                 self.start_ctrl()
                 self.start_objects()
