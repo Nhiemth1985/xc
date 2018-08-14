@@ -21,7 +21,11 @@ import os
 from socket import gethostbyname
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
-
+from yaml import load, dump
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
 
 class File:
     def __init__(self):
@@ -54,10 +58,32 @@ class File:
             self.gcode_load(data)
             self.gcode_check()
             self.gcode_info()
+        elif typr = 'yaml':
+            data = f.read()
+            self.gcode_load(data)
+            self.gcode_check()
+            self.gcode_info()
         f.close()
 
     def get(self):
         return self.data
+
+    def yaml_load(self, data):
+        self.reset()
+        infoln('Parsing YAML...', 1)
+        self.data = data
+        try:
+            self.data = yaml.dump(yaml.load(data))
+        except ValueError as err:
+            erroln(str(err))
+            sys.exit(True)
+
+    def yaml_check(self):
+        self.line_total = len(self.data)
+        self.char_total = len(''.join(self.data))
+
+    def yaml_info(self):
+        infoln('Keys: ' + str(self.line_total), 2)
 
     def gcode_load(self, data):
         self.reset()

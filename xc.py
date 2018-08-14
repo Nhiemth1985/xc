@@ -93,6 +93,21 @@ class UserArgumentParser():
             sys.exit(True)
         getattr(self, args.command)()
 
+    def kanban(self):
+        parser.add_argument(
+            '-i', '--id',
+            help='device ID')
+        parser.add_argument(
+            '-k', '--key',
+            help='key to search')
+        args = parser.parse_args(sys.argv[2:])
+        self.__load_configuration()
+
+        self.todo = File()
+        self.todo.load(self.todo_file, 'yaml')
+
+        sys.exit(False)
+
     def run(self):
         parser = argparse.ArgumentParser(
             prog=self.program_name + ' run',
