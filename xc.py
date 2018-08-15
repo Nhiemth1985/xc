@@ -397,7 +397,7 @@ class UserArgumentParser():
             self.interface = interface
         self.__load_configuration()
         self.__device_select(id)
-        self.project = DevTools(self.device.get_id())
+        self.project = DevTools(self.device.get())
         self.project.info()
         self.session = Session(self.device.get_comm())
         self.session.info()

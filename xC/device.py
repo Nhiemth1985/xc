@@ -135,6 +135,12 @@ class DeviceProperties:
         elements.sort()
         return elements
 
+    def get(self):
+        try:
+            return self.data["device"][self.id]
+        except BaseException:
+            return []
+
     def get_comm(self):
         try:
             return self.data["device"][self.id]["comm"]
