@@ -1,6 +1,10 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## [0.57b] - 2017-08-15
+### Added
+- Program kanban: Added a new feature to show project to do list.
+
 ## [0.56b] - 2017-07-27
 ### Added
 - Program run: Featured colours to 'ok' and 'nok' received strings.

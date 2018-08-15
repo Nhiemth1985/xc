@@ -109,6 +109,7 @@ class DeviceProperties:
             self.system_desc = self.data["device"][self.id]["system"]["desc"]
             self.system_arch = self.data["device"][self.id]["system"]["arch"]
             self.system_path = self.data["device"][self.id]["system"]['path']
+            self.system_work = self.data["device"][self.id]["system"]['work']
             self.system_logs = self.data["device"][self.id]["system"]['logs']
         except KeyError as err:
             erroln('Mandatory key is absent: %s' % (err))

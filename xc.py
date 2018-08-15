@@ -12,6 +12,7 @@ Change log: Check CHANGELOG.md file.
 
 """
 
+import yaml
 try:
     # Ubuntu default modules
     import sys
@@ -42,8 +43,8 @@ class UserArgumentParser():
 
     def __init__(self):
         self.program_name = "xc"
-        self.program_version = "0.56b"
-        self.program_date = "2018-07-27"
+        self.program_version = "0.57b"
+        self.program_date = "2018-08-15"
         self.program_description = "xC - aXes Controller"
         self.program_copyright = "Copyright (c) 2014-2018 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
@@ -94,18 +95,40 @@ class UserArgumentParser():
         getattr(self, args.command)()
 
     def kanban(self):
+        parser = argparse.ArgumentParser(
+            prog=self.program_name + ' kanban',
+            description='display project kanban')
         parser.add_argument(
             '-i', '--id',
             help='device ID')
         parser.add_argument(
             '-k', '--key',
+            default='DOING',
             help='key to search')
+        parser.add_argument(
+            '-v', '--verbosity', type=int,
+            default=1,
+            choices=[0, 1, 2, 3, 4],
+            help='verbose mode, options: ' +
+                 '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
         args = parser.parse_args(sys.argv[2:])
         self.__load_configuration()
-
-        self.todo = File()
-        self.todo.load(self.todo_file, 'yaml')
-
+        device = DeviceProperties(self.config.get())
+        if args.id is None:
+            for id in device.list():
+                device.set(id)
+                if not device.is_enable():
+                    continue
+                description = device.system_plat + " Mark " + \
+                    device.system_mark + ' - ' + \
+                    device.system_desc
+                self.__kanban(device.get_id(), args.key, description)
+        else:
+            device.set(args.id)
+            description = device.system_plat + " Mark " + \
+                device.system_mark + ' - ' + \
+                device.system_desc
+            self.__kanban(device.get_id(), args.key, description)
         sys.exit(False)
 
     def run(self):
@@ -300,6 +323,26 @@ class UserArgumentParser():
                 echoln('')
             c += 1
         sys.exit(c)
+
+    def __kanban(self, id, key, description):
+        key = key.upper()
+        try:
+            self.system_path = self.config.get()["device"][id]["system"]["work"]
+        except BaseException:
+            erroln("Invalid ID.")
+            sys.exit(True)
+        self.kanban_file = os.path.join(self.system_path, 'KANBAN.yaml')
+        self.kanban = File()
+        self.kanban.load(self.kanban_file, 'yaml')
+        self.description = description.encode("utf-8")
+        z = dict()
+        z.update({self.description: ''})
+        for doc in self.kanban.get():
+            for x, y in doc.items():
+                if x not in key:
+                    continue
+                z.update({self.description: {x: y}})
+        echoln(yaml.dump(z, default_flow_style=False, indent=2))
 
     def __load_configuration(self):
         infoln('Loading configuration...')

@@ -95,6 +95,7 @@
         "arch": "arduino:avr:yun",
         "desc": "Environment Monitor",
         "logs": "Development/envmon/Mark_I",
+        "work": "Development/envmon/Mark_I",
         "mark": "I",
         "path": "Development/envmon/Mark_I/enm1",
         "plat": "envmon"
@@ -385,6 +386,7 @@
         "logs": "Development/Escriba/Mark_I",
         "mark": "I",
         "path": "Development/Escriba/Mark_I/Escriba",
+        "work": "Development/Escriba/Mark_I",
         "plat": "Escriba"
       }
     },
@@ -401,6 +403,7 @@
         "arch": "arduino:avr:micro",
         "desc": "Fan Controller",
         "logs": "Development/fC/Mark_I",
+        "work": "Development/fC/Mark_I",
         "mark": "I",
         "path": "Development/fC/Mark_I/fC/",
         "plat": "fC"
@@ -420,6 +423,7 @@
         "logs": "Development/Marlon/Mark_I",
         "mark": "I",
         "path": "Development/Marlon/Mark_I/Marlin/Marlin",
+        "work": "Development/Marlon/Mark_I",
         "plat": "Marlon"
       }
     },
@@ -543,6 +547,7 @@
         "logs": "Development/w1/Mark_I",
         "mark": "I",
         "path": "Development/w1/Mark_I/w1",
+        "work": "Development/w1/Mark_I",
         "plat": "w1"
       }
     },
@@ -725,6 +730,7 @@
         "logs": "Development/x1/Mark_I",
         "mark": "I",
         "path": "Development/x1/Mark_I/x1",
+        "work": "Development/x1/Mark_I",
         "plat": "x1"
       }
     },
@@ -1047,6 +1053,7 @@
         "logs": "Development/x2/Mark_I",
         "mark": "I",
         "path": "Development/x2/Mark_I/x2",
+        "work": "Development/x2/Mark_I",
         "plat": "x2"
       }
     },
@@ -1538,6 +1545,7 @@
         "arch": "arduino:avr:mega:cpu=atmega2560 ",
         "desc": "Robotic Arm",
         "logs": "Development/x6/Mark_I",
+        "work": "Development/x6/Mark_I",
         "mark": "I",
         "path": "Development/x6/Mark_I/x6",
         "plat": "x6"
