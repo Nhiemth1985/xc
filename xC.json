@@ -1294,7 +1294,7 @@
         },
         {
           "control": {
-            "joystick": "hat[0] == (0, 1)",
+            "joystick": "axis[4] < 0",
             "keyboard": "K_KP8"
           },
           "default": "off",
@@ -1318,7 +1318,7 @@
         },
         {
           "control": {
-            "joystick": "hat[0] == (0, -1)",
+            "joystick": "axis[4] > 0",
             "keyboard": "K_KP2"
           },
           "default": "off",
@@ -1342,7 +1342,7 @@
         },
         {
           "control": {
-            "joystick": "axis[2] > 0",
+            "joystick": "axis[3] > 0",
             "keyboard": "K_KP6"
           },
           "default": "off",
@@ -1366,7 +1366,7 @@
         },
         {
           "control": {
-            "joystick": "axis[2] < 0",
+            "joystick": "axis[3] < 0",
             "keyboard": "K_KP4"
           },
           "default": "off",
@@ -1390,7 +1390,7 @@
         },
         {
           "control": {
-            "joystick": "axis[5] < 0",
+            "joystick": "hat[0] == (0, -1)",
             "keyboard": "K_KP_MINUS"
           },
           "default": "off",
@@ -1414,7 +1414,7 @@
         },
         {
           "control": {
-            "joystick": "axis[5] > 0",
+            "joystick": "hat[0] == (0, 1)",
             "keyboard": "K_KP_PLUS"
           },
           "default": "off",
@@ -1486,7 +1486,7 @@
         },
         {
           "control": {
-            "joystick": "hat[0] == (1, 0)",
+            "joystick": "button[5] == 1",
             "keyboard": "K_KP0"
           },
           "default": "off",
@@ -1510,7 +1510,7 @@
         },
         {
           "control": {
-            "joystick": "hat[0] == (-1, 0)",
+            "joystick": "button[4] == 1",
             "keyboard": "K_KP_PERIOD"
           },
           "default": "off",
