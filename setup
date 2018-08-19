@@ -78,12 +78,12 @@ install() {
   mkdir -p ~/.fonts
   ln -s /opt/sciemon/xc/fonts/Digirtu_.ttf ~/.fonts >/dev/null 2>&1
   # Configuration file
-  message "Configuration file"
+  #message "Configuration file"
   ln -s /opt/sciemon/xc/xC.json "$HOME"/.xC.json >/dev/null 2>&1
-  check_return $?
-  message "Completion file"
+  #check_return $?
+  #message "Completion file"
   ln -s /opt/sciemon/xc/xc_completion /etc/bash_completion.d/xc >/dev/null 2>&1
-  check_return $?
+  #check_return $?
   #
   # sh -c 'cat > /usr/share/xsessions/xc.desktop'
 # [Desktop Entry]

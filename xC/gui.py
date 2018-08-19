@@ -157,19 +157,8 @@ class Gui:
                     if eval(i["control"]["joystick"]):
                         if i["type"] == "push-button":
                             i["button"].on()
-                            # i["state"] = i["on"]["picture"]
-                            # command = i["on"]["command"]
-                            # if self.session.is_connected():
-                                # self.session.send_wait(command)
                         if i["type"] == "switch":
                             i["button"].toggle()
-                            # state = True if i["state"] == "on" else False
-                            # state = not state
-                            # i["state"] = "on" if state else "off"
-                            # infoln("b[" + str(j) + "] state = " + i["state"])
-                            # command = i[i["state"]]["command"]
-                            # if self.session.is_connected():
-                                # self.session.send_wait(command)
         if (event.type == JOYBUTTONUP):
             for i in self.device.get_objects():
                 try:
