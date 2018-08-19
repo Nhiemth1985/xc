@@ -117,8 +117,8 @@ class File:
             devices = len(self.data["device"])
         except BaseException:
             pass
-        infoln('Hosts: ' + str(hosts), 2)
         infoln('Devices: ' + str(devices), 2)
+        infoln('Hosts: ' + str(hosts), 2)
 
     def json_check(self):
         pass

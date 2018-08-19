@@ -32,6 +32,7 @@
 
 - 'DOING':
   - (control) Joystick - Auto detect in runtime
+  - (cli) Usability - bash auto complete
 
 - 'TESTING':
   - (gui) Status - Display temeperature for x86 hosts

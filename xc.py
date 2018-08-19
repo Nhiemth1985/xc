@@ -43,8 +43,8 @@ class UserArgumentParser():
 
     def __init__(self):
         self.program_name = "xc"
-        self.program_version = "0.57b"
-        self.program_date = "2018-08-15"
+        self.program_version = "0.58b"
+        self.program_date = "2018-08-19"
         self.program_description = "xC - aXes Controller"
         self.program_copyright = "Copyright (c) 2014-2018 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
@@ -140,6 +140,7 @@ class UserArgumentParser():
             help='device ID')
         parser.add_argument(
             '-p', '--program', metavar='file',
+            required=True,
             help='load G-code file')
         parser.add_argument(
             '-v', '--verbosity', type=int,
@@ -331,7 +332,8 @@ class UserArgumentParser():
         except BaseException:
             erroln("Invalid ID.")
             sys.exit(True)
-        self.kanban_file = os.path.join(self.system_path, 'KANBAN.yaml')
+        self.kanban_file = os.path.join(os.environ['HOME'], self.system_path)
+        self.kanban_file = os.path.join(self.kanban_file, 'KANBAN.yaml')
         self.kanban = File()
         self.kanban.load(self.kanban_file, 'yaml')
         self.description = description.encode("utf-8")
