@@ -101,6 +101,7 @@ from xC.device import DeviceProperties
 from xC.host import HostProperties
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
+import re
 from xC.screensaver import Screensaver
 from xC.session import Session
 from xC.timer import Timer
@@ -141,37 +142,36 @@ class Gui:
         pygame.joystick.quit()
 
     def ctrl_joystick_handle(self, event):
-        if self.control_joystick_enable is not True:
+        if not self.control_joystick_enable:
             return
-        if event.type == JOYBUTTONDOWN:
-            for i in self.device.get_objects():
-                try:
-                    i["control"]["joystick"]
-                except BaseException:
+        # Buttons
+        # Get all buttons state
+        button = []
+        for i in range(self.joystick.get_numbuttons()):
+            if self.joystick.get_button(i):
+                button.append(i)
+        # infoln("Button pressed: " + str(button))
+        # Look for any active button in object mapping
+        for i in self.device.get_objects():
+            try:
+                if i["control"]["joystick"].split("[")[0] != "button":
                     continue
-                if i["control"]["joystick"].split("[")[0] == "button":
-                    button = []
-                    for j in range(self.joystick.get_numbuttons()):
-                        button.append(self.joystick.get_button(j))
-                        # infoln("button[" + str(j) + "] = " + str(button[j]))
-                    if eval(i["control"]["joystick"]):
-                        if i["type"] == "push-button":
-                            i["button"].on()
-                        if i["type"] == "switch":
-                            i["button"].toggle()
-        if (event.type == JOYBUTTONUP):
-            for i in self.device.get_objects():
-                try:
-                    i["control"]["joystick"]
-                except BaseException:
-                    continue
-                if i["control"]["joystick"].split("[")[0] == "button":
-                    button = []
-                    for j in range(self.joystick.get_numbuttons()):
-                        button.append(self.joystick.get_button(j))
-                    if eval(i["control"]["joystick"]):
-                        if i["type"] == "push-button":
-                            i["button"].off()
+            except BaseException:
+                continue
+            i["source"] = ''
+            # Button down
+            if int(re.findall('\\b\\d+\\b', i["control"]["joystick"])[0]) in \
+               button and event.type == JOYBUTTONDOWN:
+                i["source"] = 'joystick'
+                if i["type"] == "switch":
+                    i["button"].toggle()
+                elif i["type"] == "push-button":
+                    i["button"].on()
+            # Button up
+            else:
+                if event.type == JOYBUTTONUP and i["type"] == "push-button":
+                    i["button"].off()
+        # Digital motion (hat)
         if (event.type == JOYHATMOTION or self.joystick_hat_active):
             for i in self.device.get_objects():
                 try:
@@ -195,11 +195,9 @@ class Gui:
                             # command = i["on"]["command"].replace('*', str(n))
                             # self.session.send_wait(command)
                     else:
-                        # i["state"] = i["off"]["picture"]
                         i["button"].off()
+        # Analog motion
         if event.type == JOYAXISMOTION:
-            if self.joystick_timer.check() is not True:
-                return
             # Search for configured axes
             for i in self.device.get_objects():
                 try:
@@ -248,7 +246,7 @@ class Gui:
             self.control_joystick_delay = (self.device.get_control()
                                            ["joystick"]["delay"])
         except BaseException:
-            self.control_joystick_delay = 1
+            self.control_joystick_delay = 50
         # Draw
         self.joyicon = Image(self.controls,
                              os.path.join(images_directory, 'joystick.png'),
@@ -263,12 +261,7 @@ class Gui:
             for i in range(joysticks):
                 self.joystick = pygame.joystick.Joystick(i)
                 self.joystick.init()
-                try:
-                    delay = self.device.get_control()["joystick"]["delay"]
-                except BaseException:
-                    delay = 100
                 self.ctrl_joystick_delay = Timer(self.control_joystick_delay)
-                self.joystick_timer = Timer(delay)
                 info('Enable: ', 2)
                 infoln(str(self.control_joystick_enable))
                 infoln(self.joystick.get_name(), 2)
@@ -277,7 +270,7 @@ class Gui:
                 infoln('Balls: ' + str(self.joystick.get_numballs()), 3)
                 infoln('Hats: ' + str(self.joystick.get_numhats()), 3)
                 infoln('Speed: ' + str(self.control_joystick_speed) + '%', 3)
-                infoln('Delay: ' + str(delay) + 'ms', 3)
+                infoln('Delay: ' + str(self.control_joystick_delay) + 'ms', 3)
         else:
             infoln('None')
 
@@ -599,8 +592,8 @@ class Gui:
                 if event.type == pygame.QUIT:
                     self.running = False
                 self.ctrl_check(event)
-            self.ctrl_handle()
             self.draw()
+            self.ctrl_handle()
             self.device_check()
         infoln("Exiting...")
         self.stop()
@@ -620,16 +613,20 @@ class Gui:
             pygame.event.set_grab(False)
         # Objects
         for i in self.device.get_objects():
+            if (i["source"] == 'joystick' and
+               not self.ctrl_joystick_delay.check()):
+                continue
             # Push button (pulse)
-            if i["type"] == 'push-button' and \
-               i["button"].get_state() and \
-               i["timer"].check() and \
-               self.session.is_connected():
+            if (i["type"] == 'push-button' and
+                i["button"].get_state() and
+                i["timer"].check() and
+               self.session.is_connected()):
                     command = i["on"]["command"].replace('*', '1')
                     self.session.send_wait(command)
-            elif i["type"] == 'switch' and \
-                 i["button"].get_change() and\
-                 self.session.is_connected():
+            # Switch
+            elif (i["type"] == 'switch' and
+                  i["button"].get_change() and
+                  self.session.is_connected()):
                     i["state"] = "on" if i["button"].get_state() else "off"
                     command = i[i["state"]]["command"].replace('*', '1')
                     self.session.send_wait(command)
@@ -703,6 +700,7 @@ class Gui:
                                eval(i["picture"]["split"]))
             i["boolean"] = True if i["default"] == "on" else False
             # infoln('ID: ' + str(i["id"]) + ", default: " + str(i["default"]))
+            i["source"] = ''
             i["button"] = Button(i["image"],
                                  eval(i["picture"]["position"]),
                                  [65, 50],
