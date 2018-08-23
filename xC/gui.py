@@ -145,13 +145,11 @@ class Gui:
         if not self.control_joystick_enable:
             return
         # Buttons
-        # Get all buttons state
         button = []
         for i in range(self.joystick.get_numbuttons()):
             if self.joystick.get_button(i):
                 button.append(i)
         # infoln("Button pressed: " + str(button))
-        # Look for any active button in object mapping
         for i in self.device.get_objects():
             try:
                 if i["control"]["joystick"].split("[")[0] != "button":
@@ -159,15 +157,14 @@ class Gui:
             except BaseException:
                 continue
             i["source"] = ''
-            # Button down
-            if int(re.findall('\\b\\d+\\b', i["control"]["joystick"])[0]) in \
-               button and event.type == JOYBUTTONDOWN:
+            if event.type == JOYBUTTONDOWN and \
+               int(re.findall('\\b\\d+\\b', i["control"]["joystick"])[0]) in \
+               button:
                 i["source"] = 'joystick'
                 if i["type"] == "switch":
                     i["button"].toggle()
                 elif i["type"] == "push-button":
                     i["button"].on()
-            # Button up
             else:
                 if event.type == JOYBUTTONUP and i["type"] == "push-button":
                     i["button"].off()
