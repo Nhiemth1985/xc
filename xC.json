@@ -428,7 +428,7 @@
       }
     },
     "w1": {
-      "enable": false,
+      "enable": true,
       "comm": {
         "network": {},
         "serial": {

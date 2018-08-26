@@ -269,6 +269,7 @@ class Gui:
                 infoln('Speed: ' + str(self.control_joystick_speed) + '%', 3)
                 infoln('Delay: ' + str(self.control_joystick_delay) + 'ms', 3)
         else:
+            self.control_joystick_enable = False
             infoln('None')
 
     def ctrl_keyboard_stop(self):
