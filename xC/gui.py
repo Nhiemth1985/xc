@@ -186,11 +186,6 @@ class Gui:
                         self.joystick_hat_active = False
                     if eval(i["control"]["joystick"]):
                         i["button"].on()
-                        # i["state"] = i["on"]["picture"]
-                        # if self.session.is_connected():
-                            # n = 1
-                            # command = i["on"]["command"].replace('*', str(n))
-                            # self.session.send_wait(command)
                     else:
                         i["button"].off()
         # Analog motion
@@ -209,20 +204,17 @@ class Gui:
                         # infoln("axis[" + str(j) + "] = " + str(axis[j]))
                     if eval(i["control"]["joystick"]):
                         i["button"].on()
-                        i["state"] = i["on"]["picture"]
-                        if self.session.is_connected():
-                            # Get joystick axis number from JSON device file and
-                            # atrib axis[?] value to n variable
-                            n = eval(i["control"]["joystick"].split(" ")[0])
-                            n = abs(n * self.control_joystick_speed)
-                            n = int(round(n))
-                            if int(n) == 0:
-                                continue
-                            # command = i["on"]["command"].replace('*', str(n))
-                            # self.session.send_wait(command)
+                        # Get joystick axis number from JSON device file and
+                        # atrib axis[?] value to n variable
+                        n = eval(i["control"]["joystick"].split(" ")[0])
+                        n = abs(n * self.control_joystick_speed)
+                        n = int(round(n))
+                        if int(n) == 0:
+                            n = 1
+                        i["factor"] = str(n)
                     else:
-                        # i["state"] = i["off"]["picture"]
                         i["button"].off()
+                        i["factor"] = '1'
 
     def ctrl_joystick_start(self):
         info('Joystick: ', 1)
@@ -396,6 +388,8 @@ class Gui:
                 return
             #
             for i in self.device.get_objects():
+                if i["type"] == "push-button":
+                    i["button"].off()
                 try:
                     i["control"]["mouse"]
                 except BaseException:
@@ -407,15 +401,13 @@ class Gui:
                             n = eval(i["control"]["mouse"].split(" ")[0])
                             n = abs(n * self.control_mouse_speed)
                             n = int(round(n))
+                            i["factor"] = str(n)
                             i["button"].on()
                             if int(n) == 0:
                                 continue
-                            # command = i["on"]["command"].replace('*', str(n))
-                            # self.session.send_wait(command)
                         except BaseException:
                             pass
                 else:
-                    # i["state"] = i["off"]["picture"]
                     i["button"].off()
 
     def ctrl_mouse_start(self):
@@ -432,6 +424,11 @@ class Gui:
                                         ["mouse"]["speed"])
         except BaseException:
             self.control_mouse_speed = 100
+        try:
+            self.control_mouse_delay = (self.device.get_control()
+                                        ["mouse"]["delay"])
+        except BaseException:
+            self.control_mouse_delay = 100
         # Draw
         self.mouse = Image(self.controls,
                            os.path.join(images_directory, 'mouse.png'),
@@ -444,6 +441,7 @@ class Gui:
         null = open(os.devnull, 'w')
         return_code = subprocess.call(cmd)
         if return_code == 0:
+            self.ctrl_mouse_delay = Timer(self.control_mouse_delay)
             infoln('Found')
             info('Enable: ', 2)
             infoln(str(self.control_mouse_button.get_state()))
@@ -488,6 +486,12 @@ class Gui:
         try:
             self.control_touch_speed = (self.device.get_control()
                                         ["touch"]["speed"])
+        except BaseException:
+            self.control_touch_visible = False
+        # Delay
+        try:
+            self.control_touch_visible = (self.host.get_control()
+                                        ["touch"]["visible"])
         except BaseException:
             self.control_touch_speed = 1
         # Delay
@@ -600,7 +604,8 @@ class Gui:
     def ctrl_handle(self):
         # Mouse visible
         if self.control_mouse_button.get_state() or \
-           self.control_touch_button.get_state():
+           (self.control_touch_button.get_state() and not
+            self.control_touch_visible):
             self.ctrl_mouse_cursor(False)
         else:
             self.ctrl_mouse_cursor(True)
@@ -619,14 +624,14 @@ class Gui:
                 i["button"].get_state() and
                 i["timer"].check() and
                self.session.is_connected()):
-                    command = i["on"]["command"].replace('*', '1')
+                    command = i["on"]["command"].replace('*', i["factor"])
                     self.session.send_wait(command)
             # Switch
             elif (i["type"] == 'switch' and
                   i["button"].get_change() and
                   self.session.is_connected()):
                     i["state"] = "on" if i["button"].get_state() else "off"
-                    command = i[i["state"]]["command"].replace('*', '1')
+                    command = i[i["state"]]["command"].replace('*', 1)
                     self.session.send_wait(command)
 
     def ctrl_check(self, event):
@@ -699,6 +704,7 @@ class Gui:
             i["boolean"] = True if i["default"] == "on" else False
             # infoln('ID: ' + str(i["id"]) + ", default: " + str(i["default"]))
             i["source"] = ''
+            i["factor"] = '1'
             i["button"] = Button(i["image"],
                                  eval(i["picture"]["position"]),
                                  [65, 50],

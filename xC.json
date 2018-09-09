@@ -12,6 +12,11 @@
       },
       "resources": {
         "temperature_sensor": true
+      },
+      "control": {
+        "touch": {
+          "visible": true
+        }
       }
     },
     "t1": {
@@ -22,6 +27,11 @@
       },
       "resources": {
         "temperature_sensor": true
+      },
+      "control": {
+        "touch": {
+          "visible": true
+        }
       }
     },
     "xCm1": {
@@ -47,6 +57,11 @@
         "temperature_sensor": true,
         "fan": true,
         "status_led": true
+      },
+      "control": {
+        "touch": {
+          "visible": true
+        }
       }
     },
     "xCm2": {
@@ -1475,7 +1490,7 @@
             "picture": "off"
           },
           "on": {
-            "command": "G0 W-*  ; Move +w",
+            "command": "G0 W*  ; Move +w",
             "expects": "ok",
             "picture": "on"
           },
@@ -1499,7 +1514,7 @@
             "picture": "off"
           },
           "on": {
-            "command": "G0 W*  ; Move -w",
+            "command": "G0 W-*  ; Move -w",
             "expects": "ok",
             "picture": "on"
           },

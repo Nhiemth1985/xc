@@ -70,8 +70,6 @@ class HostProperties:
         self.distribution = platform.linux_distribution()[0]
         self.distribution_version = platform.linux_distribution()[1]
         self.python_version = platform.python_version()
-        # self.temperature = None
-        # self.fan_speed = None
         self.profile = 'generic'
         if self.name in self.data:
             self.profile = self.name
@@ -237,6 +235,12 @@ class HostProperties:
         except BaseException:
             pass
         infoln('Fan: ' + status, 1)
+
+    def get_control(self):
+        try:
+            return self.data[self.name]["control"]
+        except BaseException:
+            pass
 
     def get_screen(self):
         try:

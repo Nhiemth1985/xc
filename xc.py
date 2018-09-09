@@ -265,6 +265,9 @@ class UserArgumentParser():
             '-c', '--connected', action="store_true",
             help='show only connected devices')
         parser.add_argument(
+            '-a', '--all', action="store_true",
+            help='show even disabled devices')
+        parser.add_argument(
             '-v', '--verbosity', type=int,
             default=1,
             choices=[0, 1, 2, 3, 4],
@@ -294,8 +297,8 @@ class UserArgumentParser():
         for id in device.list():
             device.set(id)
             session = Session(device.get_comm())
-            if not device.is_enable():
-                continue
+            if not args.all and not device.is_enable():
+                    continue
             if args.verbosity >= 4 or args.connected:
                 interface = 'Offline'
                 args.interface = 'serial'  # TODO: ***** Remove ASAP *****
