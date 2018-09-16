@@ -33,9 +33,9 @@
 
 - 'TESTING':
   - (control) Joystick - Bug 1
-  - (cli) Usability - bash auto complete
 
 - 'DONE':
+  - (cli) Usability - bash auto complete
   - (gui) Status - Display temeperature for x86 hosts
   - (control) Joystick - Hat support
   - (gui) Screen saver - Add screen saver function

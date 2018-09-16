@@ -384,18 +384,17 @@ class Gui:
             r = pygame.mouse.get_rel()
             x = r[0]
             y = r[1]
-            if x == 0 and y == 0:
-                return
-            #
+            # if x == 0 and y == 0:
+                # return
             for i in self.device.get_objects():
-                if i["type"] == "push-button":
-                    i["button"].off()
+                # if i["type"] == "push-button":
+                    # i["button"].off()
                 try:
                     i["control"]["mouse"]
                 except BaseException:
                     continue
                 if eval(i["control"]["mouse"]):
-                    i["state"] = i["on"]["picture"]
+                    # i["state"] = i["on"]["picture"]
                     if self.session.is_connected():
                         try:
                             n = eval(i["control"]["mouse"].split(" ")[0])
@@ -631,7 +630,7 @@ class Gui:
                   i["button"].get_change() and
                   self.session.is_connected()):
                     i["state"] = "on" if i["button"].get_state() else "off"
-                    command = i[i["state"]]["command"].replace('*', 1)
+                    command = i[i["state"]]["command"]
                     self.session.send_wait(command)
 
     def ctrl_check(self, event):

@@ -12,13 +12,13 @@ Change log: Check CHANGELOG.md file.
 
 """
 
-import yaml
 try:
     # Ubuntu default modules
     import sys
     import argparse
     import os.path
     import time
+    import yaml
     # Myself modules
     from xC.device import DeviceProperties
     from xC.echo import verbose, level, \
@@ -346,6 +346,8 @@ class UserArgumentParser():
             for x, y in doc.items():
                 if x not in key:
                     continue
+                if y is None:
+                    return
                 z.update({self.description: {x: y}})
         echoln(yaml.dump(z, default_flow_style=False, indent=2))
 

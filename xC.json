@@ -429,7 +429,10 @@
         "network": {},
         "serial": {
           "path": "/dev/serial/by-id/usb-Arduino__www.arduino.cc__0042_75533343336351214101-if00",
-          "speed": 250000
+          "speed": 250000,
+          "terminal_echo": true,
+          "terminal_end_of_line": "LF",
+          "delay": 10
         }
       },
       "system": {
