@@ -64,6 +64,7 @@ install() {
       python-termcolor \
       python-sh \
       python-psutil \
+      python-yaml \
       >/dev/null 2>&1
   check_return $?
   # Copy files

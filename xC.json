@@ -115,6 +115,26 @@
         "path": "Development/envmon/Mark_I/enm1",
         "plat": "envmon"
       }
+    "enm2": {
+      "comm": {
+        "network": {
+          "address": "192.168.0.105"
+        },
+        "serial": {
+          "path": "/dev/serial/by-id/usb-Arduino_LLC_Arduino_Leonardo-if00",
+          "speed": 9600
+        }
+      },
+      "enable": false,
+      "system": {
+        "arch": "arduino:avr:yun",
+        "desc": "Environment Monitor",
+        "logs": "Development/envmon/Mark_I",
+        "work": "Development/envmon/Mark_I",
+        "mark": "I",
+        "path": "Development/envmon/Mark_I/enm1",
+        "plat": "envmon"
+      }
     },
     "escriba": {
       "comm": {
