@@ -115,6 +115,7 @@
         "path": "Development/envmon/Mark_I/enm1",
         "plat": "envmon"
       }
+    },
     "enm2": {
       "comm": {
         "network": {

@@ -22,7 +22,6 @@ Change log:
 import sys
 import json
 import os
-from socket import gethostbyname
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 import yaml

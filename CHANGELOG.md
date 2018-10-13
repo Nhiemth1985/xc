@@ -1,15 +1,15 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
-## [0.58b] - 2017-08-19
+## [0.58b] - 2018-08-19
 ### Added
 - Bash completion.
 
-## [0.57b] - 2017-08-15
+## [0.57b] - 2018-08-15
 ### Added
 - Kanban command line.
 
-## [0.56b] - 2017-07-27
+## [0.56b] - 2018-07-27
 ### Added
 - Program run: Featured colours to 'ok' and 'nok' received strings.
 
