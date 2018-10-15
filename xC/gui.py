@@ -482,17 +482,18 @@ class Gui:
                                          ["touch"]["enable"])
         except BaseException:
             self.control_touch_enable = False
+        # Speed
         try:
             self.control_touch_speed = (self.device.get_control()
                                         ["touch"]["speed"])
         except BaseException:
-            self.control_touch_visible = False
-        # Delay
+            self.control_touch_speed = False
+        # Visible
         try:
             self.control_touch_visible = (self.host.get_control()
                                         ["touch"]["visible"])
         except BaseException:
-            self.control_touch_speed = 1
+            self.control_touch_visible = 1
         # Delay
         try:
             self.control_touch_delay = (self.device.get_control()
