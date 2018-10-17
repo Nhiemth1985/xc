@@ -2,7 +2,7 @@
 # 
 # nrdp.sh
 # 
-# Author: Márcio Pessoa <marcio@pessoa.eti.br>
+# Author: Márcio Pessoa <marcio.pessoa@gmail.com>
 # Contributors: none
 # 
 # Description:

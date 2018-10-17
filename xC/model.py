@@ -1,7 +1,7 @@
 """
 model.py
 
-Author: Marcio Pessoa <marcio.pessoa@sciemon.com>
+Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
 
 Change log:

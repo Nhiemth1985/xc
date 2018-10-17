@@ -1,7 +1,7 @@
 """
 echo.py
 
-Author: Marcio Pessoa <marcio@pessoa.eti.br>
+Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
 
 Description:

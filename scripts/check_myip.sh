@@ -2,7 +2,7 @@
 # 
 # check_myip.sh
 # 
-# Author: Márcio Pessoa <marcio@pessoa.eti.br>
+# Author: Márcio Pessoa <marcio.pessoa@gmail.com>
 # Contributors: none
 # 
 # Description:
@@ -89,7 +89,7 @@ case "$1" in
     echo "Usage: $0 without options."
     echo
     echo "Version: 0.01b"
-    echo "Report bugs to: Marcio Pessoa <marcio@pessoa.eti.br>"
+    echo "Report bugs to: Marcio Pessoa <marcio.pessoa@gmail.com>"
     ;;
 esac
 exit 0

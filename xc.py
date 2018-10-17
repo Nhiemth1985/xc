@@ -3,9 +3,9 @@
 """
 xc.py
 
-Copyright (c) 2014-2018 Márcio Pessoa <marcio.pessoa@sciemon.com>
+Copyright (c) 2014-2018 Márcio Pessoa
 
-Author: Marcio Pessoa <marcio@pessoa.eti.br>
+Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
 
 Change log: Check CHANGELOG.md file.
@@ -49,7 +49,7 @@ class UserArgumentParser():
         self.program_copyright = "Copyright (c) 2014-2018 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
         self.program_website = "http://pessoa.eti.br/"
-        self.program_contact = "Marcio Pessoa <marcio.pessoa@sciemon.com>"
+        self.program_contact = "Marcio Pessoa <marcio.pessoa@gmail.com>"
         self.id = None
         self.interface = None
         self.config_file = os.path.join(os.getenv('HOME', ''), '.xC.json')
