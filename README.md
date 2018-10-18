@@ -171,13 +171,3 @@ I recommend you use underline before macro name. It's usefull to quickly identif
  K_MENU         |       | menu
  K_POWER        |       | power
  K_EURO         |       | Euro
-
-Device detection
-
- B | A | Result
----|---|--------
- 0 | 0 | 0
- 0 | 1 | 1
- 1 | 0 | 1
- 1 | 1 | 0
-
