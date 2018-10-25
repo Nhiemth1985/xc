@@ -1,5 +1,5 @@
 """
-host_properties.py
+host.py
 
 Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none

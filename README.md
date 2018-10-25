@@ -7,7 +7,7 @@
 # Introduction
 
 ## Topology
-![Topology](Documents/xC.png)
+![Topology](Documents/Pictures/xC.png)
 
 ## Terminology 
 - xC: aXes Controller, this software

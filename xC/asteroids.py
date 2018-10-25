@@ -1,6 +1,8 @@
 """
 asteroids.py
 
+Description: Asteroids package file
+
 Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
 

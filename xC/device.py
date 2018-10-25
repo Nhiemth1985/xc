@@ -1,5 +1,7 @@
 """
-device_properties.py
+device.py
+
+Description: Device package file
 
 Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none

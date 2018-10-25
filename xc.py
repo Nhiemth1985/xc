@@ -3,6 +3,8 @@
 """
 xc.py
 
+Description: Main program file
+
 Copyright (c) 2014-2018 Márcio Pessoa
 
 Author: Marcio Pessoa <marcio.pessoa@gmail.com>
