@@ -473,6 +473,8 @@
         "serial": {
           "path": "/dev/serial/by-id/usb-Arduino_LLC_Arduino_Leonardo-if00",
           "speed": 115200,
+          "terminal_echo": true,
+          "terminal_end_of_line": "LF",
           "delay": 100
         }
       },
