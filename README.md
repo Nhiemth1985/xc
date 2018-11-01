@@ -5,6 +5,12 @@
 [Kanban](KANBAN.md)
 
 # Introduction
+xC is a software to rule all robots.
+
+![x6](Documents/Pictures/x6.png)
+
+![Escriba](Documents/Pictures/escriba.png)
+
 
 ## Topology
 ![Topology](Documents/Pictures/xC.png)
