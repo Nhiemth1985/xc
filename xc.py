@@ -303,7 +303,7 @@ class UserArgumentParser():
                     continue
             if args.verbosity >= 4 or args.connected:
                 interface = 'Offline'
-                args.interface = 'serial'  # TODO: ***** Remove ASAP *****
+                args.interface = 'serial'
                 if args.interface == 'serial' or args.interface == 'all':
                     if session.is_connected_serial():
                         interface = "Serial"

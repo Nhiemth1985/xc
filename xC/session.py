@@ -66,17 +66,12 @@ class Session:
         if data == []:
             return
         self.data = data
-        # Mandatory keys
+        # Optional keys
         try:
             self.comm_serial_path = self.data["serial"]\
                 .get('path', self.comm_serial_path)
             self.comm_serial_speed = self.data["serial"]\
                 .get('speed', self.comm_serial_speed)
-        except KeyError as err:
-            erroln('Mandatory key is absent: %s' % (err))
-            sys.exit(True)
-        # Optional keys
-        try:
             self.comm_serial_delay = self.data["serial"]\
                 .get('delay', self.comm_serial_delay)
             self.comm_serial_terminal_echo = self.data["serial"]\

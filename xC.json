@@ -137,6 +137,57 @@
         "plat": "envmon"
       }
     },
+    "xc": {
+      "comm": {
+        "network": {
+          "address": "192.168.15.12"
+        }
+      },
+      "enable": true,
+      "system": {
+        "arch": "arduino:avr:yun",
+        "desc": "Axes Controller",
+        "logs": "Development/xC/xc",
+        "work": "Development/xC/xc",
+        "mark": "I",
+        "path": "Development/xC/xc",
+        "plat": "xC"
+      }
+    },
+    "xcm1": {
+      "comm": {
+        "network": {
+          "address": "192.168.15.12"
+        }
+      },
+      "enable": true,
+      "system": {
+        "arch": "arduino:avr:yun",
+        "desc": "Axes Controller",
+        "logs": "Development/xC/Mark_I",
+        "work": "Development/xC/Mark_I",
+        "mark": "I",
+        "path": "Development/xC/Mark_I",
+        "plat": "xC"
+      }
+    },
+    "xcm2": {
+      "comm": {
+        "network": {
+          "address": "192.168.15.12"
+        }
+      },
+      "enable": true,
+      "system": {
+        "arch": "arduino:avr:yun",
+        "desc": "Axes Controller",
+        "logs": "Development/xC/Mark_II",
+        "work": "Development/xC/Mark_II",
+        "mark": "II",
+        "path": "Development/xC/Mark_II",
+        "plat": "xC"
+      }
+    },
     "escriba": {
       "comm": {
         "network": {},
