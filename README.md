@@ -11,6 +11,10 @@ xC is a software to rule all robots.
 
 ![Escriba](Documents/Pictures/escriba.png)
 
+<!--
+## Videos
+Watch this projects videos on [YouTube Playlist].
+-->
 
 ## Topology
 ![Topology](Documents/Pictures/xC.png)

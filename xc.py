@@ -45,8 +45,8 @@ class UserArgumentParser():
 
     def __init__(self):
         self.program_name = "xc"
-        self.program_version = "0.58b"
-        self.program_date = "2018-08-19"
+        self.program_version = "0.59b"
+        self.program_date = "2018-11-12"
         self.program_description = "xC - aXes Controller"
         self.program_copyright = "Copyright (c) 2014-2018 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
@@ -340,6 +340,8 @@ class UserArgumentParser():
         self.kanban_file = os.path.join(os.environ['HOME'], self.system_path)
         self.kanban_file = os.path.join(self.kanban_file, 'KANBAN.yaml')
         self.kanban = File()
+        if not self.kanban.is_file(self.kanban_file):
+            return
         self.kanban.load(self.kanban_file, 'yaml')
         self.description = description.encode("utf-8")
         z = dict()

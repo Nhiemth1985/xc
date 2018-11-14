@@ -5,6 +5,10 @@ Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
 
 Change log:
+2018-11-12
+        * Version: 0.04b
+        * Added: is_file method.
+
 2018-08-14
         * Version: 0.03b
         * Added: Support to YAML files.
@@ -29,11 +33,17 @@ import yaml
 
 class File:
     def __init__(self):
-        self.version = '0.03b'
+        self.version = '0.04b'
         self.reset()
 
     def reset(self):
         self.data = None
+
+    def is_file(self, file):
+        if os.path.isfile(file):
+            return True
+        else:
+            return False
 
     def load(self, file, type):
         infoln('File: ' + str(file), 1)
