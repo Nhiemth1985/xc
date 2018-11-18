@@ -5,10 +5,14 @@ Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
 
 Change log:
+2018-11-16
+        * Version: 0.06b
+        * Changed: os.system to subprocess OS command calls.
+
 2017-11-11
         * Version: 0.05b
-        * New feature: Terminal line feed and carriage return customization.
-        * New feature: Terminal local echo customization.
+        * Added: Terminal line feed and carriage return customization.
+        * Added: Terminal local echo customization.
 
 2017-06-04
         * Version: 0.04b
@@ -25,17 +29,17 @@ Change log:
 
 2017-02-24
         * Version: 0.01b
-        * Added check program before execution
-          * Checks for arduino and miniterm.py executables on system.
+        * Added: Check program before execution
+        * Added: Checks for arduino and miniterm.py executables on system.
 
 2016-02-13
         * Version: 0.00b
         * Scrach version.
 """
 
-import os.path
 import sys
-import time
+import os.path
+import subprocess
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 
@@ -45,7 +49,7 @@ class DevTools:
 
     def __init__(self, data):
         """docstring"""
-        self.version = '0.05b'
+        self.version = '0.06b'
         self.terminal_program = "miniterm.py"
         self.arduino_program = "arduino"
         self.load(data)
@@ -141,7 +145,8 @@ class DevTools:
                    local_echo + " " +
                    "--quiet")
         codeln(command)
-        return_code = os.system(command)
+        return_code = subprocess.call(command, shell=True)
+        #
         if return_code != 0:
             erroln("Return code: " + str(return_code))
             if return_code > 127:
@@ -161,7 +166,7 @@ class DevTools:
         if level() < 3:
             cmd += " >/dev/null 2>&1"
         infoln('Verifying...')
-        return_code = os.system(cmd)
+        return_code = subprocess.call(cmd, shell=True)
         if return_code != 0:
             erroln("Return code: " + str(return_code))
             if return_code > 127:
@@ -184,7 +189,7 @@ class DevTools:
         if level() < 3:
             cmd += " >/dev/null 2>&1"
         infoln('Uploading...')
-        return_code = os.system(cmd)
+        return_code = subprocess.call(cmd, shell=True)
         if return_code == 0:
             f = open(self.logs + "/.buildno", 'r')
             buildno = f.read()
