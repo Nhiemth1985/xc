@@ -20,7 +20,6 @@ try:
     import argparse
     import os.path
     import time
-    import yaml
     # Myself modules
     from xC.device import DeviceProperties
     from xC.echo import verbose, level, \
@@ -45,8 +44,8 @@ class UserArgumentParser():
 
     def __init__(self):
         self.program_name = "xc"
-        self.program_version = "0.60b"
-        self.program_date = "2018-11-16"
+        self.program_version = "0.61b"
+        self.program_date = "2018-11-22"
         self.program_description = "xC - aXes Controller"
         self.program_copyright = "Copyright (c) 2014-2018 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
@@ -95,43 +94,6 @@ class UserArgumentParser():
             parser.print_help()
             sys.exit(True)
         getattr(self, args.command)()
-
-    def kanban(self):
-        parser = argparse.ArgumentParser(
-            prog=self.program_name + ' kanban',
-            description='display project kanban')
-        parser.add_argument(
-            '-i', '--id',
-            help='device ID')
-        parser.add_argument(
-            '-k', '--key',
-            default='DOING',
-            help='key to search')
-        parser.add_argument(
-            '-v', '--verbosity', type=int,
-            default=1,
-            choices=[0, 1, 2, 3, 4],
-            help='verbose mode, options: ' +
-                 '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
-        args = parser.parse_args(sys.argv[2:])
-        self.__load_configuration()
-        device = DeviceProperties(self.config.get())
-        if args.id is None:
-            for id in device.list():
-                device.set(id)
-                if not device.is_enable():
-                    continue
-                description = device.system_plat + " Mark " + \
-                    device.system_mark + ' - ' + \
-                    device.system_desc
-                self.__kanban(device.get_id(), args.key, description)
-        else:
-            device.set(args.id)
-            description = device.system_plat + " Mark " + \
-                device.system_mark + ' - ' + \
-                device.system_desc
-            self.__kanban(device.get_id(), args.key, description)
-        sys.exit(False)
 
     def run(self):
         parser = argparse.ArgumentParser(
@@ -329,31 +291,6 @@ class UserArgumentParser():
                 echoln('')
             c += 1
         sys.exit(c)
-
-    def __kanban(self, id, key, description):
-        key = key.upper()
-        try:
-            self.system_path = self.config.get()["device"][id]["system"]["work"]
-        except BaseException:
-            erroln("Invalid ID.")
-            sys.exit(True)
-        self.kanban_file = os.path.join(os.environ['HOME'], self.system_path)
-        self.kanban_file = os.path.join(self.kanban_file, 'KANBAN.yaml')
-        self.kanban = File()
-        if not self.kanban.is_file(self.kanban_file):
-            return
-        self.kanban.load(self.kanban_file, 'yaml')
-        self.description = description.encode("utf-8")
-        z = dict()
-        z.update({self.description: ''})
-        for doc in self.kanban.get():
-            for x, y in doc.items():
-                if x not in key:
-                    continue
-                if y is None:
-                    return
-                z.update({self.description: {x: y}})
-        echoln(yaml.dump(z, default_flow_style=False, indent=2))
 
     def __load_configuration(self):
         infoln('Loading configuration...')

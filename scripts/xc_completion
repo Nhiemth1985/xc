@@ -16,6 +16,9 @@
 #   Just copy this file to: /etc/bash_completion.d
 # 
 # Change log:
+# 2018-11-22
+#         * Removed: Kanban features.
+#
 # 2018-08-19
 #         * First version.
 
@@ -47,9 +50,7 @@ _xc()
   cur=${COMP_WORDS[COMP_CWORD]}
 
   if [[ $COMP_CWORD -eq 1 ]] ; then
-    COMPREPLY=( $( compgen -W "gui terminal run list \
-      verify upload \
-      kanban" -- $cur ) )
+    COMPREPLY=( $( compgen -W "gui terminal run list" -- $cur ) )
   else
 
     prev=${COMP_WORDS[COMP_CWORD-1]}

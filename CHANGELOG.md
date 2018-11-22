@@ -1,6 +1,10 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## [0.61b] - 2018-11-22
+### Removed
+- Kanban features.
+
 ## [0.59b] - 2018-11-12
 ### Added
 - Method to check files before opening it.
