@@ -1,7 +1,5 @@
 # xC - aXes Controller
 
-[Change log](CHANGELOG.md)
-
 ## Introduction
 xC is a software to rule all robots.
 
@@ -13,6 +11,9 @@ xC is a software to rule all robots.
 ## Videos
 Watch this projects videos on [YouTube Playlist].
 -->
+
+## Changes
+All notable changes to this project will be documented in this [Change log](CHANGELOG.md).
 
 ## Topology
 ![Topology](Documents/Pictures/xC.png)
@@ -44,4 +45,4 @@ I recommend you use underline before macro name. It's usefull to quickly identif
 
 ### Keyboard map
 
-To configure controls, take a look at [Controls.md](Documents/Controls.md).
+To configure controls, take a look at [controls.md](Documents/controls.md).
