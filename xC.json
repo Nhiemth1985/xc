@@ -489,10 +489,10 @@
       "system": {
         "arch": "arduino:avr:micro",
         "desc": "Fan Controller",
-        "logs": "Development/fC/Mark_I",
-        "work": "Development/fC/Mark_I",
+        "logs": "Development/.other/fC/Mark_I",
+        "work": "Development/.other/fC/Mark_I",
         "mark": "I",
-        "path": "Development/fC/Mark_I/fC/",
+        "path": "Development/.other/fC/Mark_I/fC/",
         "plat": "fC"
       }
     },
