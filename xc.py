@@ -257,7 +257,6 @@ class UserArgumentParser():
             echo('--------')
         if args.verbosity > 1:
             echoln('')
-        c = 0
         for id in device.list():
             device.set(id)
             session = Session(device.get_comm())
@@ -289,8 +288,7 @@ class UserArgumentParser():
                 echo('\t' + interface)
             if args.verbosity > 0:
                 echoln('')
-            c += 1
-        sys.exit(c)
+        sys.exit(False)
 
     def __load_configuration(self):
         infoln('Loading configuration...')
