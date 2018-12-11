@@ -305,7 +305,7 @@ class UserArgumentParser():
                 if self.session.is_connected_serial():
                     self.session.start()
                 else:
-                    warnln('Device is not connected.', 1)
+                    erroln('Device is not connected.', 1)
                     sys.exit(True)
             elif self.interface == 'network':
                 if self.device.comm_network_address is None:
