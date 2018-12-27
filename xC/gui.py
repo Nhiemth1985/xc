@@ -127,6 +127,8 @@ class Gui:
         self.screensaver_time = 60
         self.screensaver_type = 'black'
         self.device_timer = Timer(1000)
+        self.joystick_detected = set()
+        self.joystick_timer = Timer(1000)
         self.device = DeviceProperties(self.data)
 
     def reset(self):
@@ -224,7 +226,7 @@ class Gui:
                                             ["joystick"]["enable"])
         except BaseException:
             self.control_joystick_enable = False
-        # Is speed configured?
+        # Speed
         try:
             self.control_joystick_speed = (self.device.get_control()
                                            ["joystick"]["speed"])
@@ -242,10 +244,12 @@ class Gui:
                              [2, 1])
         self.control_joystick_button = Button(self.joyicon, [0, 100], [5, 58],
                                               self.control_joystick_enable)
-        self.joystick_hat_active = False
         # Detect and start
+        self.joystick_hat_active = False
         joysticks = pygame.joystick.get_count()
         if joysticks:
+            if (self.joystick_detected != joysticks):
+                self.joystick_detected = joysticks
             infoln(str(joysticks))
             for i in range(joysticks):
                 self.joystick = pygame.joystick.Joystick(i)
@@ -594,6 +598,9 @@ class Gui:
                 if event.type == pygame.QUIT:
                     self.running = False
                 self.ctrl_check(event)
+            # if self.joystick_timer.check():
+                # print "opa"
+                # self.ctrl_joystick_start()
             self.draw()
             self.ctrl_handle()
             self.device_check()
@@ -729,7 +736,7 @@ class Gui:
             self.reset()
             self.device.reset()
             self.start_device()
-            self.start_ctrl()
+            self.ctrl_start()
             self.start_objects()
             self.session.reset()
             self.start_session()
@@ -741,7 +748,7 @@ class Gui:
                 # Confiure a new device.
                 self.session.reset()
                 self.start_device()
-                self.start_ctrl()
+                self.ctrl_start()
                 self.start_objects()
                 self.start_session()
                 return
@@ -835,7 +842,7 @@ class Gui:
         infoln('Loading images...', 1)
         self.images_load()
 
-    def start_ctrl(self):
+    def ctrl_start(self):
         infoln('Input...')
         self.ctrl_keyboard_start()
         self.ctrl_mouse_start()
@@ -847,7 +854,7 @@ class Gui:
         self.start_host()
         self.start_screen()
         self.start_device()
-        self.start_ctrl()
+        self.ctrl_start()
         self.start_objects()
         self.start_session()
 
