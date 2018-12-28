@@ -41,7 +41,7 @@ fi
 
 message() {
   message=$1
-  echo "$message""... \c"
+  echo "$message""... \\c"
 }
 
 check_return() {
