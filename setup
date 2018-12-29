@@ -33,6 +33,8 @@
 
 readonly ACTION=$1
 readonly OPTION=$2
+readonly PYTHON="python3"
+
 if [ "$OPTION" = "--verbose" ]; then
   verbose="--verbose"
 else
@@ -101,7 +103,7 @@ install() {
 
 update() {
   message "Compiling"
-  find . -name "*.py" -exec python -m py_compile {} \;
+  find . -name "*.py" -exec "$PYTHON" -m py_compile {} \;
   check_return $?
   message "Copying files"
   rsync --include-from .rsync_include.txt \

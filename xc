@@ -28,6 +28,7 @@
 
 readonly WORK_DIR='/opt/sciemon/xc'
 readonly WORK_FILE='xc.pyc'
+readonly PYTHON='python3'
 
 # Default values
 command="gui"
@@ -48,12 +49,12 @@ done
 
 # Apply desired command
 if [ "$#" -eq 0 ]; then
-  python "$WORK_DIR"/"$WORK_FILE" "$command" \
+  "$PYTHON" "$WORK_DIR"/"$WORK_FILE" "$command" \
     --verbosity="$verbosity" | \
     grep -v 'SDL_'
   exit ${PIPESTATUS[0]}
 else
-  python "$WORK_DIR"/"$WORK_FILE" "$@" \
+  "$PYTHON" "$WORK_DIR"/"$WORK_FILE" "$@" \
     --verbosity="$verbosity" | \
     grep -v 'SDL_'
   exit ${PIPESTATUS[0]}
