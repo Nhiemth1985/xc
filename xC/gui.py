@@ -105,7 +105,6 @@ import re
 from xC.screensaver import Screensaver
 from xC.session import Session
 from xC.timer import Timer
-from xC.pong import Pong
 
 xc_path = os.getenv('XC_PATH', '/opt/sciemon/xc')
 images_directory = os.path.join(xc_path, 'images')
@@ -273,9 +272,6 @@ class Gui:
 
     def ctrl_keyboard_handle(self, event):
         # Program behavior
-        if self.pong.running:
-            self.pong.control(event)
-            return False
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:  # Escape
                 self.running = False
@@ -291,8 +287,6 @@ class Gui:
                 self.control_touch_button.toggle()
             if event.key == K_F12:  # Voice grab
                 self.control_voice_button.toggle()
-            if event.key == K_p:  # Pong
-                self.pong.start()
             if event.key == K_LALT:  # Release controls
                 self.control_keyboard_button.off()
                 self.control_mouse_button.off()
@@ -388,8 +382,6 @@ class Gui:
             r = pygame.mouse.get_rel()
             x = r[0]
             y = r[1]
-            # if x == 0 and y == 0:
-                # return
             for i in self.device.get_objects():
                 # if i["type"] == "push-button":
                     # i["button"].off()
@@ -495,7 +487,7 @@ class Gui:
         # Visible
         try:
             self.control_touch_visible = (self.host.get_control()
-                                        ["touch"]["visible"])
+                                          ["touch"]["visible"])
         except BaseException:
             self.control_touch_visible = 1
         # Delay
@@ -671,12 +663,9 @@ class Gui:
 
     def draw(self):
         self.screen.blit(self.background, (0, 0))
-        if self.pong.running:
-            self.pong.run()
-        else:
-            self.draw_ctrl()
-            self.draw_object()
-            self.draw_device()
+        self.draw_ctrl()
+        self.draw_object()
+        self.draw_device()
         self.draw_status()
         self.draw_screensaver()
         self.clock.tick(self.screen_rate)
@@ -829,9 +818,6 @@ class Gui:
         # Clockling
         infoln('Clockling...', 1)
         self.clock = pygame.time.Clock()
-
-        # Pong
-        self.pong = Pong(self.screen)
 
         # Screensaver
         self.screensaver = Screensaver(self.screen)
