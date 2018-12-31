@@ -60,7 +60,7 @@ import json
 import os
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
-from xC.session import Session
+# from xC.session import Session
 
 
 class DeviceProperties:
