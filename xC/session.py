@@ -267,7 +267,7 @@ class Session:
             codeln(received, 'green', attrs=['bold'])
             return received
         else:
-            codeln(received, 'green')
+            # codeln(received, 'green')
             return received
 
     def send(self, command):

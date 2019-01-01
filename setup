@@ -13,6 +13,9 @@
 #   setup update
 #
 # Change log:
+# 2019-01-01
+#         * Changed: Python 3 ready.
+#
 # 2018-06-13
 #         * Added: Python compilation before install or update installation.
 #
@@ -61,13 +64,11 @@ install() {
   message "Installing software dependencies"
   apt update >/dev/null 2>&1 && \
     apt -y install \
-      python-serial \
-      python-pygame \
-      python-termcolor \
-      python-sh \
-      python-psutil \
-      python-yaml \
+      python3-pip \
       >/dev/null 2>&1
+  check_return $?
+  message "Installing Python 3 dependencies"
+  pip3 install pygame termcolor
   check_return $?
   # Copy files
   message "Creating directory structure"

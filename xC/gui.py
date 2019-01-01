@@ -5,6 +5,10 @@ Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
 
 Change log:
+2019-01-01
+        * Version: 0.18
+        * Changed: Python 3 ready.
+
 2018-06-27
         * Version: 0.17b
         * Changed: Removed resizeable window feature.
@@ -93,10 +97,9 @@ Change log:
 import sys
 import os.path
 import os
-import pygame
-from pygame.locals import *
 import subprocess
 import time
+
 from xC.device import DeviceProperties
 from xC.host import HostProperties
 from xC.echo import verbose, level, \
@@ -106,6 +109,11 @@ from xC.screensaver import Screensaver
 from xC.session import Session
 from xC.timer import Timer
 
+import contextlib
+with contextlib.redirect_stdout(None):
+    import pygame
+    from pygame.locals import *
+
 xc_path = os.getenv('XC_PATH', '/opt/sciemon/xc')
 images_directory = os.path.join(xc_path, 'images')
 
@@ -114,7 +122,7 @@ class Gui:
     """  """
 
     def __init__(self, data):
-        self.version = '0.17b'
+        self.version = '0.18'
         self.load(data)
         self.set()
 
@@ -603,8 +611,8 @@ class Gui:
     def ctrl_handle(self):
         # Mouse visible
         if self.control_mouse_button.get_state() or \
-           (self.control_touch_button.get_state() and not
-            self.control_touch_visible):
+            (self.control_touch_button.get_state() and not
+             self.control_touch_visible):
             self.ctrl_mouse_cursor(False)
         else:
             self.ctrl_mouse_cursor(True)
@@ -762,10 +770,9 @@ class Gui:
     def start_screen(self):
         global pygame
         infoln("Screen...")
-
         # Set screen resolution
-        self.screen_resolution = (480, 320)  # pixels (default resolution)
-        self.screen_resolution = map(int, self.screen_size.split('x'))
+        self.screen_resolution = [int(s) for s in self.screen_size.split('x')
+                                  if s.isdigit()]
         # Check for minimum resolution
         if (self.screen_resolution[0] < 480) or \
            (self.screen_resolution[1] < 320):
@@ -869,7 +876,7 @@ class Gui:
         self.status_bar.blit(text, textpos)
 
         # General information
-        text = font.render(self.host.status(), True, (32, 128, 32))
+        text = font.render(str(self.host.status()), True, (32, 128, 32))
         textpos = text.get_rect()
         textpos.midbottom = self.status_bar.get_rect().midbottom
         self.status_bar.blit(text, textpos)
