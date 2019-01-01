@@ -36,7 +36,7 @@ import os.path
 import os
 import re
 from serial import Serial
-import sh
+# import sh
 from socket import gethostbyname
 import sys
 from time import sleep

@@ -103,7 +103,7 @@ from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 import re
 from xC.screensaver import Screensaver
-# from xC.session import Session
+from xC.session import Session
 from xC.timer import Timer
 
 xc_path = os.getenv('XC_PATH', '/opt/sciemon/xc')

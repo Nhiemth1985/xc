@@ -26,7 +26,7 @@ try:
         echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
     from xC.file import File
     from xC.host import HostProperties
-    # from xC.session import Session
+    from xC.session import Session
     from xC.tools import DevTools
 except ImportError as err:
     print("Could not load module. " + str(err))
