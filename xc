@@ -27,7 +27,7 @@
 #
 
 readonly WORK_DIR='/opt/sciemon/xc'
-readonly WORK_FILE='xc.pyc'
+readonly WORK_FILE='xc.py'
 readonly PYTHON='python3'
 
 # Default values
