@@ -1,8 +1,12 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
-## [0.7] - 2019-01-01
+## [0.71] - 2019-01-02
 ### Removed
+- Bash completion.
+
+## [0.7] - 2019-01-01
+### Added
 - Python 3 ready!
 
 ## [0.61b] - 2018-11-22

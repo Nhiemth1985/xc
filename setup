@@ -85,9 +85,6 @@ install() {
   #message "Configuration file"
   ln -s /opt/sciemon/xc/xC.json "$HOME"/.xC.json >/dev/null 2>&1
   #check_return $?
-  #message "Completion file"
-  ln -s /opt/sciemon/xc/scripts/xc_completion \
-    /etc/bash_completion.d/xc >/dev/null 2>&1
   #check_return $?
   #
   # sh -c 'cat > /usr/share/xsessions/xc.desktop'

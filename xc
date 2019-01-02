@@ -12,6 +12,9 @@
 #   xc -h
 # 
 # Change log:
+# 2019-01-01
+#          * Changed: Python 3 ready.
+#
 # 2018-07-18
 #          * Bug fix: Not returning the xc.pyc exit status.
 #          * Bug fix: Not undestanding -v option.
