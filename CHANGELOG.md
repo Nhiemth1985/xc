@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - Bash completion.
 
+### Fixed
+- Bug #70: Pygame undesirable verbose message after ported to Python 3
+- Bug #68: Terminal command doesn't display any keyboard input until Return is pressed
+
 ## [0.7] - 2019-01-01
 ### Added
 - Python 3 ready!
@@ -32,14 +36,6 @@ All notable changes to this project will be documented in this file.
 ## [0.55b] - 2018-07-18
 ### Fixed
 - List: Was showing all devices when required to return only connected devices.
-
-## [0.54b] - 2018-06-20
-### Fixed
-- Pong easter egg: Ball spawn to never raize balls without angle.
-
-## [0.53b] - 2018-06-19
-### Added
-- Pong easter egg.
 
 ## [0.52b] - 2018-06-05
 ### Added

@@ -144,7 +144,6 @@ class DevTools:
                    "--eol " + self.terminal_end_of_line + " " +
                    local_echo + " " +
                    "--quiet")
-        codeln(command)
         return_code = subprocess.call(command, shell=True)
         #
         if return_code != 0:

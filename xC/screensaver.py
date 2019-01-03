@@ -5,21 +5,28 @@ Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
 
 Change log:
+2019-01-01
+        * Version: 0.2
+        * Changed: Python 3 ready.
+
 2018-07-22
         * Version: 0.01b
         * Added: First version.
 """
 
-import pygame
-from pygame.locals import *
 import random
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 
+import contextlib
+with contextlib.redirect_stdout(None):
+    import pygame
+    from pygame.locals import *
+
 
 class Screensaver:
     def __init__(self, screen):
-        self.version = '0.01b'
+        self.version = '0.2'
         self.screen = screen
         self.running = False
         self.set()

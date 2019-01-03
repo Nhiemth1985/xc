@@ -5,7 +5,7 @@ xc.py
 
 Description: Main program file
 
-Copyright (c) 2014-2018 Márcio Pessoa
+Copyright (c) 2014-2019 Márcio Pessoa
 
 Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
@@ -47,7 +47,7 @@ class UserArgumentParser():
         self.program_version = "0.7"
         self.program_date = "2019-01-01"
         self.program_description = "xC - aXes Controller"
-        self.program_copyright = "Copyright (c) 2014-2018 Marcio Pessoa"
+        self.program_copyright = "Copyright (c) 2014-2019 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
         self.program_website = "http://pessoa.eti.br/"
         self.program_contact = "Marcio Pessoa <marcio.pessoa@gmail.com>"

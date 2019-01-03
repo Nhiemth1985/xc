@@ -95,8 +95,8 @@ Change log:
 """
 
 import sys
-import os.path
 import os
+import os.path
 import subprocess
 import time
 
@@ -758,7 +758,10 @@ class Gui:
     def start_device(self):
         infoln("Device...")
         if not self.device.get_id():
-            self.device.detect()
+            detected = self.device.detect()
+            if len(detected) > 1:
+                warnln('Too many connected devices: ' + str(detected), 1)
+                return
         self.device.info()
         if self.device.get_id():
             self.window_title = self.device.system_plat + ' Mark ' + \

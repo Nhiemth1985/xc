@@ -3,6 +3,7 @@
 ## Introduction
 xC is a software to rule all robots.
 
+### Screenshots
 ![x6](Screenshots/x6.png)
 
 ![Escriba](Screenshots/escriba.png)
@@ -26,18 +27,24 @@ All notable changes to this project will be documented in this [Change log](CHAN
 
 ## Installation
 
-Download xC lastest version:
+### Download xC lastest version
 ``` bash
 wget https://git.sciemon.com/sciemon/xc/archive/0.50b.zip
 ```
-Uncompress:
+### Uncompress
 ``` bash
 unzip xc.zip
 ```
-Run installer:
+### Install
 ``` bash
 sudo ./setup install
 ```
+### Run
+It's ready to run on Python 3.
+``` bash
+xc
+```
+
 ## Configuration file
 
 ### Macros

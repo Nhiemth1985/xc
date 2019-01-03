@@ -19,9 +19,6 @@
 #          * Bug fix: Not returning the xc.pyc exit status.
 #          * Bug fix: Not undestanding -v option.
 #
-# 2017-05-22
-#          * Bug fix: Supress SDL verbose messages.
-# 
 # 2017-03-05
 #          * Bug fix: --verbosity option was using an unmutable value (4).
 # 
@@ -29,6 +26,7 @@
 #         * First version.
 #
 
+# 
 readonly WORK_DIR='/opt/sciemon/xc'
 readonly WORK_FILE='xc.py'
 readonly PYTHON='python3'
@@ -53,12 +51,10 @@ done
 # Apply desired command
 if [ "$#" -eq 0 ]; then
   "$PYTHON" "$WORK_DIR"/"$WORK_FILE" "$command" \
-    --verbosity="$verbosity" | \
-    grep -v 'SDL_'
+    --verbosity="$verbosity"
   exit ${PIPESTATUS[0]}
 else
   "$PYTHON" "$WORK_DIR"/"$WORK_FILE" "$@" \
-    --verbosity="$verbosity" | \
-    grep -v 'SDL_'
+    --verbosity="$verbosity"
   exit ${PIPESTATUS[0]}
 fi
