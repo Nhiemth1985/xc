@@ -51,7 +51,7 @@ from xC.timer import Timer
 
 class Session:
     def __init__(self, data):
-        self.version = '0.05b'
+        self.version = '0.06'
         self.reset()
         self.load(data)
 

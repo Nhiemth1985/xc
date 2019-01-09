@@ -52,14 +52,11 @@ from xC.echo import verbose, level, \
 
 class DevTools:
     """
-    
-    data: 
     """
 
     def __init__(self, data):
         """docstring"""
         self.version = '0.07b'
-        self.terminal_program = "miniterm.py"
         self.arduino_program = "arduino"
         self.load(data)
         self.set()
@@ -123,10 +120,6 @@ class DevTools:
         self.destination = ''
 
     def terminal(self):
-        # Check if miniterm.py exists
-        if self.__which(self.terminal_program) is None:
-            erroln('Program not found: ' + self.terminal_program)
-            sys.exit(True)
         # Connect a terminal to SSH console.
         if 'linux' in self.architecture:
             ret = os.system('ssh' + ' ' + 'xc' + '@' + self.network_address)
@@ -143,11 +136,12 @@ class DevTools:
             sys.exit(ret)
         # Connect a terminal to device serial console.
         infoln("Communication device: " +
-               os.popen("readlink -f " + self.device_path).read())
+             os.popen("readlink -f " + self.device_path).read())
         # Start serial session
         session = Session(self.data["comm"])
-        session.info()
         instance = session.start()
+        if instance is True:
+            sys.exit(True)
         # Start minicom session
         miniterm = Miniterm(instance,
                             echo=self.terminal_echo,
@@ -159,7 +153,12 @@ class DevTools:
         miniterm.set_rx_encoding('UTF-8')
         miniterm.set_tx_encoding('UTF-8')
         miniterm.start()
-        miniterm.join(True)
+        try:
+            miniterm.join(True)
+        except KeyboardInterrupt:
+            pass
+        miniterm.join()
+        miniterm.close()
         sys.exit(False)
 
     def verify(self):
