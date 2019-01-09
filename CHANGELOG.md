@@ -1,6 +1,10 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## [0.72] - 2019-01-08
+### Fixed
+- Serial connection.
+
 ## [0.71] - 2019-01-02
 ### Removed
 - Bash completion.

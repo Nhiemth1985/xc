@@ -5,6 +5,10 @@ Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
 
 Change log:
+2019-01-08
+        * Version: 0.06
+        * Fixed: Minor updated to support serial on Python 3.
+
 2017-07-27
         * Version: 0.05b
         * New feature: Featured colours to 'ok' and 'nok' received strings.
@@ -35,7 +39,7 @@ Change log:
 import os.path
 import os
 import re
-from serial import Serial
+import serial
 # import sh
 from socket import gethostbyname
 import sys
@@ -118,9 +122,11 @@ class Session:
         infoln("Connecting...", 1)
         if self.is_connected_serial():
             try:
-                self.session = Serial(self.comm_serial_path,
-                                      self.comm_serial_speed,
-                                      timeout=1)
+                self.session = serial.Serial()
+                self.session.port = self.comm_serial_path
+                self.session.baudrate = self.comm_serial_speed
+                self.session.timeout = 1
+                self.session.open()
             except BaseException:
                 warnln('Operation not completed.', 2)
                 return False

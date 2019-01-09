@@ -5,6 +5,10 @@ Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
 
 Change log:
+2019-01-08
+        * Version: 0.07
+        * Changed: Load minicom package directly.
+
 2018-11-16
         * Version: 0.06b
         * Changed: os.system to subprocess OS command calls.
@@ -40,16 +44,21 @@ Change log:
 import sys
 import os.path
 import subprocess
+from xC.session import Session
+from serial.tools.miniterm import Miniterm
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 
 
 class DevTools:
-    """docstring"""
+    """
+    
+    data: 
+    """
 
     def __init__(self, data):
         """docstring"""
-        self.version = '0.06b'
+        self.version = '0.07b'
         self.terminal_program = "miniterm.py"
         self.arduino_program = "arduino"
         self.load(data)
@@ -133,24 +142,25 @@ class DevTools:
                 erroln("Return code: " + str(ret))
             sys.exit(ret)
         # Connect a terminal to device serial console.
-        local_echo = ''
-        if self.terminal_echo:
-            local_echo = "--echo"
         infoln("Communication device: " +
                os.popen("readlink -f " + self.device_path).read())
-        command = (self.terminal_program + " " +
-                   self.device_path + " " +
-                   str(self.device_speed) + " " +
-                   "--eol " + self.terminal_end_of_line + " " +
-                   local_echo + " " +
-                   "--quiet")
-        return_code = subprocess.call(command, shell=True)
-        #
-        if return_code != 0:
-            erroln("Return code: " + str(return_code))
-            if return_code > 127:
-                return_code = 1
-        sys.exit(return_code)
+        # Start serial session
+        session = Session(self.data["comm"])
+        session.info()
+        instance = session.start()
+        # Start minicom session
+        miniterm = Miniterm(instance,
+                            echo=self.terminal_echo,
+                            eol=self.terminal_end_of_line.lower(),
+                            filters=[])
+        miniterm.exit_character = chr(0x1d)
+        miniterm.menu_character = chr(0x14)
+        miniterm.raw = True
+        miniterm.set_rx_encoding('UTF-8')
+        miniterm.set_tx_encoding('UTF-8')
+        miniterm.start()
+        miniterm.join(True)
+        sys.exit(False)
 
     def verify(self):
         """Run Arduino program and verify a sketch."""
