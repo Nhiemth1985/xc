@@ -44,8 +44,8 @@ class UserArgumentParser():
 
     def __init__(self):
         self.program_name = "xc"
-        self.program_version = "0.72"
-        self.program_date = "2019-01-08"
+        self.program_version = "0.73"
+        self.program_date = "2019-01-11"
         self.program_description = "xC - aXes Controller"
         self.program_copyright = "Copyright (c) 2014-2019 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
@@ -236,8 +236,8 @@ class UserArgumentParser():
             default=1,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
-                 '0 Quiet (return number of devices), 1 IDs (default),' +
-                 ' 2 Names, 3 Status, 4 Description')
+                 '0 Quiet, 1 IDs (default),' +
+                 ' 2 Names, 3 Description, 4 Link')
         args = parser.parse_args(sys.argv[2:])
         self.__load_configuration()
         device = DeviceProperties(self.config.get())

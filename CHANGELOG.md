@@ -1,6 +1,10 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## [0.73] - 2019-01-11
+### Fixed
+- List command description.
+
 ## [0.72] - 2019-01-08
 ### Fixed
 - Serial connection.

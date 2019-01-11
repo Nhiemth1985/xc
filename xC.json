@@ -143,7 +143,7 @@
           "address": "192.168.15.12"
         }
       },
-      "enable": true,
+      "enable": false,
       "system": {
         "arch": "arduino:avr:yun",
         "desc": "Axes Controller",
@@ -160,7 +160,7 @@
           "address": "192.168.15.12"
         }
       },
-      "enable": true,
+      "enable": false,
       "system": {
         "arch": "arduino:avr:yun",
         "desc": "Axes Controller",
@@ -177,7 +177,7 @@
           "address": "192.168.15.12"
         }
       },
-      "enable": true,
+      "enable": false,
       "system": {
         "arch": "arduino:avr:yun",
         "desc": "Axes Controller",
