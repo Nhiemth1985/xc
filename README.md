@@ -29,7 +29,7 @@ All notable changes to this project will be documented in this [Change log](CHAN
 
 ### Download xC lastest version
 ``` bash
-wget https://git.sciemon.com/sciemon/xc/archive/0.50b.zip
+wget https://github.com/marcio-pessoa/xC/archive/0.58.zip
 ```
 ### Uncompress
 ``` bash
