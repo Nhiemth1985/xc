@@ -90,7 +90,7 @@
       "resources": {
         "temperature_sensor": true,
         "fan": false,
-        "status_led": false
+        "status_led": true
       }
     }
   },
@@ -135,57 +135,6 @@
         "mark": "I",
         "path": "Development/envmon/Mark_I/enm1",
         "plat": "envmon"
-      }
-    },
-    "xc": {
-      "comm": {
-        "network": {
-          "address": "192.168.15.12"
-        }
-      },
-      "enable": false,
-      "system": {
-        "arch": "arduino:avr:yun",
-        "desc": "Axes Controller",
-        "logs": "Development/xC/xc",
-        "work": "Development/xC/xc",
-        "mark": "I",
-        "path": "Development/xC/xc",
-        "plat": "xC"
-      }
-    },
-    "xcm1": {
-      "comm": {
-        "network": {
-          "address": "192.168.15.12"
-        }
-      },
-      "enable": false,
-      "system": {
-        "arch": "arduino:avr:yun",
-        "desc": "Axes Controller",
-        "logs": "Development/xC/Mark_I",
-        "work": "Development/xC/Mark_I",
-        "mark": "I",
-        "path": "Development/xC/Mark_I",
-        "plat": "xC"
-      }
-    },
-    "xcm2": {
-      "comm": {
-        "network": {
-          "address": "192.168.15.12"
-        }
-      },
-      "enable": false,
-      "system": {
-        "arch": "arduino:avr:yun",
-        "desc": "Axes Controller",
-        "logs": "Development/xC/Mark_II",
-        "work": "Development/xC/Mark_II",
-        "mark": "II",
-        "path": "Development/xC/Mark_II",
-        "plat": "xC"
       }
     },
     "escriba": {
