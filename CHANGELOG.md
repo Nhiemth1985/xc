@@ -1,6 +1,10 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## [0.74] - 2019-01-15
+### Fixed
+- Display host information on used commands verify, terminal and upload.
+
 ## [0.73] - 2019-01-11
 ### Fixed
 - List command description.

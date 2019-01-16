@@ -109,10 +109,18 @@ from xC.screensaver import Screensaver
 from xC.session import Session
 from xC.timer import Timer
 
-import contextlib
-with contextlib.redirect_stdout(None):
-    import pygame
-    from pygame.locals import *
+if sys.version_info >= (3, 0):
+    import contextlib
+    with contextlib.redirect_stdout(None):
+        import pygame
+        from pygame.locals import *
+else:
+    with open(os.devnull, 'w') as f:
+        oldstdout = sys.stdout
+        sys.stdout = f
+        import pygame
+        from pygame.locals import *
+        sys.stdout = oldstdout
 
 xc_path = os.getenv('XC_PATH', '/opt/sciemon/xc')
 images_directory = os.path.join(xc_path, 'images')

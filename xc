@@ -16,11 +16,11 @@
 #          * Changed: Python 3 ready.
 #
 # 2018-07-18
-#          * Bug fix: Not returning the xc.pyc exit status.
-#          * Bug fix: Not undestanding -v option.
+#          * Fixed: Not returning the xc.pyc exit status.
+#          * Fixed: Not undestanding -v option.
 #
 # 2017-03-05
-#          * Bug fix: --verbosity option was using an unmutable value (4).
+#          * Fixed: --verbosity option was using an unmutable value (4).
 # 
 # 2017-02-03
 #         * First version.

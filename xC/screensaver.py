@@ -14,14 +14,24 @@ Change log:
         * Added: First version.
 """
 
+import sys
+import os
 import random
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 
-import contextlib
-with contextlib.redirect_stdout(None):
-    import pygame
-    from pygame.locals import *
+if sys.version_info >= (3, 0):
+    import contextlib
+    with contextlib.redirect_stdout(None):
+        import pygame
+        from pygame.locals import *
+else:
+    with open(os.devnull, 'w') as f:
+        oldstdout = sys.stdout
+        sys.stdout = f
+        import pygame
+        from pygame.locals import *
+        sys.stdout = oldstdout
 
 
 class Screensaver:

@@ -44,8 +44,8 @@ class UserArgumentParser():
 
     def __init__(self):
         self.program_name = "xc"
-        self.program_version = "0.73"
-        self.program_date = "2019-01-11"
+        self.program_version = "0.74"
+        self.program_date = "2019-01-15"
         self.program_description = "xC - aXes Controller"
         self.program_copyright = "Copyright (c) 2014-2019 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
@@ -342,6 +342,8 @@ class UserArgumentParser():
         if interface:
             self.interface = interface
         self.__load_configuration()
+        self.host = HostProperties(self.config.get()["host"])
+        self.host.info()
         self.__device_select(id)
         self.project = DevTools(self.device.get())
         self.project.info()
