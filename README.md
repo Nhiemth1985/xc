@@ -41,8 +41,15 @@ sudo ./setup install
 ```
 ### Run
 It's ready to run on Python 3.
+
+Just type:
 ``` bash
 xc
+```
+
+For help:
+``` bash
+xc -h
 ```
 
 ## Configuration file

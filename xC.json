@@ -821,7 +821,7 @@
           "enable": true
         },
         "mouse": {
-          "enable": false,
+          "enable": true,
           "speed": 0.3
         }
       },
@@ -1146,7 +1146,7 @@
           "enable": true
         },
         "touch": {
-          "enable": false
+          "enable": true
         },
         "mouse": {
           "enable": false,

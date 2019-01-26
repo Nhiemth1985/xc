@@ -29,7 +29,7 @@
 # 
 readonly WORK_DIR='/opt/sciemon/xc'
 readonly WORK_FILE='xc.py'
-readonly PYTHON='python3'
+readonly PYTHON='/usr/bin/python2'
 
 # Default values
 command="gui"

@@ -7,6 +7,10 @@ Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
 
 Change log:
+2019-01-25
+        * Version: 0.11b
+        * Fixed: Auto detection was returning invalid device name.
+
 2018-04-02
         * Version: 0.10b
         * Changed: Only configured interfaces are shown.
@@ -94,10 +98,9 @@ class DeviceProperties:
         Attributes:
             element: An element name (like x1, x2, x6, etc.).
         """
-        self.reset()
-        self.id = id
-        if not self.id:
+        if not id:
             return
+        self.id = id
         # Is device present in configuration file?
         try:
             check_id = self.data["device"][self.id]
@@ -212,7 +215,7 @@ class DeviceProperties:
             else:
                 session.reset()
         if len(ids) == 1:
-            self.set(ids[0])
+            self.set(ids[0].decode('utf-8'))
         elif len(ids) < 1:
             self.set(None)
         elif len(ids) > 1:
