@@ -27,6 +27,13 @@ All notable changes to this project will be documented in this [Change log](CHAN
 
 ## Installation
 
+### Required modules
+``` bash
+sudo apt install python-pygame \
+                 python-serial \
+                 python3-serial
+```
+
 ### Download xC lastest version
 ``` bash
 wget https://github.com/marcio-pessoa/xC/archive/0.58.zip
