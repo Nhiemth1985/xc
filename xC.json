@@ -592,6 +592,58 @@
         "plat": "w1"
       }
     },
+    "t1": {
+      "comm": {
+        "network": {},
+        "serial": {
+          "path": "/dev/serial/by-id/usb-MicroPython_Pyboard_Virtual_Comm_Port_in_FS_Mode_326631633536-if01",
+          "speed": 9600,
+          "delay": 200,
+          "terminal_echo": true,
+          "terminal_end_of_line": "LF"
+        }
+      },
+      "control": {
+        "joystick": {
+          "enable": false,
+          "delay": 40,
+          "speed": 3
+        },
+        "keyboard": {
+          "enable": true,
+          "delay": 1,
+          "speed": 10
+        },
+        "mouse": {
+          "enable": false,
+          "speed": 10
+        },
+        "touch": {
+          "enable": false,
+          "delay": 100,
+          "speed": 10
+        }
+      },
+      "endup": {
+        "command": [
+        ]
+      },
+      "object": [
+      ],
+      "startup": {
+        "command": [
+        ]
+      },
+      "system": {
+        "arch": "arduino:avr:leonardo",
+        "desc": "Useless Machine",
+        "logs": "Development/x1/Mark_I",
+        "mark": "I",
+        "path": "Development/x1/Mark_I/x1",
+        "work": "Development/x1/Mark_I",
+        "plat": "x1"
+      }
+    },
     "x1": {
       "comm": {
         "network": {},
