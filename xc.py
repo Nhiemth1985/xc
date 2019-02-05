@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-xc.py
-
-Description: Main program file
-
-Copyright (c) 2014-2019 Márcio Pessoa
-
-Author: Marcio Pessoa <marcio.pessoa@gmail.com>
-Contributors: none
-
-Change log: Check CHANGELOG.md file.
-
+---
+name: xc.py
+description: Main program file
+copyright: 2014-2019 Márcio Pessoa
+people:
+  developers:
+  - name: Márcio Pessoa
+    email: marcio.pessoa@gmail.com
+change-log: Check CHANGELOG.md file.
 """
 
 try:
