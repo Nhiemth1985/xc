@@ -28,7 +28,7 @@ import json
 import os
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
-import yaml
+# import yaml
 
 
 class File:

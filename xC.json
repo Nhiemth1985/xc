@@ -92,6 +92,35 @@
         "fan": false,
         "status_led": true
       }
+    },
+    "xCm3": {
+      "screen": {
+        "size": "480x320",
+        "full": false,
+        "rate": 30
+      },
+      "screensaver": {
+        "time": 0,
+        "type": "random"
+      },
+      "comm": {
+        "network": {
+          "address": "192.168.15.115"
+        }
+      },
+      "system": {
+        "arch": "raspberry3pi:B+:arm:linux",
+        "desc": "Axes Controller",
+        "logs": "Development/xC/Mark_III/",
+        "mark": "III",
+        "path": "Development/xC/Mark_III/xc",
+        "plat": "xC"
+      },
+      "resources": {
+        "temperature_sensor": true,
+        "fan": false,
+        "status_led": false
+      }
     }
   },
   "device": {

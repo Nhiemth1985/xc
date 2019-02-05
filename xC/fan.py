@@ -64,7 +64,7 @@ class Fan():
         #                 numbers on header P1.
         #     GPIO.BCM: Broadcom chip-specific pin numbers. These pin numbers
         #               follow the lower-level numbering system defined by the
-        #               Raspberry Pi’s Broadcom-chip brain.
+        #               Raspberry Pis Broadcom-chip brain.
         GPIO.setmode(GPIO.BOARD)
         # Set fan control pin
         GPIO.setup(self.write_pin, GPIO.OUT)

@@ -29,10 +29,17 @@ All notable changes to this project will be documented in this [Change log](CHAN
 
 ### Required modules
 ``` bash
-sudo apt install python-pygame \
-                 python-serial \
-                 python3-serial
+sudo apt install -y python-pygame \
+                    python3-pygame \
+                    python-termcolor \
+                    python3-termcolor \
+                    python-psutil \
+                    python3-psutil \
+                    python-serial \
+                    python3-serial
 ```
+
+If this modules are not available on your Linux distribution, please install using pip.
 
 ### Download xC lastest version
 ``` bash
@@ -44,7 +51,7 @@ unzip xc.zip
 ```
 ### Install
 ``` bash
-sudo ./setup install
+./setup install
 ```
 ### Run
 It's ready to run on Python 3.

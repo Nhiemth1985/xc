@@ -125,7 +125,7 @@ else:
 xc_path = os.getenv('XC_PATH', '/opt/sciemon/xc')
 images_directory = os.path.join(xc_path, 'images')
 
-
+ 
 class Gui:
     """  """
 
@@ -818,7 +818,8 @@ class Gui:
             ttf_path = pygame.font.match_font(ttf_name)
             if ttf_path is None:
                 erroln('TrueType font missing.')
-                infoln('\"' + ttf_name + '\" not found (' + ttf_path + ')', 2)
+                infoln('\"' + str(ttf_name) + '\" not found (' +
+                       str(ttf_path) + ')', 2)
 
         # Background
         self.background = pygame.Surface(self.screen.get_size())

@@ -36,7 +36,6 @@
 
 readonly ACTION=$1
 readonly OPTION=$2
-readonly PYTHON="python3"
 
 if [ "$OPTION" = "--verbose" ]; then
   verbose="--verbose"
@@ -62,46 +61,39 @@ check_return() {
 install() {
   # Dependencies
   message "Installing software dependencies"
-  apt update >/dev/null 2>&1 && \
-    apt -y install \
-      python3-pip \
+  sudo apt update >/dev/null 2>&1 && \
+    sudo apt install -y
+      python-pygame \
+      python3-pygame \
+      python-termcolor \
+      python3-termcolor \
+      python-psutil \
+      python3-psutil \
+      python-serial \
+      python3-serial \
       >/dev/null 2>&1
-  check_return $?
-  message "Installing Python 3 dependencies"
-  pip3 install pygame termcolor
   check_return $?
   # Copy files
   message "Creating directory structure"
-  mkdir -p /opt/sciemon/xc
+  sudo mkdir -p /opt/sciemon/xc
   check_return $?
   message "Setting user permissions"
-  chown --recursive "$USER". /opt/sciemon
+  sudo chown --recursive "$USER". /opt/sciemon
   check_return $?
   update
   # Fonts
   mkdir -p ~/.fonts
   ln -s /opt/sciemon/xc/fonts/Digirtu_.ttf ~/.fonts >/dev/null 2>&1
   # Configuration file
-  #message "Configuration file"
   ln -s /opt/sciemon/xc/xC.json "$HOME"/.xC.json >/dev/null 2>&1
-  #check_return $?
-  #check_return $?
-  #
-  # sh -c 'cat > /usr/share/xsessions/xc.desktop'
-# [Desktop Entry]
-# Type=Application
-# Exec=/opt/sciemon/xc/xc
-# Name=xC
-# Comment=Axes Controller
-
-  #
-  # sh -c 'cat >> /usr/share/lightdm/lightdm.conf.d/60-lightdm-gtk-greeter.conf'
-# autologin-user=srackham"
 }
 
 update() {
-  message "Compiling"
-  find . -name "*.py" -exec "$PYTHON" -m py_compile {} \;
+  message "Python 2 compiling"
+  find . -name "*.py" -exec python2 -m py_compile {} \;
+  check_return $?
+  message "Python 3 compiling"
+  find . -name "*.py" -exec python3 -m py_compile {} \;
   check_return $?
   message "Copying files"
   rsync --include-from .rsync_include.txt \
