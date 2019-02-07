@@ -621,7 +621,7 @@
         "plat": "w1"
       }
     },
-    "t1": {
+    "r1": {
       "comm": {
         "network": {},
         "serial": {
@@ -664,13 +664,13 @@
         ]
       },
       "system": {
-        "arch": "arduino:avr:leonardo",
-        "desc": "Useless Machine",
-        "logs": "Development/x1/Mark_I",
+        "arch": "pyboard:arm:1",
+        "desc": "Self Balancing Robot",
+        "logs": "Development/r1/Mark_I",
         "mark": "I",
-        "path": "Development/x1/Mark_I/x1",
-        "work": "Development/x1/Mark_I",
-        "plat": "x1"
+        "path": "Development/r1/Mark_I/x1",
+        "work": "Development/r1/Mark_I",
+        "plat": "r1"
       }
     },
     "x1": {
