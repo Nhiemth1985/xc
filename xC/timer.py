@@ -1,28 +1,41 @@
 """
-timer.py
-
-Author: Marcio Pessoa <marcio.pessoa@gmail.com>
-Contributors: none
-
-Change log:
-2017-06-29
-        * Version: 0.03b
-        * Bug fix: Some minor fixes.
-
-2017-06-28
-        * Version: 0.02b
-        * New feature: Added get method.
-        * New feature: Added status method.
-        * Improvement: Added status to check method.
-        * Improvement: Changed requied library "datetime" to "time".
-
-2017-04-01
-        * Version: 0.01b
-        * Improvement: Added version information.
-
-2016-02-13
-        * Version: 0.00b
-        * Scrach version.
+---
+name: timer.py
+description: Stepper motor package
+copyright: 2014-2019 Marcio Pessoa
+people:
+  developers:
+  - name: Marcio Pessoa
+    email: marcio.pessoa@gmail.com
+change-log:
+  2017-06-29
+  - version: 0.08
+    fixed: Some minor fixes.
+  2017-06-28
+  - version: 0.07
+    added: get method.
+    added: status method.
+    added: status to check method.
+    changed: Requied library "datetime" to "time".
+  2017-04-01
+  - version: 0.06
+    added: version information.
+  2016-02-13
+  - version: 0.05
+    added: Ported from C++ to Python.
+  2015-10-04
+  - version: 0.04
+    fixed: COUNTDOWN timer. Now counter stop decreasing after reaches 0.
+  2015-09-27
+  - version: 0.03
+    added: residual method.
+  2014-11-16
+  - version: 0.02
+    changed: Timer (int period) to (unsigned long period).
+    changed: set (int period) to (unsigned long period).
+  2014-07-06
+  - version: 0.01
+    added: Staring a new library.
 """
 
 import time
@@ -35,7 +48,7 @@ class Timer:
     def __init__(self, period, type="LOOP"):
         """
         """
-        self.version = '0.03b'
+        self.version = '0.08'
         self.millis = lambda: int(round(time.time() * 1000))
         self.period = period * 1.0
         self.type = type
