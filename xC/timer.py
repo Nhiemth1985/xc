@@ -93,7 +93,6 @@ class Timer:
     def check(self):
         """
         """
-        print("Enable:"), self.enable
         if not self.enable:
             return False
         elif self.type == "LOOP":
@@ -113,6 +112,3 @@ class Timer:
         """
         """
         return (self.millis() - self.counter) / self.period
-
-    def get_status(self):
-        return self.enable

@@ -702,7 +702,9 @@ class Gui:
         # Get Screensaver parameters
         try:
             self.screensaver_time = self.host.get_screensaver() \
-                                        .get('time', self.screensaver_time)
+                .get('time', self.screensaver_time)
+            if self.screensaver_time < 1:
+                self.screensaver_time = 1
             self.screensaver_type = self.host.get_screensaver() \
                 .get('type', self.screensaver_type)
             self.screensaver_enable = self.host.get_screensaver() \
@@ -847,7 +849,6 @@ class Gui:
                                        type='COUNTDOWN')
         if not self.screensaver_enable:
             self.screensaver_timer.disable()
-            print("Screensaver:"), self.screensaver_timer.get_status()
 
         # Images
         infoln('Loading images...', 1)
