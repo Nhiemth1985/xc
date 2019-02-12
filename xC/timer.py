@@ -60,7 +60,7 @@ class Timer:
         """
         self.period = period * 1.0
         self.reset()
-        self.enable = True
+        # self.enable = True
 
     def get(self):
         """
@@ -70,7 +70,7 @@ class Timer:
     def reset(self):
         """
         """
-        self.enable = True
+        # self.enable = True
         self.counter = self.millis()
 
     def enable(self):
@@ -93,7 +93,10 @@ class Timer:
     def check(self):
         """
         """
-        if self.type == "LOOP":
+        print("Enable:"), self.enable
+        if not self.enable:
+            return False
+        elif self.type == "LOOP":
             if (self.millis() - self.counter >= self.period):
                 self.counter = self.millis()
                 return True
@@ -110,3 +113,6 @@ class Timer:
         """
         """
         return (self.millis() - self.counter) / self.period
+
+    def get_status(self):
+        return self.enable

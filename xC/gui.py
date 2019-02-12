@@ -125,7 +125,7 @@ else:
 xc_path = os.getenv('XC_PATH', '/opt/sciemon/xc')
 images_directory = os.path.join(xc_path, 'images')
 
- 
+
 class Gui:
     """  """
 
@@ -141,6 +141,7 @@ class Gui:
         self.screen_rate = 30
         self.screensaver_time = 60
         self.screensaver_type = 'black'
+        self.screensaver_enable = False
         self.device_timer = Timer(1000)
         self.joystick_detected = set()
         self.joystick_timer = Timer(1000)
@@ -703,7 +704,9 @@ class Gui:
             self.screensaver_time = self.host.get_screensaver() \
                                         .get('time', self.screensaver_time)
             self.screensaver_type = self.host.get_screensaver() \
-                                        .get('type', self.screensaver_type)
+                .get('type', self.screensaver_type)
+            self.screensaver_enable = self.host.get_screensaver() \
+                .get('enable', self.screensaver_enable)
         except BaseException:
             pass
 
@@ -842,6 +845,9 @@ class Gui:
         self.screensaver = Screensaver(self.screen)
         self.screensaver_timer = Timer(1000 * self.screensaver_time,
                                        type='COUNTDOWN')
+        if not self.screensaver_enable:
+            self.screensaver_timer.disable()
+            print("Screensaver:"), self.screensaver_timer.get_status()
 
         # Images
         infoln('Loading images...', 1)
