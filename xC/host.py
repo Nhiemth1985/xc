@@ -5,6 +5,10 @@ Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
 
 Change log:
+2019-02-12
+        * Version: 0.03
+        * Fixed: Temperature sensing on Raspberry Pi.
+
 2018-07-22
         * Version: 0.02b
         * Added: Suport to x86_64.
@@ -28,14 +32,13 @@ from xC.timer import Timer
 try:
     import RPi.GPIO as GPIO
     GPIO.setmode(GPIO.BOARD)
-    from gpiozero import CPUTemperature
 except BaseException:
     pass
 
 
 class HostProperties:
     def __init__(self, data):
-        self.version = '0.02b'
+        self.version = '0.03'
         self.load(data)
         self.set()
 
@@ -146,9 +149,10 @@ class HostProperties:
         # Temperature sensor
         try:
             if self.data[self.name]["resources"]["temperature_sensor"]:
-                self.temperature = str("{:1.0f} C".
-                                       format(float(CPUTemperature().
-                                                    temperature)))
+                temp = os.popen("vcgencmd measure_temp").readline()
+                temp = temp.replace("temp=","")
+                temp = temp.replace("\'C","")
+                self.temperature = str("{:1.0f} C".format(float(temp)))
         except BaseException:
             pass
         # Fan speed

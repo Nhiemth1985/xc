@@ -1,0 +1,44 @@
+digraph "packages" {
+charset="utf-8"
+rankdir=BT
+"0" [label="xC", shape="box"];
+"1" [label="xC.device", shape="box"];
+"2" [label="xC.echo", shape="box"];
+"3" [label="xC.fan", shape="box"];
+"4" [label="xC.file", shape="box"];
+"5" [label="xC.gui", shape="box"];
+"6" [label="xC.host", shape="box"];
+"7" [label="xC.screensaver", shape="box"];
+"8" [label="xC.session", shape="box"];
+"9" [label="xC.signal", shape="box"];
+"10" [label="xC.timer", shape="box"];
+"11" [label="xC.tools", shape="box"];
+"12" [label="xc", shape="box"];
+"1" -> "2" [arrowhead="open", arrowtail="none"];
+"1" -> "8" [arrowhead="open", arrowtail="none"];
+"3" -> "10" [arrowhead="open", arrowtail="none"];
+"4" -> "2" [arrowhead="open", arrowtail="none"];
+"5" -> "1" [arrowhead="open", arrowtail="none"];
+"5" -> "2" [arrowhead="open", arrowtail="none"];
+"5" -> "6" [arrowhead="open", arrowtail="none"];
+"5" -> "7" [arrowhead="open", arrowtail="none"];
+"5" -> "8" [arrowhead="open", arrowtail="none"];
+"5" -> "10" [arrowhead="open", arrowtail="none"];
+"6" -> "2" [arrowhead="open", arrowtail="none"];
+"6" -> "3" [arrowhead="open", arrowtail="none"];
+"6" -> "9" [arrowhead="open", arrowtail="none"];
+"6" -> "10" [arrowhead="open", arrowtail="none"];
+"7" -> "2" [arrowhead="open", arrowtail="none"];
+"8" -> "2" [arrowhead="open", arrowtail="none"];
+"8" -> "10" [arrowhead="open", arrowtail="none"];
+"9" -> "10" [arrowhead="open", arrowtail="none"];
+"11" -> "2" [arrowhead="open", arrowtail="none"];
+"11" -> "8" [arrowhead="open", arrowtail="none"];
+"12" -> "1" [arrowhead="open", arrowtail="none"];
+"12" -> "2" [arrowhead="open", arrowtail="none"];
+"12" -> "4" [arrowhead="open", arrowtail="none"];
+"12" -> "5" [arrowhead="open", arrowtail="none"];
+"12" -> "6" [arrowhead="open", arrowtail="none"];
+"12" -> "8" [arrowhead="open", arrowtail="none"];
+"12" -> "11" [arrowhead="open", arrowtail="none"];
+}

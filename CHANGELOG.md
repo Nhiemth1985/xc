@@ -1,6 +1,10 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## [0.75] - 2019-02-12
+### Fixed
+- Minor updates.
+
 ## [0.74] - 2019-01-15
 ### Fixed
 - Display host information on used commands verify, terminal and upload.
@@ -158,7 +162,7 @@ Documentation.
 
 ## [] - 2017-03-05
 ### Changed
-- Removed unused code. 
+- Removed unused code.
 
 ## [] - 2017-02-28
 ### Added
@@ -235,7 +239,7 @@ Documentation.
 - Code optionazation, separated into some package files.
 
 ## [] - 2015-10-18
-### Fixed 
+### Fixed
 - list option fixed.
 
 ## [] - 2015-09-11

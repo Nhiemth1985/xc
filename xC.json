@@ -534,7 +534,6 @@
       },
       "endup": {
         "command": [
-          "M81  ; Power off"
         ]
       },
       "object": [
@@ -549,7 +548,7 @@
             "picture": "off"
           },
           "on": {
-            "command": "M1  ; Turn right",
+            "command": "M1  ; Clockwise",
             "expects": "ok",
             "picture": "on"
           },
@@ -573,7 +572,7 @@
             "picture": "off"
           },
           "on": {
-            "command": "M2  ; Turn left",
+            "command": "M2  ; Counterclockwise",
             "expects": "ok",
             "picture": "on"
           },
@@ -613,8 +612,7 @@
       ],
       "startup": {
         "command": [
-          "M111  ; Debug mode",
-          "G91  ; Relative programming"
+          "M111  ; Debug mode"
         ]
       },
       "system": {

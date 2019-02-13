@@ -1,0 +1,51 @@
+digraph "classes" {
+charset="utf-8"
+rankdir=BT
+"0" [label="{Button|click : list\limage\lposition\lsize\lstate : bool\lstate_before : bool\l|check()\ldraw()\lget_change()\lget_state()\loff()\lon()\ltoggle()\l}", shape="record"];
+"1" [label="{DevTools|architecture : NoneType\larduino_file : NoneType\larduino_program : str\ldata\ldescription : NoneType\ldestination : str, NoneType\ldevice_path : NoneType\ldevice_port : NoneType\ldevice_speed : NoneType\lid : NoneType\linterface : str\llogs : NoneType\lmark : NoneType\lnetwork_address : NoneType\lpath : NoneType\lplatform : NoneType\lsystem_logs : NoneType\lsystem_path : NoneType\lterminal_echo : bool\lterminal_end_of_line : str\lversion : str\l|info()\lload()\lreset()\lset()\lterminal()\lupload()\lverify()\l}", shape="record"];
+"2" [label="{DeviceProperties|data\lid : NoneType\linterface\lsystem_arch : str\lsystem_desc : str\lsystem_logs : str\lsystem_mark : str\lsystem_path : str\lsystem_plat : str\lsystem_work\lversion : str\l|detect()\lget()\lget_comm()\lget_control()\lget_control_map()\lget_endup()\lget_id()\lget_objects()\lget_startup()\linfo()\lis_enable()\llist()\lload()\lreset()\lset()\lset_interface()\l}", shape="record"];
+"3" [label="{Echo|\l|echo()\lecholn()\lverbose()\lverbose_level()\l}", shape="record"];
+"4" [label="{Fan|bounce : int\lcounter_rpm : int\ldelta_t : float\lfan_controller\lis_sensor_present : bool\llimit_max : int\llimit_min : int\lmax_speed : int\lread_pin : NoneType\lrpm : int\lsample_rate : int\lspeed : int\ltimer\lversion : str\lwrite_pin\l|autoSpeed()\lcleanup()\lcounter()\lreadRPM()\lreadSpeed()\lsetLimits()\lstop()\lwriteSpeed()\l}", shape="record"];
+"5" [label="{File|char_total\ldata : bool, NoneType\litems\lline_total\lversion : str\l|gcode_check()\lgcode_info()\lgcode_load()\lget()\lis_file()\ljson_check()\ljson_info()\ljson_load()\lload()\lreset()\lyaml_check()\lyaml_info()\lyaml_load()\l}", shape="record"];
+"6" [label="{Gui|background\lclock\lconnected_devices : int\lcontrol_joystick_button\lcontrol_joystick_delay : int\lcontrol_joystick_enable : bool\lcontrol_joystick_speed : int\lcontrol_keyboard_button\lcontrol_keyboard_delay : int\lcontrol_keyboard_speed : int\lcontrol_mouse_button\lcontrol_mouse_delay : int\lcontrol_mouse_speed : int\lcontrol_touch_button\lcontrol_touch_delay : int\lcontrol_touch_enable : bool\lcontrol_touch_speed : bool\lcontrol_touch_visible : int\lcontrol_voice_button\lcontrol_voice_enable : bool\lcontrols\lctrl_joystick_delay\lctrl_mouse_delay\lctrl_touch_delay\ldata\ldevice\ldevice_timer\lhelpscreen\lhost\ljoyicon\ljoystick\ljoystick_detected : set\ljoystick_hat_active : bool\ljoystick_timer\lkeyboard\lmouse\lobject_area\lrunning : bool\lscreen\lscreen_full : bool\lscreen_rate : int\lscreen_resolution : tuple\lscreen_size : str\lscreensaver\lscreensaver_enable : bool\lscreensaver_time : int\lscreensaver_timer\lscreensaver_type : str\lsession\lstatus_bar\lterminal\ltouch\lversion : str\lvoice\lwas_connected : bool\lwindow_caption : str\lwindow_title : str\l|ctrl_check()\lctrl_handle()\lctrl_joystick_handle()\lctrl_joystick_start()\lctrl_joystick_stop()\lctrl_keyboard_handle()\lctrl_keyboard_start()\lctrl_keyboard_stop()\lctrl_mouse_cursor()\lctrl_mouse_handle()\lctrl_mouse_start()\lctrl_mouse_stop()\lctrl_start()\lctrl_touch_handle()\lctrl_touch_start()\lctrl_touch_stop()\lctrl_voice_handle()\lctrl_voice_start()\lctrl_voice_stop()\ldevice_check()\ldevice_set()\ldraw()\ldraw_ctrl()\ldraw_device()\ldraw_object()\ldraw_screensaver()\ldraw_status()\limages_load()\lload()\lreset()\lrun()\lset()\lstart()\lstart_device()\lstart_host()\lstart_objects()\lstart_screen()\lstart_session()\lstop()\lstop_ctrl()\lstop_session()\lterminal()\l}", shape="record"];
+"7" [label="{HostProperties|architecture : str\lcore : int\ldata\ldistribution : str\ldistribution_version : str\lfan\lfan_speed : int, NoneType, str\lmachine : str\lmemory : int\lmemory_used : int\lname : str\lprocessor : str\lprofile : str\lpython_version : str\lstatus_led\lstatus_signal\lsystem : str\ltemperature : str, NoneType, int\ltimer\lversion : str\l|get_control()\lget_screen()\lget_screensaver()\linfo()\lload()\lreset()\lrun()\lrun_armv7l()\lrun_x86_64()\lset()\lstart()\lstart_armv7l()\lstart_x86_64()\lstatus()\lstatus_armv7l()\lstatus_x86_64()\lstop()\lstop_armv7l()\lstop_x86_64()\l}", shape="record"];
+"8" [label="{Image|dimensions : list\lposition : list\lscreen\lsize\lsource\lsplits : list\lsplits_total\lsurface\l|draw()\lget_size()\lpiece()\lposition()\lsplit()\l}", shape="record"];
+"9" [label="{Screensaver|background\lrunning : bool\lscreen\ltype : str, NoneType\ltypes : list\lversion : str\l|reset()\lrun()\lset()\lset_type()\lstart()\lstop()\l}", shape="record"];
+"10" [label="{Session|comm_network_address : NoneType\lcomm_serial_delay : int\lcomm_serial_path : str\lcomm_serial_speed : int\lcomm_serial_terminal_echo : bool\lcomm_serial_terminal_end_of_line : str\ldata : NoneType\lgcode\lid : NoneType\linterface : str\lretry : int\lsession : Serial\ltimeout : int\lversion : str\l|check_device()\lclear()\linfo()\lis_connected()\lis_connected_network()\lis_connected_serial()\lis_ready()\lload()\lpause()\lplay()\lreceive()\lreset()\lrun()\lsend()\lsend_expect()\lsend_wait()\lset_program()\lset_retry()\lset_timeout()\lstart()\lstop()\l}", shape="record"];
+"11" [label="{SigGen|timer\lversion : str\l|period()\lsine()\lsquare()\lstep()\l}", shape="record"];
+"12" [label="{Timer|counter : int\lenable : bool\lmillis\lperiod\ltype : str\lunit\lversion : str\l|check()\ldisable()\lenable()\lget()\lreset()\lset()\lstatus()\lunit()\l}", shape="record"];
+"13" [label="{UserArgumentParser|config\lconfig_file : NoneType, str\ldevice\lhost\lid : NoneType\linterface : NoneType\lprogram_contact : str\lprogram_copyright : str\lprogram_date : str\lprogram_description : str\lprogram_license : str\lprogram_name : str\lprogram_version : str\lprogram_website : str\lproject\lsession\lversion : str\l|gui()\llist()\lrun()\lterminal()\lupload()\lverify()\l}", shape="record"];
+"0" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="control_voice_button", style="solid"];
+"0" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="control_touch_button", style="solid"];
+"0" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="control_mouse_button", style="solid"];
+"0" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="control_joystick_button", style="solid"];
+"0" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="control_keyboard_button", style="solid"];
+"1" -> "13" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="project", style="solid"];
+"2" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="device", style="solid"];
+"2" -> "13" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="device", style="solid"];
+"4" -> "7" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="fan", style="solid"];
+"5" -> "13" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="config", style="solid"];
+"7" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="host", style="solid"];
+"7" -> "13" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="host", style="solid"];
+"8" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="keyboard", style="solid"];
+"8" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="touch", style="solid"];
+"8" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="mouse", style="solid"];
+"8" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="joyicon", style="solid"];
+"8" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="voice", style="solid"];
+"8" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="helpscreen", style="solid"];
+"9" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="screensaver", style="solid"];
+"10" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="session", style="solid"];
+"10" -> "13" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="session", style="solid"];
+"10" -> "13" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="session", style="solid"];
+"11" -> "7" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="status_signal", style="solid"];
+"12" -> "4" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="timer", style="solid"];
+"12" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="screensaver_timer", style="solid"];
+"12" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="ctrl_touch_delay", style="solid"];
+"12" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="ctrl_joystick_delay", style="solid"];
+"12" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="joystick_timer", style="solid"];
+"12" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="device_timer", style="solid"];
+"12" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="ctrl_mouse_delay", style="solid"];
+"12" -> "7" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="timer", style="solid"];
+"12" -> "7" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="timer", style="solid"];
+"12" -> "11" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="timer", style="solid"];
+}

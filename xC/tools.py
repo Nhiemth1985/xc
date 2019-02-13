@@ -136,7 +136,7 @@ class DevTools:
             sys.exit(ret)
         # Connect a terminal to device serial console.
         infoln("Communication device: " +
-             os.popen("readlink -f " + self.device_path).read())
+             os.popen("readlink -f " + self.device_path).read().rstrip())
         # Start serial session
         session = Session(self.data["comm"])
         instance = session.start()
@@ -189,7 +189,7 @@ class DevTools:
             erroln('Program not found: ' + self.arduino_program)
             sys.exit(True)
         # Build command
-        infoln("Communication device: " + self.destination + ".")
+        infoln("Communication device: " + self.destination.rstrip() + ".")
         cmd = self.arduino_program + " --upload --board " + \
             self.architecture + " " + \
             self.path + "/" + self.arduino_file + \

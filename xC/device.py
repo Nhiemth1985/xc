@@ -7,6 +7,10 @@ Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
 
 Change log:
+2019-02-12
+        * Version: 0.12
+        * Fixed: Auto detection was returning always the last device.
+
 2019-01-25
         * Version: 0.11b
         * Fixed: Auto detection was returning invalid device name.
@@ -72,7 +76,7 @@ class DeviceProperties:
     Methods:
     """
     def __init__(self, data):
-        self.version = '0.10b'
+        self.version = '0.12'
         self.load(data)
         self.reset()
 
@@ -214,8 +218,9 @@ class DeviceProperties:
                 ids.append(str(id).encode("utf-8"))
             else:
                 session.reset()
+            self.reset()
         if len(ids) == 1:
-            self.set(ids[0].decode('utf-8'))
+            self.set(ids[0].decode('utf-8')).rstrip()
         elif len(ids) < 1:
             self.set(None)
         elif len(ids) > 1:
