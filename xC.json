@@ -674,6 +674,7 @@
         "desc": "Self Balancing Robot",
         "path": "Development/r1/Mark_I/x1",
         "work": "Development/r1/Mark_I",
+        "code": "/media/$USER/PYBFLASH/",
         "logs": "Development/r1/Mark_I"
       }
     },

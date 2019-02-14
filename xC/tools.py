@@ -89,8 +89,8 @@ class DevTools:
             .get("terminal_echo", self.terminal_echo)
         self.terminal_end_of_line = self.data["comm"]["serial"]\
             .get("terminal_end_of_line", self.terminal_end_of_line)
-        self.network_address = self.data["comm"].get("arch",
-                                                     self.network_address)
+        self.network_address = self.data["comm"]\
+            .get("arch", self.network_address)
         self.device_port = self.data["comm"].get("arch", self.device_port)
         self.interface = 'serial'
         if self.interface == 'serial':
@@ -136,7 +136,7 @@ class DevTools:
             sys.exit(ret)
         # Connect a terminal to device serial console.
         infoln("Communication device: " +
-             os.popen("readlink -f " + self.device_path).read().rstrip())
+               os.popen("readlink -f " + self.device_path).read().rstrip())
         # Start serial session
         session = Session(self.data["comm"])
         instance = session.start()
