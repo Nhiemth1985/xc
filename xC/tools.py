@@ -79,6 +79,7 @@ class DevTools:
         self.system_path = self.data["system"].get("path", self.system_path)
         self.path = os.path.join(os.environ['HOME'], self.system_path)
         self.arduino_file = self.path[self.path.rfind("/", 0):] + ".ino"
+        self.system_code = self.data["system"].get("code", self.system_code)
         self.system_logs = self.data["system"].get("logs", self.system_logs)
         self.logs = os.path.join(os.environ['HOME'], self.system_logs)
         self.device_path = self.data["comm"]["serial"]\
@@ -183,6 +184,9 @@ class DevTools:
         sys.exit(return_code)
 
     def upload(self):
+        if self.architecture == "MicroPython:ARM:PYBv1.1":
+            cmd = ""
+            return
         """Run Arduino program and upload a sketch."""
         # Check if arduino exists
         if self.__which(self.arduino_program) is None:
