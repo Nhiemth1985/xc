@@ -43,7 +43,7 @@ from __future__ import print_function
 import sys
 from termcolor import colored, cprint
 
-indent_width = 4
+INDENT_WIDTH = 4
 
 
 class Echo(object):
@@ -65,14 +65,14 @@ class Echo(object):
     @classmethod
     def echo(self, string, level, indent=0):
         preffix = ''
-        for i in range(indent * indent_width):
+        for i in range(indent * INDENT_WIDTH):
             preffix += ' '
         self.__print(preffix + string, level, '')
 
     @classmethod
     def echoln(self, string, level, indent=0):
         preffix = ''
-        for i in range(indent * indent_width):
+        for i in range(indent * INDENT_WIDTH):
             preffix += ' '
         self.__print(preffix + string, level, '\n')
 
