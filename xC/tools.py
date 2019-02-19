@@ -107,6 +107,7 @@ class DevTools:
         self.description = None
         self.architecture = None
         self.system_path = None
+        self.system_code = None
         self.system_logs = None
         self.path = None
         self.arduino_file = None
@@ -163,6 +164,10 @@ class DevTools:
         sys.exit(False)
 
     def verify(self):
+        if self.architecture == "MicroPython:ARM:PYBv1.1":
+            cmd = ""
+            erroln("Not available yet for MicroPython")
+            return
         """Run Arduino program and verify a sketch."""
         # Check if arduino exists
         if self.__which(self.arduino_program) is None:
@@ -186,6 +191,7 @@ class DevTools:
     def upload(self):
         if self.architecture == "MicroPython:ARM:PYBv1.1":
             cmd = ""
+            erroln("Not available yet for MicroPython")
             return
         """Run Arduino program and upload a sketch."""
         # Check if arduino exists
