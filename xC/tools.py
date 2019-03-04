@@ -5,6 +5,10 @@ Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
 
 Change log:
+2019-03-04
+        * Version: 0.08
+        * Added: Upload support to MicroPython devices.
+
 2019-01-08
         * Version: 0.07
         * Changed: Load minicom package directly.
@@ -56,7 +60,7 @@ class DevTools:
 
     def __init__(self, data):
         """docstring"""
-        self.version = '0.07b'
+        self._version = 0.08
         self.arduino_program = "arduino"
         self.load(data)
         self.set()
@@ -79,6 +83,8 @@ class DevTools:
         self.system_path = self.data["system"].get("path", self.system_path)
         self.path = os.path.join(os.environ['HOME'], self.system_path)
         self.arduino_file = self.path[self.path.rfind("/", 0):] + ".ino"
+        self.system_work = self.data["system"].get("work", self.system_work)
+        self.system_work = os.path.join(os.environ['HOME'], self.system_work)
         self.system_code = self.data["system"].get("code", self.system_code)
         self.system_logs = self.data["system"].get("logs", self.system_logs)
         self.logs = os.path.join(os.environ['HOME'], self.system_logs)
@@ -107,6 +113,7 @@ class DevTools:
         self.description = None
         self.architecture = None
         self.system_path = None
+        self.system_work = None
         self.system_code = None
         self.system_logs = None
         self.path = None
@@ -164,6 +171,7 @@ class DevTools:
         sys.exit(False)
 
     def verify(self):
+        infoln('Verifying...')
         if self.architecture == "MicroPython:ARM:PYBv1.1":
             cmd = ""
             erroln("Not available yet for MicroPython")
@@ -179,7 +187,6 @@ class DevTools:
             self.path + "/" + self.arduino_file
         if level() < 3:
             cmd += " >/dev/null 2>&1"
-        infoln('Verifying...')
         return_code = subprocess.call(cmd, shell=True)
         if return_code != 0:
             erroln("Return code: " + str(return_code))
@@ -189,24 +196,29 @@ class DevTools:
         sys.exit(return_code)
 
     def upload(self):
+        infoln('Uploading...')
+        # MicroPython
         if self.architecture == "MicroPython:ARM:PYBv1.1":
-            cmd = ""
-            erroln("Not available yet for MicroPython")
-            return
-        """Run Arduino program and upload a sketch."""
-        # Check if arduino exists
-        if self.__which(self.arduino_program) is None:
-            erroln('Program not found: ' + self.arduino_program)
-            sys.exit(True)
-        # Build command
-        infoln("Communication device: " + self.destination.rstrip() + ".")
-        cmd = self.arduino_program + " --upload --board " + \
-            self.architecture + " " + \
-            self.path + "/" + self.arduino_file + \
-            " --port " + self.destination
+            cmd = 'rsync\
+                   --archive --delete --verbose --compress \
+                   --exclude "*.md" \--exclude "*.gnbs.conf" \
+                   ' + self.system_work + '/* ' + self.system_code + '/'
+            infoln("From: " + self.system_work, 1)
+            infoln("To: " + self.system_code, 1)
+        # Arduino
+        else:
+            # Check if arduino program exists
+            if self.__which(self.arduino_program) is None:
+                erroln('Program not found: ' + self.arduino_program)
+                sys.exit(True)
+            # Build command
+            cmd = self.arduino_program + " --upload --board " + \
+                self.architecture + " " + \
+                self.path + "/" + self.arduino_file + \
+                " --port " + self.destination
+            infoln("Communication device: " + self.destination.rstrip() + ".")
         if level() < 3:
             cmd += " >/dev/null 2>&1"
-        infoln('Uploading...')
         return_code = subprocess.call(cmd, shell=True)
         if return_code == 0:
             f = open(self.logs + "/.buildno", 'r')

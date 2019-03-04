@@ -220,7 +220,7 @@ class DeviceProperties:
                 session.reset()
             self.reset()
         if len(ids) == 1:
-            self.set(ids[0].decode('utf-8')).rstrip()
+            self.set(ids[0].decode('utf-8'))
         elif len(ids) < 1:
             self.set(None)
         elif len(ids) > 1:

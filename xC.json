@@ -673,7 +673,7 @@
         "arch": "MicroPython:ARM:PYBv1.1",
         "desc": "Self Balancing Robot",
         "path": "Development/r1/Mark_I/x1",
-        "work": "Development/r1/Mark_I",
+        "work": "Development/r1/Mark_I/Firmware",
         "code": "/media/$USER/PYBFLASH/",
         "logs": "Development/r1/Mark_I"
       }

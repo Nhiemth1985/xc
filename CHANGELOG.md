@@ -1,6 +1,11 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+
+## [0.76] - 2019-03-04
+### Added
+- Upload support to MicroPython devices.
+
 ## [0.75] - 2019-02-12
 ### Fixed
 - Minor updates.
