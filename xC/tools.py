@@ -172,19 +172,20 @@ class DevTools:
 
     def verify(self):
         infoln('Verifying...')
+        # MicroPython
         if self.architecture == "MicroPython:ARM:PYBv1.1":
-            cmd = ""
-            erroln("Not available yet for MicroPython")
+            cmd = '' + self.system_work + '/*.py'
             return
-        """Run Arduino program and verify a sketch."""
-        # Check if arduino exists
-        if self.__which(self.arduino_program) is None:
-            erroln('Program not found: ' + self.arduino_program)
-            sys.exit(True)
-        # Build command
-        cmd = self.arduino_program + \
-            " --verify --board " + self.architecture + " " + \
-            self.path + "/" + self.arduino_file
+        # arduino
+        else:
+            # Check if arduino exists
+            if self.__which(self.arduino_program) is None:
+                erroln('Program not found: ' + self.arduino_program)
+                sys.exit(True)
+            # Build command
+            cmd = self.arduino_program + \
+                " --verify --board " + self.architecture + " " + \
+                self.path + "/" + self.arduino_file
         if level() < 3:
             cmd += " >/dev/null 2>&1"
         return_code = subprocess.call(cmd, shell=True)
