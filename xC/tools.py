@@ -5,6 +5,10 @@ Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
 
 Change log:
+2019-03-05
+        * Version: 0.09
+        * Added: Verify (pylint) support to MicroPython devices.
+
 2019-03-04
         * Version: 0.08
         * Added: Upload support to MicroPython devices.
@@ -174,8 +178,8 @@ class DevTools:
         infoln('Verifying...')
         # MicroPython
         if self.architecture == "MicroPython:ARM:PYBv1.1":
-            cmd = '' + self.system_work + '/*.py'
-            return
+            cmd = 'find ' + self.system_work + ' -name "*.py" ' + \
+                  '-exec pylint {} \;'
         # arduino
         else:
             # Check if arduino exists
