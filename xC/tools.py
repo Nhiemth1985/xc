@@ -7,7 +7,7 @@ Contributors: none
 Change log:
 2019-03-05
         * Version: 0.09
-        * Added: Verify (pylint) support to MicroPython devices.
+        * Added: Verify (pylint3) support to MicroPython devices.
 
 2019-03-04
         * Version: 0.08
@@ -179,7 +179,7 @@ class DevTools:
         # MicroPython
         if self.architecture == "MicroPython:ARM:PYBv1.1":
             cmd = 'find ' + self.system_work + ' -name "*.py" ' + \
-                  '-exec pylint {} \;'
+                  '-exec pylint3 {} \;'
         # arduino
         else:
             # Check if arduino exists
