@@ -206,7 +206,9 @@ class DevTools:
         if self.architecture == "MicroPython:ARM:PYBv1.1":
             cmd = 'rsync\
                    --archive --delete --verbose --compress \
-                   --exclude "*.md" \--exclude "*.gnbs.conf" \
+                   --exclude "*.md" \
+                   --exclude "*.gnbs.conf" \
+                   --exclude "Pictures" \
                    ' + self.system_work + '/* ' + self.system_code + '/'
             infoln("From: " + self.system_work, 1)
             infoln("To: " + self.system_code, 1)
