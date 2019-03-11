@@ -208,6 +208,7 @@ class DevTools:
                    --archive --delete --verbose --compress \
                    --exclude "*.md" \
                    --exclude "*.gnbs.conf" \
+                   --exclude ".rsyncignore" \
                    --exclude "Pictures" \
                    ' + self.system_work + '/* ' + self.system_code + '/' + \
                    "; sync"
