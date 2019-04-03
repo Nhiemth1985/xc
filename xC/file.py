@@ -1,5 +1,5 @@
 """
-device_properties.py
+file.py
 
 Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
