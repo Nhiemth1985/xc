@@ -41,14 +41,16 @@ Change log:
 
 from __future__ import print_function
 import sys
-from termcolor import colored, cprint
+from termcolor import cprint
 
 INDENT_WIDTH = 4
 
 
 class Echo(object):
     """
+    description:
     """
+
     @classmethod
     def __init__(self):
         self.version = '0.05b'
@@ -56,14 +58,23 @@ class Echo(object):
 
     @classmethod
     def verbose(self, level):
+        """
+        description:
+        """
         self.verbosity = level
 
     @classmethod
     def verbose_level(self):
+        """
+        description:
+        """
         return int(self.verbosity)
 
     @classmethod
     def echo(self, string, level, indent=0):
+        """
+        description:
+        """
         preffix = ''
         for i in range(indent * INDENT_WIDTH):
             preffix += ' '
@@ -71,6 +82,9 @@ class Echo(object):
 
     @classmethod
     def echoln(self, string, level, indent=0):
+        """
+        description:
+        """
         preffix = ''
         for i in range(indent * INDENT_WIDTH):
             preffix += ' '
@@ -78,52 +92,88 @@ class Echo(object):
 
     @classmethod
     def __print(self, string, level, trailer):
+        """
+        description:
+        """
         if int(level) <= int(self.verbosity):
             print(string, end=trailer)
             sys.stdout.flush()
 
 
 def verbose(level):
+    """
+    description:
+    """
     Echo.verbose(level)
 
 
 def level():
+    """
+    description:
+    """
     return Echo.verbose_level()
 
 
 def echo(string, indent=0):
+    """
+    description:
+    """
     Echo.echo(string, 0, indent)
 
 
 def echoln(string, indent=0):
+    """
+    description:
+    """
     Echo.echoln(string, 0, indent)
 
 
 def erro(string, indent=0):
+    """
+    description:
+    """
     Echo.echo('Error: ' + string, 1, indent)
 
 
 def erroln(string, indent=0):
+    """
+    description:
+    """
     Echo.echoln('Error: ' + string, 1, indent)
 
 
 def warn(string, indent=0):
+    """
+    description:
+    """
     Echo.echo('Warning: ' + string, 2, indent)
 
 
 def warnln(string, indent=0):
+    """
+    description:
+    """
     Echo.echoln('Warning: ' + string, 2, indent)
 
 
 def info(string, indent=0):
+    """
+    description:
+    """
     Echo.echo(string, 3, indent)
 
 
 def infoln(string, indent=0):
+    """
+    description:
+    """
     Echo.echoln(string, 3, indent)
 
 
 def code(string, color=None, attrs=None):
+    """
+    description:
+    """
     if level() < 4:
         return False
     if color is None:
@@ -132,7 +182,11 @@ def code(string, color=None, attrs=None):
         attrs = []
     cprint(string, color, attrs=attrs, end='')
     sys.stdout.flush()
+    return False
 
 
 def codeln(string, color=None, attrs=None):
+    """
+    description:
+    """
     code(string + '\n', color, attrs)

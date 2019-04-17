@@ -21,7 +21,7 @@ Change log:
         * First version.
 """
 
-import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO  # pylint: disable=import-error
 from xC.timer import Timer
 
 

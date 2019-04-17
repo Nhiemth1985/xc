@@ -259,7 +259,7 @@ class UserArgumentParser():
             device.set(id)
             session = Session(device.get_comm())
             if not args.all and not device.is_enable():
-                    continue
+                continue
             if args.verbosity >= 4 or args.connected:
                 interface = 'Offline'
                 args.interface = 'serial'
