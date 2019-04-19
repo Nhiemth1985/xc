@@ -21,29 +21,30 @@ Change log:
         * First version.
 """
 
-import RPi.GPIO as GPIO  # pylint: disable=import-error
+import RPi.GPIO as GPIO  # pylint: disable=import-error, useless-import-alias
 from xC.timer import Timer
 
 
 class Fan():
-    """
-    Fan speed control.
-    """
 
-    """
-    Description
-        Fan speed control.
-
-        Fan (write_pin, read_pin)
-
-    Parameters
-        write_pin: Arduino LED connected to PWM motor controller
-        read_pin: Arduino pin connected to motor sensor pin
-
-    Returns
-        void
-    """
     def __init__(self, write_pin, read_pin=None, max_speed=3000):
+        """
+        Fan speed control.
+        """
+
+        """
+        Description
+            Fan speed control.
+
+            Fan (write_pin, read_pin)
+
+        Parameters
+            write_pin: Arduino LED connected to PWM motor controller
+            read_pin: Arduino pin connected to motor sensor pin
+
+        Returns
+            void
+        """
         self.version = '0.02b'
         self.read_pin = read_pin  # Pin number
         self.write_pin = write_pin  # Pin number
@@ -83,17 +84,17 @@ class Fan():
             GPIO.add_event_detect(self.read_pin, GPIO.RISING,
                                   callback=self.counter, bouncetime=self.bounce)
 
-    """
-    Description
-        Just a counter.
-
-    Parameters
-        none
-
-    Returns
-        void
-    """
     def counter(self, channel):
+        """
+        Description
+            Just a counter.
+
+        Parameters
+            none
+
+        Returns
+            void
+        """
         if not self.is_sensor_present:
             self.counter_rpm = 0
             return True
@@ -104,20 +105,20 @@ class Fan():
             self.counter_rpm = 0
             return False
 
-    """
-    Description
-     *   Change fan speed value.
-
-     *   fan.speedWrite(int percent_speed)
-
-     * Parameters
-     *   percent_speed: Fan percent speed
-
-     * Returns
-     *   false: invalid input
-     *   true: no errors
-    """
     def writeSpeed(self, speed):
+        """
+        Description
+         *   Change fan speed value.
+
+         *   fan.speedWrite(int percent_speed)
+
+         * Parameters
+         *   percent_speed: Fan percent speed
+
+         * Returns
+         *   false: invalid input
+         *   true: no errors
+        """
         # Check input limits
         if (speed < 0 or speed > 100):
             return True
@@ -127,10 +128,16 @@ class Fan():
         return False
 
     def setLimits(self, min, max):
+        """
+        description:
+        """
         self.limit_min = min
         self.limit_max = max
 
     def autoSpeed(self, x):
+        """
+        description:
+        """
         speed = map(constrain(x, self.limit_min, self.limit_max),
                     self.limit_min, self.limit_max,
                     0, 100)
@@ -154,30 +161,23 @@ class Fan():
         """
         return self.speed
 
-    """
-     * Description
-     *   Get fan speed in RPM.
-
-     *   fan.speedRPM()
-
-     * Parameters
-     *   none
-
-     * Returns
-     *   unsigned long: Fan speed in RPM
-     *   unsigned long: -1 is errors found
-    """
     def readRPM(self):
+        """
+        description:
+        """
         return self.rpm
 
-    """
-    """
     def stop(self):
+        """
+        description:
+        """
         return self.fan_controller.stop()
 
-    """
-    """
+
     def cleanup(self):
+        """
+        description:
+        """
         self.stop()
         return GPIO.cleanup()
 

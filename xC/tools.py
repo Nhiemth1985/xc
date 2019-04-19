@@ -59,25 +59,34 @@ from xC.echo import verbose, level, \
 
 
 class DevTools:
-    """
-    """
 
     def __init__(self, data):
-        """docstring"""
+        """
+        description:
+        """
         self._version = 0.08
         self.arduino_program = "arduino"
         self.load(data)
         self.set()
 
     def load(self, data):
+        """
+        description:
+        """
         self.data = data
 
     def info(self):
+        """
+        description:
+        """
         infoln('Project...')
         infoln('    Platform: ' + self.platform)
         infoln('    Architecture: ' + self.architecture)
 
     def set(self):
+        """
+        description:
+        """
         self.reset()
         self.id = id
         self.platform = self.data["system"].get("plat", self.platform)
@@ -111,6 +120,9 @@ class DevTools:
             self.destination = self.network_address
 
     def reset(self):
+        """
+        description:
+        """
         self.id = None
         self.platform = None
         self.mark = None
@@ -133,6 +145,9 @@ class DevTools:
         self.destination = ''
 
     def terminal(self):
+        """
+        description:
+        """
         # Connect a terminal to SSH console.
         if 'linux' in self.architecture:
             ret = os.system('ssh' + ' ' + 'xc' + '@' + self.network_address)
@@ -175,6 +190,9 @@ class DevTools:
         sys.exit(False)
 
     def verify(self):
+        """
+        description:
+        """
         infoln('Verifying...')
         # MicroPython
         if self.architecture == "MicroPython:ARM:PYBv1.1":
@@ -201,6 +219,9 @@ class DevTools:
         sys.exit(return_code)
 
     def upload(self):
+        """
+        description:
+        """
         infoln('Uploading...')
         # MicroPython
         if self.architecture == "MicroPython:ARM:PYBv1.1":
@@ -248,7 +269,6 @@ class DevTools:
         sys.exit(return_code)
 
     def __which(self, program):
-        """ """
         def is_exe(fpath):
             return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
         fpath, fname = os.path.split(program)

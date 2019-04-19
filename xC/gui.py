@@ -651,6 +651,9 @@ class Gui:
                     self.session.send_wait(command)
 
     def ctrl_check(self, event):
+        """
+        description:
+        """
         self.screensaver_timer.reset()
         if self.screensaver.running:
             self.screensaver.stop()
@@ -663,6 +666,9 @@ class Gui:
         self.ctrl_handle()
 
     def draw_ctrl(self):
+        """
+        description:
+        """
         self.controls.fill([0, 0, 0])  # Black
         self.control_keyboard_button.draw()
         self.control_mouse_button.draw()
@@ -672,6 +678,9 @@ class Gui:
         self.screen.blit(self.controls, (5, 58))
 
     def draw_screensaver(self):
+        """
+        description:
+        """
         if self.screensaver_timer.check() and not self.screensaver.running:
             self.screensaver.set_type(self.screensaver_type)
             self.screensaver.start()
@@ -679,6 +688,9 @@ class Gui:
             self.screensaver.run()
 
     def draw(self):
+        """
+        description:
+        """
         self.screen.blit(self.background, (0, 0))
         self.draw_ctrl()
         self.draw_object()
@@ -689,6 +701,9 @@ class Gui:
         pygame.display.flip()
 
     def start_host(self):
+        """
+        description:
+        """
         self.host = HostProperties(self.data["host"])
         self.host.info()
         self.host.start()
@@ -713,6 +728,9 @@ class Gui:
             pass
 
     def start_objects(self):
+        """
+        description:
+        """
         for i in self.device.get_objects():
             i["image"] = Image(self.object_area,
                                os.path.join(images_directory,
@@ -736,9 +754,15 @@ class Gui:
             infoln('Imported: ' + str(len(self.device.get_objects())), 1)
 
     def device_set(self, id):
+        """
+        description:
+        """
         self.device.set(id)
 
     def device_check(self):
+        """
+        description:
+        """
         if not self.device_timer.check():
             return False
         # Reset all data if device was unpluged.
@@ -769,6 +793,9 @@ class Gui:
                 return
 
     def start_device(self):
+        """
+        description:
+        """
         infoln("Device...")
         if not self.device.get_id():
             detected = self.device.detect()
@@ -784,6 +811,9 @@ class Gui:
                 self.device.system_desc
 
     def start_screen(self):
+        """
+        description:
+        """
         global pygame
         infoln("Screen...")
         # Set screen resolution
@@ -855,6 +885,9 @@ class Gui:
         self.images_load()
 
     def ctrl_start(self):
+        """
+        description:
+        """
         infoln('Input...')
         self.ctrl_keyboard_start()
         self.ctrl_mouse_start()
@@ -863,6 +896,9 @@ class Gui:
         self.ctrl_voice_start()
 
     def start(self):
+        """
+        description:
+        """
         self.start_host()
         self.start_screen()
         self.start_device()
@@ -871,6 +907,9 @@ class Gui:
         self.start_session()
 
     def draw_status(self):
+        """
+        description:
+        """
         # Status bar
         pygame.draw.rect(self.status_bar, (0, 29, 0),
                          (0, 0, self.status_bar.get_size()[0],
@@ -903,6 +942,9 @@ class Gui:
         self.screen.blit(self.status_bar, [0, self.screen.get_size()[1] - 16])
 
     def terminal(self):
+        """
+        description:
+        """
         self.terminal = pygame.Surface((320, 200))
         font = pygame.font.SysFont('Ubuntu', 14)
         text = font.render(self.window_caption, True, (131, 148, 150))
@@ -913,8 +955,11 @@ class Gui:
 
 
 class Image:
-    """  """
+
     def __init__(self, screen, source, splits=[None, None]):
+        """
+        description:
+        """
         self.source = source
         self.screen = screen
         self.surface = pygame.image.load(self.source)
@@ -924,6 +969,9 @@ class Image:
             self.split(self.splits)
 
     def draw(self, item=[None, None], position=[None, None]):
+        """
+        description:
+        """
         if position != [None, None]:
             self.position = position
         if item == [None, None]:
@@ -976,9 +1024,15 @@ class Image:
         return [a, c]
 
     def position(self, position):
+        """
+        description:
+        """
         self.position = position
 
     def split(self, splits):
+        """
+        description:
+        """
         self.dimensions = [0, 0]
         self.splits = splits
         self.splits_total = self.splits[0] * self.splits[1]
@@ -987,11 +1041,17 @@ class Image:
         return self.splits_total
 
     def get_size(self):
+        """
+        description:
+        """
         return self.dimensions
 
 
 class Button:
     def __init__(self, image, position, surface, state=False):
+        """
+        description:
+        """
         pass
         self.image = image
         self.size = self.image.get_size()
@@ -1003,18 +1063,33 @@ class Button:
         self.click[1] = position[1] + surface[1]
 
     def on(self):
+        """
+        description:
+        """
         self.state = True
 
     def off(self):
+        """
+        description:
+        """
         self.state = False
 
     def draw(self):
+        """
+        description:
+        """
         self.image.draw([self.state, 0], self.position)
 
     def toggle(self):
+        """
+        description:
+        """
         self.state = not self.state
 
     def check(self, mouse):
+        """
+        description:
+        """
         if mouse[0] >= self.click[0] and \
            mouse[0] <= self.click[0] + self.size[0] and\
            mouse[1] >= self.click[1] and \
@@ -1022,9 +1097,15 @@ class Button:
             self.toggle()
 
     def get_state(self):
+        """
+        description:
+        """
         return self.state
 
     def get_change(self):
+        """
+        description:
+        """
         if self.state != self.state_before:
             self.state_before = self.state
             return True

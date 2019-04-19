@@ -42,11 +42,10 @@ import time
 
 
 class Timer:
-    """
-    """
 
     def __init__(self, period, type="LOOP"):
         """
+        description:
         """
         self.version = '0.08'
         self.millis = lambda: int(round(time.time() * 1000))
@@ -57,6 +56,7 @@ class Timer:
 
     def set(self, period):
         """
+        description:
         """
         self.period = period * 1.0
         self.reset()
@@ -64,17 +64,20 @@ class Timer:
 
     def get(self):
         """
+        description:
         """
         return self.period
 
     def reset(self):
         """
+        description:
         """
         # self.enable = True
         self.counter = self.millis()
 
     def enable(self):
         """
+        description:
         """
         self.enable = True
 
@@ -83,15 +86,17 @@ class Timer:
 
     def unit(self, unit):
         """
-        Available units:
-            s: seconds
-            m: milliseconds
-            u: microseconds
+        description:
+            - Available units:
+                s: seconds
+                m: milliseconds
+                u: microseconds
         """
         self.unit = unit
 
     def check(self):
         """
+        description:
         """
         if not self.enable:
             return False
@@ -110,5 +115,6 @@ class Timer:
 
     def status(self):
         """
+        description:
         """
         return (self.millis() - self.counter) / self.period

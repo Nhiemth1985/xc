@@ -32,15 +32,15 @@ except ImportError as err:
 
 
 class UserArgumentParser():
-    """
-    https://docs.python.org/2/library/argparse.html
-    http://chase-seibert.github.io/blog/
-    """
 
     # Set default verbosity level
     verbose(1)  # Error level
 
     def __init__(self):
+        """
+        https://docs.python.org/2/library/argparse.html
+        http://chase-seibert.github.io/blog/
+        """
         self.program_name = "xc"
         self.program_version = "0.77"
         self.program_date = "2019-03-05"
@@ -94,6 +94,9 @@ class UserArgumentParser():
         getattr(self, args.command)()
 
     def run(self):
+        """
+        description:
+        """
         parser = argparse.ArgumentParser(
             prog=self.program_name + ' run',
             description='connect to device terminal')
@@ -109,7 +112,7 @@ class UserArgumentParser():
             default=1,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
-                 '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
+            '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
         infoln(self.version)
@@ -123,6 +126,9 @@ class UserArgumentParser():
         sys.exit(False)
 
     def gui(self):
+        """
+        description:
+        """
         parser = argparse.ArgumentParser(
             prog=self.program_name + ' gui',
             description='graphical user interface')
@@ -134,7 +140,7 @@ class UserArgumentParser():
             default=1,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
-                 '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
+            '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
         infoln(self.version)
@@ -147,6 +153,9 @@ class UserArgumentParser():
         sys.exit(False)
 
     def terminal(self):
+        """
+        description:
+        """
         parser = argparse.ArgumentParser(
             prog=self.program_name + ' terminal',
             description='command line interface')
@@ -171,6 +180,9 @@ class UserArgumentParser():
         self.project.terminal()
 
     def verify(self):
+        """
+        description:
+        """
         parser = argparse.ArgumentParser(
             prog=self.program_name + ' verify',
             description='check firmware code')
@@ -185,7 +197,7 @@ class UserArgumentParser():
             default=1,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
-                 '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
+            '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
         infoln(self.version)
@@ -193,6 +205,9 @@ class UserArgumentParser():
         self.project.verify()
 
     def upload(self):
+        """
+        description:
+        """
         parser = argparse.ArgumentParser(
             prog=self.program_name + ' upload',
             description='upload firmware to device')
@@ -212,7 +227,7 @@ class UserArgumentParser():
             default=1,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
-                 '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
+            '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
         infoln(self.version)
@@ -220,6 +235,9 @@ class UserArgumentParser():
         self.project.upload()
 
     def list(self):
+        """
+        description:
+        """
         parser = argparse.ArgumentParser(
             prog=self.program_name + ' list',
             description='list devices')
@@ -234,8 +252,8 @@ class UserArgumentParser():
             default=1,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
-                 '0 Quiet, 1 IDs (default),' +
-                 ' 2 Names, 3 Description, 4 Link')
+            '0 Quiet, 1 IDs (default),' +
+            ' 2 Names, 3 Description, 4 Link')
         args = parser.parse_args(sys.argv[2:])
         self.__load_configuration()
         device = DeviceProperties(self.config.get())

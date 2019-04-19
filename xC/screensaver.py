@@ -35,28 +35,44 @@ else:
 
 
 class Screensaver:
+
     def __init__(self, screen):
+        """
+        description:
+        """
         self.version = '0.2'
         self.screen = screen
         self.running = False
         self.set()
 
     def start(self):
+        """
+        description:
+        """
         infoln('Screensaver...')
         infoln('Starting...', 1)
         self.running = True
         self.reset()
 
     def reset(self):
+        """
+        description:
+        """
         self.background = pygame.Surface(self.screen.get_size())
         self.background.fill([0, 0, 0])  # Black
         pygame.mouse.set_visible(False)
 
     def set(self):
+        """
+        description:
+        """
         self.type = 'black'
         self.types = ['black', 'squares', 'lines', 'circles']
 
     def set_type(self, type=None):
+        """
+        description:
+        """
         if type in self.types:
             self.type = type
             return
@@ -65,6 +81,9 @@ class Screensaver:
             return
 
     def run(self):
+        """
+        description:
+        """
         if self.type == 'black':
             self.__black()
         elif self.type == 'squares':
@@ -76,6 +95,9 @@ class Screensaver:
         self.screen.blit(self.background, [0, 0])
 
     def stop(self):
+        """
+        description:
+        """
         self.running = False
         pygame.mouse.set_visible(True)
         infoln("Exiting...", 1)

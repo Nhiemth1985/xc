@@ -70,18 +70,25 @@ from xC.session import Session
 
 
 class DeviceProperties:
-    """
-    Methods:
-    """
+
     def __init__(self, data):
+        """
+        description:
+        """
         self.version = '0.12'
         self.load(data)
         self.reset()
 
     def load(self, data):
+        """
+        description:
+        """
         self.data = data
 
     def is_enable(self):
+        """
+        description:
+        """
         enable = False
         try:
             enable = self.data["device"][self.id].get('enable', True)
@@ -90,6 +97,9 @@ class DeviceProperties:
         return enable
 
     def get_id(self):
+        """
+        description:
+        """
         return self.id
 
     def set(self, id):
@@ -143,36 +153,54 @@ class DeviceProperties:
         return elements
 
     def get(self):
+        """
+        description:
+        """
         try:
             return self.data["device"][self.id]
         except BaseException:
             return []
 
     def get_comm(self):
+        """
+        description:
+        """
         try:
             return self.data["device"][self.id]["comm"]
         except BaseException:
             return []
 
     def get_objects(self):
+        """
+        description:
+        """
         try:
             return self.data["device"][self.id]["object"]
         except BaseException:
             return []
 
     def get_endup(self):
+        """
+        description:
+        """
         try:
             return self.data["device"][self.id]["endup"]
         except BaseException:
             return []
 
     def get_startup(self):
+        """
+        description:
+        """
         try:
             return self.data["device"][self.id]["startup"]
         except BaseException:
             return []
 
     def get_control(self):
+        """
+        description:
+        """
         try:
             return self.data["device"][self.id]["control"]
         except BaseException:
@@ -189,6 +217,9 @@ class DeviceProperties:
         self.system_logs = ""
 
     def set_interface(self, interface):
+        """
+        description:
+        """
         self.interface = interface
 
     def info(self):
@@ -203,10 +234,16 @@ class DeviceProperties:
         infoln('Description: ' + str(self.system_desc), 1)
 
     def get_control_map(self):
+        """
+        description:
+        """
         for i in self.objects():
             info(i)["command"]
 
     def detect(self):
+        """
+        description:
+        """
         self.reset()
         ids = []
         for id in self.list():

@@ -28,24 +28,36 @@ import json
 import os
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
-# import yaml
 
 
 class File:
+
     def __init__(self):
+        """
+        description:
+        """
         self.version = '0.04b'
         self.reset()
 
     def reset(self):
+        """
+        description:
+        """
         self.data = None
 
     def is_file(self, file):
+        """
+        description:
+        """
         if os.path.isfile(file):
             return True
         else:
             return False
 
     def load(self, file, type):
+        """
+        description:
+        """
         infoln('File: ' + str(file), 1)
         # Open file
         if not file:
@@ -76,9 +88,15 @@ class File:
         f.close()
 
     def get(self):
+        """
+        description:
+        """
         return self.data
 
     def yaml_load(self, data):
+        """
+        description:
+        """
         self.reset()
         infoln('Parsing YAML...', 1)
         try:
@@ -88,25 +106,43 @@ class File:
             sys.exit(True)
 
     def yaml_check(self):
+        """
+        description:
+        """
         self.items = len(self.data)
 
     def yaml_info(self):
+        """
+        description:
+        """
         infoln('Keys: ' + str(self.items), 2)
 
     def gcode_load(self, data):
+        """
+        description:
+        """
         self.reset()
         infoln('Parsing G-code...', 1)
         self.data = data
 
     def gcode_check(self):
+        """
+        description:
+        """
         self.line_total = len(self.data)
         self.char_total = len(''.join(self.data))
 
     def gcode_info(self):
+        """
+        description:
+        """
         infoln('Lines: ' + str(self.line_total), 2)
         infoln('Characters: ' + str(self.char_total), 2)
 
     def json_load(self, data):
+        """
+        description:
+        """
         self.reset()
         infoln('Parsing JSON...', 1)
         try:
@@ -116,6 +152,9 @@ class File:
             sys.exit(True)
 
     def json_info(self):
+        """
+        description:
+        """
         hosts = 0
         devices = 0
         try:
@@ -130,4 +169,7 @@ class File:
         infoln('Hosts: ' + str(hosts), 2)
 
     def json_check(self):
+        """
+        description:
+        """
         pass
