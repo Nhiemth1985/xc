@@ -13,6 +13,10 @@
 #   setup update
 #
 # Change log:
+# 2019-05-18
+#         * Removed: python3-pygame is no more available at Ubuntu ATP repository.
+#         * Added: python3-pygame must be installed from pip3.
+#
 # 2019-01-01
 #         * Changed: Python 3 ready.
 #
@@ -62,16 +66,16 @@ install() {
   # Dependencies
   message "Installing software dependencies"
   sudo apt update >/dev/null 2>&1 && \
-    sudo apt install -y
+    sudo apt install -y \
       python-pygame \
-      python3-pygame \
       python-termcolor \
-      python3-termcolor \
       python-psutil \
       python3-psutil \
       python-serial \
       python3-serial \
       >/dev/null 2>&1
+    sudo sudo pip3 install \
+      pygame
   check_return $?
   # Copy files
   message "Creating directory structure"
