@@ -678,6 +678,28 @@
         "logs": "Development/r1/Mark_I"
       }
     },
+    "r1m2": {
+      "comm": {
+        "network": {},
+        "serial": {
+          "path": "/dev/serial/by-id/usb-Arduino__www.arduino.cc__0043_85634313839351F05102-if00",
+          "speed": 19200,
+          "delay": 0,
+          "terminal_echo": false,
+          "terminal_end_of_line": "CRLF"
+        }
+      },
+      "system": {
+        "plat": "r1",
+        "mark": "II",
+        "arch": "arduino:avr:uno",
+        "desc": "Self Balancing Robot",
+        "path": "Development/r1/Mark_I/Reference/MPU6050-test",
+        "work": "Development/r1/Mark_I/Reference/MPU6050-test",
+        "code": "Development/r1/Mark_I/Reference/MPU6050-test",
+        "logs": "Development/r1/Mark_I/Reference/MPU6050-test"
+      }
+    },
     "x1": {
       "comm": {
         "network": {},
