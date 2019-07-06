@@ -40,6 +40,7 @@
 
 readonly ACTION=$1
 readonly OPTION=$2
+readonly WORKDIR="/opt/xc"
 
 if [ "$OPTION" = "--verbose" ]; then
   verbose="--verbose"
@@ -79,17 +80,17 @@ install() {
   check_return $?
   # Copy files
   message "Creating directory structure"
-  sudo mkdir -p /opt/sciemon/xc
+  sudo mkdir -p "$WORKDIR"
   check_return $?
   message "Setting user permissions"
-  sudo chown --recursive "$USER". /opt/sciemon
+  sudo chown --recursive "$USER". "$WORKDIR"
   check_return $?
   update
   # Fonts
   mkdir -p ~/.fonts
-  ln -s /opt/sciemon/xc/fonts/Digirtu_.ttf ~/.fonts >/dev/null 2>&1
+  ln -s "$WORKDIR"/fonts/Digirtu_.ttf ~/.fonts >/dev/null 2>&1
   # Configuration file
-  ln -s /opt/sciemon/xc/xC.json "$HOME"/.xC.json >/dev/null 2>&1
+  ln -s "$WORKDIR"/xC.json "$HOME"/.xC.json >/dev/null 2>&1
 }
 
 update() {
@@ -103,7 +104,7 @@ update() {
   rsync --include-from .rsync_include.txt \
         --exclude-from .rsync_exclude.txt \
         $verbose --delete --archive ./ \
-        /opt/sciemon/xc
+        "$WORKDIR"
   check_return $?
 }
 

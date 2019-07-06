@@ -42,7 +42,7 @@
     "xCm1": {
       "screen": {
         "size": "480x320",
-        "full": true,
+        "full": false,
         "rate": 30
       },
       "comm": {
@@ -916,7 +916,9 @@
         "serial": {
           "path": "/dev/serial/by-id/usb-RLRduino__www.rlrobotics.ind.br__06f8_741363339323512171F0-if00",
           "speed": 115200,
-          "delay": 200
+          "delay": 200,
+          "terminal_echo": true,
+          "terminal_end_of_line": "LF"
         }
       },
       "control": {

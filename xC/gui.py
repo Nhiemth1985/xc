@@ -122,7 +122,8 @@ else:
         from pygame.locals import *
         sys.stdout = oldstdout
 
-xc_path = os.getenv('XC_PATH', '/opt/sciemon/xc')
+# FIXME: Ta ridiculo esse path fixo aqui em baixo
+xc_path = os.getenv('XC_PATH', '/opt/xc')
 images_directory = os.path.join(xc_path, 'images')
 
 

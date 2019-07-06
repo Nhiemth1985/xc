@@ -1,16 +1,16 @@
 #!/bin/bash
-# 
+#
 # xc
-# 
+#
 # Author: Márcio Pessoa <marcio.pessoa@gmail.com>
 # Contributors: none
-# 
+#
 # Description:
 #   Start up script file
-# 
+#
 # Example:
 #   xc -h
-# 
+#
 # Change log:
 # 2019-01-01
 #          * Changed: Python 3 ready.
@@ -21,13 +21,13 @@
 #
 # 2017-03-05
 #          * Fixed: --verbosity option was using an unmutable value (4).
-# 
+#
 # 2017-02-03
 #         * First version.
 #
 
-# 
-readonly WORK_DIR='/opt/sciemon/xc'
+#
+readonly WORK_DIR='/opt/xc'
 readonly WORK_FILE='xc.py'
 readonly PYTHON='/usr/bin/python2'
 
