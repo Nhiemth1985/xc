@@ -2,9 +2,10 @@
 - name: Install/update xC
   hosts: all
   vars:
-    owner: xc
-    group: xc
-    path: /opt/xc
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    dest: /opt
+    path: xc
 
   tasks:
     - name: APT - Install dependencies
@@ -26,17 +27,17 @@
     - name: Filesystem - Create work directory if it does not exist
       become: true
       file:
-        path: /opt/xc
+        path: "{{ dest }}/{{ path }}"
         state: directory
         mode: '0755'
-        owner: "{{owner}}"
-        group: "{{group}}"
+        owner: "{{ owner }}"
+        group: "{{ group }}"
       tags: filesystem
 
     - name: Install - Copy files
       synchronize:
         src: .
-        dest: /opt
+        dest: "{{ dest }}"
         delete: yes
         dirs: yes
       tags: copy
@@ -55,7 +56,15 @@
         state: link
       tags: fonts
 
-    - name: Environment - Creating environment variables
+    - name: Environment - Configure ~/.profile
       lineinfile:
         path: ~/.profile
-        line: . '{{ path }}'/.profile
+        line: . {{ dest }}/{{ path }}/.profile
+      tags: environment
+
+    - name: Configuration - Create config file
+      file:
+        src: "{{ dest }}/{{ path }}/xC.json"
+        dest: ~/.xC.json
+        state: link
+      tags: configuration

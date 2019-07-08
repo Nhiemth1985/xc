@@ -633,23 +633,23 @@ class Gui:
             pygame.event.set_grab(False)
         # Objects
         for i in self.device.get_objects():
-            if (i["source"] == 'joystick' and
-               not self.ctrl_joystick_delay.check()):
+            if (i["source"] == 'joystick') and \
+               (not self.ctrl_joystick_delay.check()):
                 continue
             # Push button (pulse)
-            if (i["type"] == 'push-button' and
-                i["button"].get_state() and
-                i["timer"].check() and
-               self.session.is_connected()):
-                    command = i["on"]["command"].replace('*', i["factor"])
-                    self.session.send_wait(command)
+            if i["type"] == 'push-button' and \
+               i["button"].get_state() and \
+               i["timer"].check() and \
+               self.session.is_connected():
+                command = i["on"]["command"].replace('*', i["factor"])
+                self.session.send_wait(command)
             # Switch
-            elif (i["type"] == 'switch' and
-                  i["button"].get_change() and
-                  self.session.is_connected()):
-                    i["state"] = "on" if i["button"].get_state() else "off"
-                    command = i[i["state"]]["command"]
-                    self.session.send_wait(command)
+            elif i["type"] == 'switch' and \
+                 i["button"].get_change() and \
+                 self.session.is_connected():
+                i["state"] = "on" if i["button"].get_state() else "off"
+                command = i[i["state"]]["command"]
+                self.session.send_wait(command)
 
     def ctrl_check(self, event):
         """

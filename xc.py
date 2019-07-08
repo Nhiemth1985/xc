@@ -252,8 +252,7 @@ class UserArgumentParser():
             default=1,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
-            '0 Quiet, 1 IDs (default),' +
-            ' 2 Names, 3 Description, 4 Link')
+            '0 Quiet, 1 IDs (default), 2 Names, 3 Description, 4 Link')
         args = parser.parse_args(sys.argv[2:])
         self.__load_configuration()
         device = DeviceProperties(self.config.get())

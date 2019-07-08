@@ -38,7 +38,7 @@ cd xc
 ```
 ### Install
 ``` bash
-ansible-playbook xC.yaml -l localhost
+ansible-playbook xC.yaml
 ```
 ### Run
 It's ready to run on Python 3.
