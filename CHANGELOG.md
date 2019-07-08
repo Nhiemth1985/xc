@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.77] - 2019-07-07
+### Added
+- Ansible installer.
+
 ## [0.76] - 2019-03-04
 ### Added
 - Upload support to MicroPython devices.

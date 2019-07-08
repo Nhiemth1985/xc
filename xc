@@ -28,7 +28,7 @@
 
 #
 readonly WORK_DIR='/opt/xc'
-readonly WORK_FILE='xc.py'
+readonly WORK_FILE='xc.pyc'
 readonly PYTHON='/usr/bin/python2'
 
 # Default values

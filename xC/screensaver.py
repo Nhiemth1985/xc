@@ -35,11 +35,11 @@ else:
 
 
 class Screensaver:
+    """
+    description:
+    """
 
     def __init__(self, screen):
-        """
-        description:
-        """
         self.version = '0.2'
         self.screen = screen
         self.running = False
@@ -112,10 +112,10 @@ class Screensaver:
         position = [random.randrange(0, self.background.get_size()[0]),
                     random.randrange(0, self.background.get_size()[1])]
         size = [random.randrange(0, self.background.get_size()[0] -
-                position[0]),
+                                 position[0]),
                 random.randrange(0, self.background.get_size()[1] -
-                position[1])]
-        rect = [position[0], position[1], size[0], size[1]]
+                                 position[1])]
+        #  rect = [position[0], position[1], size[0], size[1]]
         pygame.draw.line(self.background, color,
                          position,
                          size)
@@ -127,9 +127,9 @@ class Screensaver:
         position = [random.randrange(0, self.background.get_size()[0]),
                     random.randrange(0, self.background.get_size()[1])]
         size = [random.randrange(0, self.background.get_size()[0] -
-                position[0]),
+                                 position[0]),
                 random.randrange(0, self.background.get_size()[1] -
-                position[1])]
+                                 position[1])]
         rect = [position[0], position[1], size[0], size[1]]
         pygame.draw.rect(self.background, color, rect)
 

@@ -47,7 +47,7 @@ class UserArgumentParser():
         self.program_description = "xC - aXes Controller"
         self.program_copyright = "Copyright (c) 2014-2019 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
-        self.program_website = "http://pessoa.eti.br/"
+        self.program_website = "https://github.com/marcio-pessoa/xC"
         self.program_contact = "Marcio Pessoa <marcio.pessoa@gmail.com>"
         self.id = None
         self.interface = None

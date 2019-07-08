@@ -42,11 +42,11 @@ import time
 
 
 class Timer:
+    """
+    description:
+    """
 
     def __init__(self, period, type="LOOP"):
-        """
-        description:
-        """
         self.version = '0.08'
         self.millis = lambda: int(round(time.time() * 1000))
         self.period = period * 1.0
@@ -82,6 +82,9 @@ class Timer:
         self.enable = True
 
     def disable(self):
+        """
+        description:
+        """
         self.enable = False
 
     def unit(self, unit):
@@ -101,17 +104,16 @@ class Timer:
         if not self.enable:
             return False
         elif self.type == "LOOP":
-            if (self.millis() - self.counter >= self.period):
+            if self.millis() - self.counter >= self.period:
                 self.counter = self.millis()
                 return True
         elif self.type == "COUNTDOWN":
-            if (self.millis() - self.counter >= self.period):
+            if self.millis() - self.counter >= self.period:
                 self.enable = False
                 return True
         elif self.type == "STOPWATCH":
             return self.millis() - self.counter
-        else:
-            return False
+        return False
 
     def status(self):
         """

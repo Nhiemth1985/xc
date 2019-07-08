@@ -1,0 +1,61 @@
+---
+- name: Install/update xC
+  hosts: all
+  vars:
+    owner: xc
+    group: xc
+    path: /opt/xc
+
+  tasks:
+    - name: APT - Install dependencies
+      become: true
+      apt:
+        package: [
+          python-pygame,
+          python-termcolor,
+          python-psutil,
+          python3-psutil,
+          python-serial,
+          python3-serial
+        ]
+        state: present
+        cache_valid_time: 3600
+        update_cache: yes
+      tags: apt
+
+    - name: Filesystem - Create work directory if it does not exist
+      become: true
+      file:
+        path: /opt/xc
+        state: directory
+        mode: '0755'
+        owner: "{{owner}}"
+        group: "{{group}}"
+      tags: filesystem
+
+    - name: Install - Copy files
+      synchronize:
+        src: .
+        dest: /opt
+        delete: yes
+        dirs: yes
+      tags: copy
+
+    - name: Fonts - Create fonts directory if it does not exist
+      file:
+        path: ~/.fonts
+        state: directory
+        mode: '0755'
+      tags: fonts
+
+    - name: Fonts - Link fonts if it does not exist
+      file:
+        src: /opt/xc/fonts/Digirtu_.ttf
+        dest: ~/.fonts/Digirtu_.ttf
+        state: link
+      tags: fonts
+
+    - name: Environment - Creating environment variables
+      lineinfile:
+        path: ~/.profile
+        line: . '{{ path }}'/.profile

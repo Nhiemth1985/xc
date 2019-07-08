@@ -19,27 +19,13 @@ All notable changes to this project will be documented in this [Change log](CHAN
 ## Topology
 ![Topology](Documents/Pictures/xC.png)
 
-## Terminology 
+## Terminology
 - xC: aXes Controller, this software
 - Host: The computer system running xC software
 - Device: The device that will be controlled by xC, such as a robot, CNC, 3D Printer, and much more.
 - User: It's you!
 
 ## Installation
-
-### Required modules
-``` bash
-sudo apt install -y python-pygame \
-                    python3-pygame \
-                    python-termcolor \
-                    python3-termcolor \
-                    python-psutil \
-                    python3-psutil \
-                    python-serial \
-                    python3-serial
-```
-
-If this modules are not available on your Linux distribution, please install using pip.
 
 ### Download xC lastest version
 ``` bash
@@ -48,10 +34,11 @@ wget https://github.com/marcio-pessoa/xC/archive/0.58.zip
 ### Uncompress
 ``` bash
 unzip xc.zip
+cd xc
 ```
 ### Install
 ``` bash
-./setup install
+ansible-playbook xC.yaml -l localhost
 ```
 ### Run
 It's ready to run on Python 3.
