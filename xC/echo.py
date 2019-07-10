@@ -13,6 +13,11 @@ Verbosity:
     4 Device code running
 
 Change log:
+2017-07-08
+        * Version: 0.06
+        * Added: debug function.
+        * Added: debugln function.
+
 2017-05-11
         * Version: 0.05b
         * Bug fix: Added flush to code output.
@@ -53,7 +58,7 @@ class Echo(object):
 
     @classmethod
     def __init__(self):
-        self.version = '0.05b'
+        self.version = 0.06
         self.verbosity = a
 
     @classmethod
@@ -168,6 +173,20 @@ def infoln(string, indent=0):
     description:
     """
     Echo.echoln(string, 3, indent)
+
+
+def debug(string, indent=0):
+    """
+    description:
+    """
+    Echo.echo(string, 4, indent)
+
+
+def debugln(string, indent=0):
+    """
+    description:
+    """
+    Echo.echoln(string, 4, indent)
 
 
 def code(string, color=None, attrs=None):

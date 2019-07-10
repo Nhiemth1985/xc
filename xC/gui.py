@@ -5,6 +5,10 @@ Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
 
 Change log:
+2019-07-08
+        * Version: 0.19
+        * Fixed: Verboseless messages.
+
 2019-01-01
         * Version: 0.18
         * Changed: Python 3 ready.
@@ -103,7 +107,7 @@ import time
 from xC.device import DeviceProperties
 from xC.host import HostProperties
 from xC.echo import verbose, level, \
-    echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
+    echo, echoln, erro, erroln, warn, warnln, info, infoln, debug, debugln, code, codeln
 import re
 from xC.screensaver import Screensaver
 from xC.session import Session
@@ -131,7 +135,7 @@ class Gui:
     """  """
 
     def __init__(self, data):
-        self.version = '0.18'
+        self.version = 0.19
         self.load(data)
         self.set()
 
@@ -272,15 +276,15 @@ class Gui:
                 self.joystick = pygame.joystick.Joystick(i)
                 self.joystick.init()
                 self.ctrl_joystick_delay = Timer(self.control_joystick_delay)
-                info('Enable: ', 2)
-                infoln(str(self.control_joystick_enable))
-                infoln(self.joystick.get_name(), 2)
-                infoln('Axes: ' + str(self.joystick.get_numaxes()), 3)
-                infoln('Buttons: ' + str(self.joystick.get_numbuttons()), 3)
-                infoln('Balls: ' + str(self.joystick.get_numballs()), 3)
-                infoln('Hats: ' + str(self.joystick.get_numhats()), 3)
-                infoln('Speed: ' + str(self.control_joystick_speed) + '%', 3)
-                infoln('Delay: ' + str(self.control_joystick_delay) + 'ms', 3)
+                debug('Enable: ', 2)
+                debugln(str(self.control_joystick_enable))
+                debugln(self.joystick.get_name(), 2)
+                debugln('Axes: ' + str(self.joystick.get_numaxes()), 3)
+                debugln('Buttons: ' + str(self.joystick.get_numbuttons()), 3)
+                debugln('Balls: ' + str(self.joystick.get_numballs()), 3)
+                debugln('Hats: ' + str(self.joystick.get_numhats()), 3)
+                debugln('Speed: ' + str(self.control_joystick_speed) + '%', 3)
+                debugln('Delay: ' + str(self.control_joystick_delay) + 'ms', 3)
         else:
             self.control_joystick_enable = False
             infoln('None')
@@ -364,11 +368,11 @@ class Gui:
         return_code = subprocess.call(cmd)
         if return_code == 0:
             infoln('Found')
-            info('Enable: ', 2)
-            infoln(str(self.control_keyboard_button.get_state()))
-            infoln('Speed: ' + str(self.control_keyboard_speed) +
+            debug('Enable: ', 2)
+            debugln(str(self.control_keyboard_button.get_state()))
+            debugln('Speed: ' + str(self.control_keyboard_speed) +
                    'ms', 2)
-            infoln('Delay: ' + str(self.control_keyboard_delay) +
+            debugln('Delay: ' + str(self.control_keyboard_delay) +
                    'ms', 2)
         else:
             infoln('None')
@@ -456,9 +460,9 @@ class Gui:
         if return_code == 0:
             self.ctrl_mouse_delay = Timer(self.control_mouse_delay)
             infoln('Found')
-            info('Enable: ', 2)
-            infoln(str(self.control_mouse_button.get_state()))
-            infoln('Speed: ' + str(self.control_mouse_speed) + '%', 2)
+            debug('Enable: ', 2)
+            debugln(str(self.control_mouse_button.get_state()))
+            debugln('Speed: ' + str(self.control_mouse_speed) + '%', 2)
         else:
             infoln('None')
 
@@ -490,7 +494,7 @@ class Gui:
         pass
 
     def ctrl_touch_start(self):
-        infoln('Touch: ', 1)
+        info('Touch: ', 1)
         try:
             self.control_touch_enable = (self.device.get_control()
                                          ["touch"]["enable"])
@@ -515,8 +519,9 @@ class Gui:
         except BaseException:
             self.control_touch_delay = 1
         self.ctrl_touch_delay = Timer(self.control_touch_delay)
-        info('Enable: ', 2)
-        infoln(str(self.control_touch_enable))
+        infoln('Found')
+        debug('Enable: ', 2)
+        debugln(str(self.control_touch_enable))
         self.touch = Image(self.controls,
                            os.path.join(images_directory, 'touch.png'),
                            [2, 1])
@@ -531,8 +536,8 @@ class Gui:
         info('Voice: ', 1)
         infoln('Not implemented yet.')
         self.control_voice_enable = False
-        info('Enable: ', 2)
-        infoln(str(self.control_voice_enable))
+        debug('Enable: ', 2)
+        debugln(str(self.control_voice_enable))
         self.voice = Image(self.controls,
                            os.path.join(images_directory, 'voice.png'),
                            [2, 1])
@@ -608,9 +613,8 @@ class Gui:
                 if event.type == pygame.QUIT:
                     self.running = False
                 self.ctrl_check(event)
-            # if self.joystick_timer.check():
-                # print "opa"
-                # self.ctrl_joystick_start()
+            if self.joystick_timer.check():
+                self.ctrl_joystick_start()
             self.draw()
             self.ctrl_handle()
             self.device_check()
@@ -663,7 +667,7 @@ class Gui:
         self.ctrl_mouse_handle(event)
         self.ctrl_joystick_handle(event)
         self.ctrl_touch_handle(event)
-        self.ctrl_voice_handle(event)
+        # self.ctrl_voice_handle(event)
         self.ctrl_handle()
 
     def draw_ctrl(self):
@@ -675,7 +679,7 @@ class Gui:
         self.control_mouse_button.draw()
         self.control_joystick_button.draw()
         self.control_touch_button.draw()
-        self.control_voice_button.draw()
+        # self.control_voice_button.draw()
         self.screen.blit(self.controls, (5, 58))
 
     def draw_screensaver(self):
@@ -848,7 +852,7 @@ class Gui:
         pygame.display.set_caption(self.window_title)
 
         # Checking fonts
-        infoln('Checking fonts...', 1)
+        debugln('Checking fonts...', 1)
         for ttf_name in ['Digital Readout Thick Upright',
                          'Ubuntu']:
             ttf_path = pygame.font.match_font(ttf_name)
@@ -871,7 +875,7 @@ class Gui:
         self.status_bar = pygame.Surface([self.screen.get_size()[0], 16])
 
         # Clockling
-        infoln('Clockling...', 1)
+        debugln('Clockling...', 1)
         self.clock = pygame.time.Clock()
 
         # Screensaver
@@ -882,7 +886,7 @@ class Gui:
             self.screensaver_timer.disable()
 
         # Images
-        infoln('Loading images...', 1)
+        debugln('Loading images...', 1)
         self.images_load()
 
     def ctrl_start(self):
@@ -894,7 +898,7 @@ class Gui:
         self.ctrl_mouse_start()
         self.ctrl_joystick_start()
         self.ctrl_touch_start()
-        self.ctrl_voice_start()
+        # self.ctrl_voice_start()
 
     def start(self):
         """

@@ -8,7 +8,7 @@
     path: xc
 
   tasks:
-    - name: APT - Install dependencies
+    - name: APT - Install dependencies on any system
       become: true
       apt:
         package: [
@@ -23,6 +23,21 @@
         cache_valid_time: 3600
         update_cache: yes
       tags: apt
+
+    - name: APT - Install dependencies on Raspberry Pi
+      become: true
+      apt:
+        package: [
+          python-rpi.gpio,
+          python3-rpi.gpio,
+          rpi.gpio-common
+        ]
+        state: present
+        cache_valid_time: 3600
+        update_cache:
+      when:
+        - (ansible_facts['architecture'] == "armv7l" or ansible_facts['architecture'] == "aarch64")
+      tags: raspberry
 
     - name: Filesystem - Create work directory if it does not exist
       become: true

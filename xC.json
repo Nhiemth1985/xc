@@ -37,6 +37,9 @@
         "touch": {
           "visible": true
         }
+      },
+      "joystick": {
+        "scan_time": 10
       }
     },
     "xCm1": {
@@ -67,6 +70,9 @@
         "touch": {
           "visible": true
         }
+      },
+      "joystick": {
+        "scan_time": 10
       }
     },
     "xCm2": {

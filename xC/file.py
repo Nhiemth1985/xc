@@ -5,6 +5,10 @@ Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
 
 Change log:
+2019-07-08
+        * Version: 0.05
+        * Fixed: Verboseless messages.
+
 2018-11-12
         * Version: 0.04b
         * Added: is_file method.
@@ -27,7 +31,7 @@ import sys
 import json
 import os
 from xC.echo import verbose, level, \
-    echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
+    echo, echoln, erro, erroln, warn, warnln, info, infoln, debug, debugln, code, codeln
 
 
 class File:
@@ -36,7 +40,7 @@ class File:
         """
         description:
         """
-        self.version = '0.04b'
+        self.version = 0.05
         self.reset()
 
     def reset(self):
@@ -58,7 +62,7 @@ class File:
         """
         description:
         """
-        infoln('File: ' + str(file), 1)
+        debugln('File: ' + str(file), 1)
         # Open file
         if not file:
             erroln('File definition missing.')
@@ -98,7 +102,7 @@ class File:
         description:
         """
         self.reset()
-        infoln('Parsing YAML...', 1)
+        debugln('Parsing YAML...', 1)
         try:
             self.data = yaml.load(data)
         except ValueError as err:
@@ -115,14 +119,14 @@ class File:
         """
         description:
         """
-        infoln('Keys: ' + str(self.items), 2)
+        debugln('Keys: ' + str(self.items), 2)
 
     def gcode_load(self, data):
         """
         description:
         """
         self.reset()
-        infoln('Parsing G-code...', 1)
+        debugln('Parsing G-code...', 1)
         self.data = data
 
     def gcode_check(self):
@@ -136,15 +140,15 @@ class File:
         """
         description:
         """
-        infoln('Lines: ' + str(self.line_total), 2)
-        infoln('Characters: ' + str(self.char_total), 2)
+        debugln('Lines: ' + str(self.line_total), 2)
+        debugln('Characters: ' + str(self.char_total), 2)
 
     def json_load(self, data):
         """
         description:
         """
         self.reset()
-        infoln('Parsing JSON...', 1)
+        debugln('Parsing JSON...', 1)
         try:
             self.data = json.loads(data)
         except ValueError as err:
@@ -165,8 +169,8 @@ class File:
             devices = len(self.data["device"])
         except BaseException:
             pass
-        infoln('Devices: ' + str(devices), 2)
-        infoln('Hosts: ' + str(hosts), 2)
+        debugln('Devices: ' + str(devices), 2)
+        debugln('Hosts: ' + str(hosts), 2)
 
     def json_check(self):
         """

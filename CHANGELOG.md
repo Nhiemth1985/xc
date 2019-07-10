@@ -1,6 +1,10 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## [0.78] - 2019-07-08
+### Fixed
+- Verboseless messages.
+
 ## [0.77] - 2019-07-07
 ### Added
 - Ansible installer.

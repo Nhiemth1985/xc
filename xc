@@ -33,7 +33,7 @@ readonly PYTHON='/usr/bin/python2'
 
 # Default values
 command="gui"
-verbosity=4
+verbosity=3
 
 # Identify user defined verbosity
 declare -a args=($@)

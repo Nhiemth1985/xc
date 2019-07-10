@@ -5,6 +5,10 @@ Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 Contributors: none
 
 Change log:
+2019-07-08
+        * Version: 0.04
+        * Fixed: Verboseless messages.
+
 2019-02-12
         * Version: 0.03
         * Fixed: Temperature sensing on Raspberry Pi.
@@ -26,7 +30,7 @@ from psutil import virtual_memory
 import re
 from socket import gethostbyname
 from xC.echo import verbose, level, \
-    echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
+    echo, echoln, erro, erroln, warn, warnln, info, infoln, debug, debugln, code, codeln
 from xC.timer import Timer
 
 try:
@@ -38,7 +42,7 @@ except BaseException:
 
 class HostProperties:
     def __init__(self, data):
-        self.version = '0.03'
+        self.version = 0.04
         self.load(data)
         self.set()
 
@@ -81,22 +85,22 @@ class HostProperties:
 
     def info(self):
         infoln("Host...")
-        infoln("Profile: " + self.profile, 1)
+        debugln("Profile: " + self.profile, 1)
         infoln("Name: " + self.name, 1)
         infoln("Machine: " + self.machine + " (" + self.architecture + ")", 1)
-        infoln("Processor: " + self.processor, 1)
-        info("Core", 1)
+        debugln("Processor: " + self.processor, 1)
+        debug("Core", 1)
         if self.core > 1:
-            info("s")
-        infoln(": " + str(self.core))
-        infoln("Memory: " +
+            debug("s")
+        debugln(": " + str(self.core))
+        debugln("Memory: " +
                str(self.memory) + "GB (used: " +
                str(self.memory_used) + "%)", 1)
-        info("Operating system: " + self.system, 1)
+        debug("Operating system: " + self.system, 1)
         if platform.system() == 'Linux':
-            infoln(" (" + self.distribution + " " +
+            debugln(" (" + self.distribution + " " +
                    self.distribution_version + ")")
-        infoln("Python: " + self.python_version, 1)
+        debugln("Python: " + self.python_version, 1)
 
     def run(self):
         if self.machine == 'armv7l':
@@ -114,7 +118,7 @@ class HostProperties:
                 status = 'Present'
         except BaseException:
             pass
-        infoln('Temperature sensor: ' + status, 1)
+        debugln('Temperature sensor: ' + status, 1)
 
     def start(self):
         if self.machine == 'armv7l':
@@ -213,7 +217,7 @@ class HostProperties:
                 status = 'Present'
         except BaseException:
             pass
-        infoln('Temperature sensor: ' + status, 1)
+        debugln('Temperature sensor: ' + status, 1)
         # Status LED
         status = 'Absent'
         try:

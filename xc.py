@@ -21,7 +21,7 @@ try:
     # Myself modules
     from xC.device import DeviceProperties
     from xC.echo import verbose, level, \
-        echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
+        echo, echoln, erro, erroln, warn, warnln, info, infoln, debug, debugln, code, codeln
     from xC.file import File
     from xC.host import HostProperties
     from xC.session import Session
@@ -42,8 +42,8 @@ class UserArgumentParser():
         http://chase-seibert.github.io/blog/
         """
         self.program_name = "xc"
-        self.program_version = "0.77"
-        self.program_date = "2019-03-05"
+        self.program_version = "0.78"
+        self.program_date = "2019-07-08"
         self.program_description = "xC - aXes Controller"
         self.program_copyright = "Copyright (c) 2014-2019 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
@@ -112,7 +112,7 @@ class UserArgumentParser():
             default=1,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
-            '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
+            '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Debug')
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
         infoln(self.version)
@@ -140,7 +140,7 @@ class UserArgumentParser():
             default=1,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
-            '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
+            '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Debug')
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
         infoln(self.version)
@@ -172,7 +172,7 @@ class UserArgumentParser():
             default=1,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
-                 '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
+                 '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Debug')
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
         infoln(self.version)
@@ -197,7 +197,7 @@ class UserArgumentParser():
             default=1,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
-            '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
+            '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Debug')
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
         infoln(self.version)
@@ -227,7 +227,7 @@ class UserArgumentParser():
             default=1,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
-            '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Code')
+            '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Debug')
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
         infoln(self.version)
