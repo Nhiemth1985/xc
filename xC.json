@@ -688,7 +688,7 @@
       "comm": {
         "network": {},
         "serial": {
-          "path": "/dev/serial/by-id/usb-Arduino__www.arduino.cc__0043_85634313839351F05102-if00",
+          "path": "/dev/serial/by-id/usb-Arduino_LLC_Arduino_Micro-if00",
           "speed": 19200,
           "delay": 0,
           "terminal_echo": false,
@@ -698,7 +698,7 @@
       "system": {
         "plat": "r1",
         "mark": "II",
-        "arch": "arduino:avr:uno",
+        "arch": "arduino:avr:micro",
         "desc": "Self Balancing Robot",
         "path": "Development/r1/Mark_I/Reference/MPU6050-test",
         "work": "Development/r1/Mark_I/Reference/MPU6050-test",
