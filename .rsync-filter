@@ -19,7 +19,6 @@
 - setup
 - *.hjson
 - *.gnbs.conf
-- Screenshots
 - Reference
 - *-test.*
 - *.retry
