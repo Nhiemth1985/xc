@@ -476,7 +476,7 @@ class Gui:
             self.control_mouse_button.check(pygame.mouse.get_pos())
             self.control_joystick_button.check(pygame.mouse.get_pos())
             self.control_touch_button.check(pygame.mouse.get_pos())
-            self.control_voice_button.check(pygame.mouse.get_pos())
+            # self.control_voice_button.check(pygame.mouse.get_pos())
         # Object behavior
         if not self.control_touch_button.get_state():
             return
