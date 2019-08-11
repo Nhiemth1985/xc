@@ -212,21 +212,14 @@ def constrain(x, a, b):
 
 def map(x, in_min, in_max, out_min, out_max):
     """
-    map(value, fromLow, fromHigh, toLow, toHigh)
-
-    Description
-        Re-maps a number from one range to another. That is, a value of fromLow
-        would get mapped to toLow, a value of fromHigh to toHigh, values
+    description:
+        Re-maps a number from one range to another. That is, a value of in_min
+        would get mapped to out_min, a value of in_max to out_max, values
         in-between to values in-between, etc.
-
-        Does not constrain values to within the range, because out-of-range
-        values are sometimes intended and useful. The constrain() function may
-        be used either before or after this function, if limits to the ranges
-        are desired.
 
         Note that the "lower bounds" of either range may be larger or smaller
         than the "upper bounds" so the map() function may be used to reverse a
-        range of numbers, for example
+        range of numbers, for example:
 
         y = map(x, 1, 50, 50, 1);
 
@@ -236,21 +229,20 @@ def map(x, in_min, in_max, out_min, out_max):
 
         is also valid and works well.
 
-        The map() function uses integer math so will not generate fractions,
-        when the math might indicate that it should do so. Fractional remainders
-        are truncated, and are not rounded or averaged.
+    usage:
+        map(value, in_min, in_max, out_min, out_max)
 
-    Parameters
+    parameters:
         value: the number to map
-        fromLow: the lower bound of the value's current range
-        fromHigh: the upper bound of the value's current range
-        toLow: the lower bound of the value's target range
-        toHigh: the upper bound of the value's target range
+        in_min: the lower bound of the value's current range
+        in_max: the upper bound of the value's current range
+        out_min: the lower bound of the value's target range
+        out_max: the upper bound of the value's target range
 
-    Returns
+    returns:
         The mapped value.
 
-    Original source:
+    reference:
         https://www.arduino.cc/en/Reference/Map
     """
     x *= 1.0
