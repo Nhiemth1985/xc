@@ -1,13 +1,16 @@
 """
 ---
 name: timer.py
-description: Stepper motor package
+description: Timer package
 copyright: 2014-2019 Marcio Pessoa
 people:
   developers:
   - name: Marcio Pessoa
     email: marcio.pessoa@gmail.com
 change-log:
+  2019-08-25
+  - version: 0.09
+    fixed: Some adequations to pylint3.
   2017-06-29
   - version: 0.08
     fixed: Some minor fixes.
@@ -46,12 +49,13 @@ class Timer:
     description:
     """
 
-    def __init__(self, period, type="LOOP"):
-        self.version = '0.08'
+    def __init__(self, period, style="LOOP"):
+        self.version = 0.09
         self.millis = lambda: int(round(time.time() * 1000))
         self.period = period * 1.0
-        self.type = type
-        self.enable = True
+        self.__style = style
+        self.__enable = True
+        self.__unit = None
         self.counter = self.millis()
 
     def set(self, period):
@@ -60,7 +64,6 @@ class Timer:
         """
         self.period = period * 1.0
         self.reset()
-        # self.enable = True
 
     def get(self):
         """
@@ -72,20 +75,19 @@ class Timer:
         """
         description:
         """
-        # self.enable = True
         self.counter = self.millis()
 
     def enable(self):
         """
         description:
         """
-        self.enable = True
+        self.__enable = True
 
     def disable(self):
         """
         description:
         """
-        self.enable = False
+        self.__enable = False
 
     def unit(self, unit):
         """
@@ -95,7 +97,7 @@ class Timer:
                 m: milliseconds
                 u: microseconds
         """
-        self.unit = unit
+        self.__unit = unit
 
     def check(self):
         """
@@ -103,15 +105,15 @@ class Timer:
         """
         if not self.enable:
             return False
-        elif self.type == "LOOP":
+        if self.__style == "LOOP":
             if self.millis() - self.counter >= self.period:
                 self.counter = self.millis()
                 return True
-        elif self.type == "COUNTDOWN":
+        if self.__style == "COUNTDOWN":
             if self.millis() - self.counter >= self.period:
-                self.enable = False
+                self.__enable = False
                 return True
-        elif self.type == "STOPWATCH":
+        if self.__style == "STOPWATCH":
             return self.millis() - self.counter
         return False
 
