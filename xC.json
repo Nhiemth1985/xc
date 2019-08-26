@@ -27,7 +27,7 @@
       },
       "screensaver": {
         "enable": false,
-        "time": 0,
+        "time": 5,
         "type": "random"
       },
       "resources": {
