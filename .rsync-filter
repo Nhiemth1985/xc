@@ -15,7 +15,6 @@
 - .gitignore
 - HOURS.*
 - KANBAN.*
-- KANBAN.*
 - setup
 - *.hjson
 - *.gnbs.conf
