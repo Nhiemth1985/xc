@@ -103,7 +103,7 @@ class Timer:
         """
         description:
         """
-        if not self.enable:
+        if not self.__enable:
             return False
         if self.__style == "LOOP":
             if self.millis() - self.counter >= self.period:
