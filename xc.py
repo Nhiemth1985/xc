@@ -172,7 +172,7 @@ class UserArgumentParser():
             default=1,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
-                 '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Debug')
+            '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Debug')
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
         infoln(self.version)
