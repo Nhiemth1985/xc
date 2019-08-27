@@ -35,11 +35,11 @@ from xC.echo import verbose, level, \
 
 
 class File:
+    """
+    description:
+    """
 
     def __init__(self):
-        """
-        description:
-        """
         self.version = 0.05
         self.reset()
 

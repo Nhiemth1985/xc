@@ -1,101 +1,87 @@
 """
-gui.py
-
-Author: Marcio Pessoa <marcio.pessoa@gmail.com>
-Contributors: none
-
-Change log:
-2019-07-08
-        * Version: 0.19
-        * Fixed: Verboseless messages.
-
-2019-01-01
-        * Version: 0.18
-        * Changed: Python 3 ready.
-
-2018-06-27
-        * Version: 0.17b
-        * Changed: Removed resizeable window feature.
-
-2018-06-19
-        * Version: 0.16b
-        * Added: Pong easter egg
-
-2018-06-05
-        * Version: 0.15b
-        * Added: CPU Core number.
-
-2018-01-27
-        * Version: 0.14b
-        * Added: Screen resolution customization.
-
-2017-07-27
-        * Version: 0.13b
-        * Improvement: Added memory information to startup messages.
-
-2017-07-20
-        * Version: 0.12b
-        * Improvement: Removed function map().
-        * Improvement: Removed function constrain().
-
-2017-06-26
-        * Version: 0.11b
-        * New feature: Hardware startup messages.
-        * New feature: Added Status LED control.
-        * New feature: Added temperature sensor.
-        * New feature: Added fan control and fan speed sensor.
-        * New feature: Hardware information for Raspberry Pi .
-        * Improvement: Added function map().
-        * Improvement: Added function constrain().
-
-2017-06-13
-        * Version: 0.10b
-        * Improvement: Detailed control start messages.
-
-2017-05-22
-        * Version: 0.09b
-        * New feature: Keyboard and mouse detection.
-
-2017-05-19
-        * Version: 0.08b
-        * New feature: Joystick buttons support.
-
-2017-05-17
-        * Version: 0.07b
-        * Bug fix: Correction applied to joystick precision.
-        * Improvement: Added mouse speed configuration.
-        * Improvement: Added joystick speed configuration.
-
-2017-05-12
-        * Version: 0.06b
-        * New feature: Joystick support.
-        * Improvement: Unified object drawing.
-
-2017-05-11
-        * Version: 0.05b
-        * New feature: Mouse support.
-
-2017-05-10
-        * Version: 0.04b
-        * New feature: Automatically build object from JSON definition.
-        * New feature: Keyboard support.
-
-2017-05-08
-        * Version: 0.03b
-        * Improvement: Check for TrueType fonts on start up.
-        * Improvement: Removed __presentation() method.
-
-2017-04-04
-        * Version: 0.02b
-        * Added: Image class to manage images easily.
-
-2017-04-01
-        * Version: 0.01b
-        * Added: Version information.
-
-2016-05-12
-        * Version: 0.00b
-        * Scrach version.
+---
+name: gui.py
+description: Graphical User Interface
+copyright: 2016-2019 Marcio Pessoa
+people:
+  developers:
+  - name: Marcio Pessoa
+    email: marcio.pessoa@gmail.com
+  contributors:
+  - name: None
+change-log:
+  2019-07-08
+  - version: 0.19
+    fixed: Verboseless messages.
+  2019-01-01
+  - version: 0.18
+    changed: Python 3 ready.
+  2018-06-27
+  - version: 0.17b
+    changed: Removed resizeable window feature.
+  2018-06-19
+  - version: 0.16b
+    added: Pong easter egg
+  2018-06-05
+  - version: 0.15b
+    added: CPU Core number.
+  2018-01-27
+  - version: 0.14b
+    added: Screen resolution customization.
+  2017-07-27
+  - version: 0.13b
+    improvement: Added memory information to startup messages.
+  2017-07-20
+  - version: 0.12b
+    improvement: Removed function map().
+    improvement: Removed function constrain().
+  2017-06-26
+  - version: 0.11b
+    added: Hardware startup messages.
+    added: Added Status LED control.
+    added: Added temperature sensor.
+    added: Added fan control and fan speed sensor.
+    added: Hardware information for Raspberry Pi .
+    improvement: Added function map().
+    improvement: Added function constrain().
+  2017-06-13
+  - version: 0.10b
+    improvement: Detailed control start messages.
+  2017-05-22
+  - version: 0.09b
+    added: Keyboard and mouse detection.
+  2017-05-19
+  - version: 0.08b
+    added: Joystick buttons support.
+  2017-05-17
+  - version: 0.07b
+    fixed: Correction applied to joystick precision.
+    improvement: Added mouse speed configuration.
+    improvement: Added joystick speed configuration.
+  2017-05-12
+  - version: 0.06b
+    added: Joystick support.
+    improvement: Unified object drawing.
+  2017-05-11
+  - version: 0.05b
+    added: Mouse support.
+  2017-05-10
+  - version: 0.04b
+    added: Automatically build object from JSON definition.
+    added: Keyboard support.
+  2017-05-08
+  - version: 0.03b
+    improvement: Check for TrueType fonts on start up.
+    improvement: Removed __presentation() method.
+  2017-04-04
+  - version: 0.02b
+    added: Image class to manage images easily.
+  2017-04-01
+  - version: 0.01b
+    added: version information.
+  2016-05-12
+  - version: 0.00b
+    added: Scrach version.
 """
 
 import sys
@@ -132,10 +118,12 @@ images_directory = os.path.join(xc_path, 'images')
 
 
 class Gui:
-    """  """
+    """
+    description:
+    """
 
     def __init__(self, data):
-        self.version = 0.19
+        self._version = 0.19
         self.load(data)
         self.set()
 
@@ -370,10 +358,8 @@ class Gui:
             infoln('Found')
             debug('Enable: ', 2)
             debugln(str(self.control_keyboard_button.get_state()))
-            debugln('Speed: ' + str(self.control_keyboard_speed) +
-                   'ms', 2)
-            debugln('Delay: ' + str(self.control_keyboard_delay) +
-                   'ms', 2)
+            debugln('Speed: ' + str(self.control_keyboard_speed) + 'ms', 2)
+            debugln('Delay: ' + str(self.control_keyboard_delay) + 'ms', 2)
         else:
             infoln('None')
         pygame.key.set_repeat(1, 100)
@@ -667,7 +653,6 @@ class Gui:
         self.ctrl_mouse_handle(event)
         self.ctrl_joystick_handle(event)
         self.ctrl_touch_handle(event)
-        # self.ctrl_voice_handle(event)
         self.ctrl_handle()
 
     def draw_ctrl(self):
@@ -687,7 +672,7 @@ class Gui:
         description:
         """
         if self.screensaver_timer.check() and not self.screensaver.running:
-            self.screensaver.set_type(self.screensaver_type)
+            self.screensaver.style(self.screensaver_type)
             self.screensaver.start()
         if self.screensaver.running:
             self.screensaver.run()
@@ -880,8 +865,7 @@ class Gui:
 
         # Screensaver
         self.screensaver = Screensaver(self.screen)
-        self.screensaver_timer = Timer(1000 * self.screensaver_time,
-                                       type='COUNTDOWN')
+        self.screensaver_timer = Timer(1000 * self.screensaver_time, 'COUNTDOWN')
         if not self.screensaver_enable:
             self.screensaver_timer.disable()
 

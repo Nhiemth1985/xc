@@ -1,25 +1,29 @@
 """
-pong.py
-
-Author: Marcio Pessoa <marcio.pessoa@gmail.com>
-Contributors: none
-
-Change log:
-2019-01-01
-        * Version: 0.2
-        * Changed: Python 3 ready.
-
-2018-07-22
-        * Version: 0.01b
-        * Added: First version.
+---
+name: pong.py
+description: Timer package
+copyright: 2014-2019 Marcio Pessoa
+people:
+  developers:
+  - name: Marcio Pessoa
+    email: marcio.pessoa@gmail.com
+change-log:
+  2019-08-25
+  - version: 0.3
+    fixed: Some adequations to pylint3.
+  2019-01-01
+  - version: 0.2
+    changed: Python 3 ready.
+  2018-07-22
+  - version: 0.01
+    added: First version.
 """
 
 import sys
 import os
 import random
-from xC.echo import verbose, level, \
-    echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 
+# TODO: Remove Python 2 compatibility
 if sys.version_info >= (3, 0):
     import contextlib
     with contextlib.redirect_stdout(None):
@@ -40,59 +44,47 @@ class Screensaver:
     """
 
     def __init__(self, screen):
-        self.version = '0.2'
-        self.screen = screen
+        self.version = 0.3
+        self.__screen = screen
         self.running = False
-        self.set()
+        self.__style = 'black'
+        self.__styles = ['black', 'squares', 'lines', 'circles']
+        self.background = pygame.Surface(self.__screen.get_size())
+        # infoln('Screensaver...')
 
     def start(self):
         """
         description:
         """
-        infoln('Screensaver...')
-        infoln('Starting...', 1)
+        # infoln('Starting...', 1)
         self.running = True
-        self.reset()
-
-    def reset(self):
-        """
-        description:
-        """
-        self.background = pygame.Surface(self.screen.get_size())
         self.background.fill([0, 0, 0])  # Black
         pygame.mouse.set_visible(False)
 
-    def set(self):
+    def style(self, style=None):
         """
         description:
         """
-        self.type = 'black'
-        self.types = ['black', 'squares', 'lines', 'circles']
-
-    def set_type(self, type=None):
-        """
-        description:
-        """
-        if type in self.types:
-            self.type = type
+        if style in self.__styles:
+            self.__style = style
             return
-        if type == 'random':
-            self.type = random.choice(self.types)
+        if style == 'random':
+            self.__style = random.choice(self.__styles)
             return
 
     def run(self):
         """
         description:
         """
-        if self.type == 'black':
+        if self.__style == 'black':
             self.__black()
-        elif self.type == 'squares':
+        elif self.__style == 'squares':
             self.__squares()
-        elif self.type == 'lines':
+        elif self.__style == 'lines':
             self.__lines()
-        elif self.type == 'circles':
+        elif self.__style == 'circles':
             self.__circles()
-        self.screen.blit(self.background, [0, 0])
+        self.__screen.blit(self.background, [0, 0])
 
     def stop(self):
         """
@@ -100,7 +92,7 @@ class Screensaver:
         """
         self.running = False
         pygame.mouse.set_visible(True)
-        infoln("Exiting...", 1)
+        # infoln("Exiting...", 1)
 
     def __black(self):
         pass

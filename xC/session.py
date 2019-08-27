@@ -36,26 +36,33 @@ Change log:
         * Scrach version.
 """
 
+import sys
 import os.path
 import os
 import re
+from time import sleep
+from socket import gethostbyname
 import serial
 # import sh
-from socket import gethostbyname
-import sys
-from time import sleep
 from xC.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 from xC.timer import Timer
 
 
 class Session:
+    """
+    description:
+    """
+
     def __init__(self, data):
         self.version = '0.06'
         self.reset()
         self.load(data)
 
     def reset(self):
+        """
+        description:
+        """
         self.data = None
         self.comm_serial_path = ''
         self.comm_serial_speed = 0
@@ -67,6 +74,9 @@ class Session:
         self.timeout = 100  # milliseconds
 
     def load(self, data):
+        """
+        description:
+        """
         if data == []:
             return
         self.data = data
@@ -96,13 +106,22 @@ class Session:
         return 0
 
     def is_connected(self):
+        """
+        description:
+        """
         if self.is_connected_serial() or self.is_connected_network():
             return True
 
     def is_connected_serial(self):
+        """
+        description:
+        """
         return os.path.exists(self.comm_serial_path)
 
     def is_connected_network(self):
+        """
+        description:
+        """
         if self.comm_network_address is None:
             return False
         try:
@@ -112,11 +131,17 @@ class Session:
             return False
 
     def stop(self):
+        """
+        description:
+        """
         if self.session:
             self.session.close()
         self.reset()
 
     def start(self):
+        """
+        description:
+        """
         if not self.data:
             return
         infoln("Connecting...", 1)
@@ -138,6 +163,9 @@ class Session:
             return True
 
     def info(self):
+        """
+        description:
+        """
         infoln('Session...')
         if not self.data:
             return
@@ -148,6 +176,9 @@ class Session:
             infoln('Network: ' + str(self.comm_network_address), 1)
 
     def check_device(self):
+        """
+        description:
+        """
         if not self.check_device_timer.check():
             return
         if (self.session.is_connected() is False) and \
@@ -160,6 +191,9 @@ class Session:
                 self.start()
 
     def run(self):
+        """
+        description:
+        """
         infoln('Running program...')
         go_on = False
         while not go_on:
@@ -182,6 +216,9 @@ class Session:
                 go_on = False
 
     def is_ready(self):
+        """
+        description:
+        """
         i = 0
         while True:
             b = self.receive()
@@ -194,9 +231,15 @@ class Session:
         return True
 
     def play(self):
+        """
+        description:
+        """
         pass
 
     def pause(self):
+        """
+        description:
+        """
         pass
 
     def send_expect(self, command, expected, timeout=0, retry=0):
@@ -258,7 +301,9 @@ class Session:
         return True
 
     def receive(self):
-        """Just receive a message"""
+        """
+        description: Just receive a message
+        """
         try:
             received = self.session.readline().rstrip()
         except IOError as err:
@@ -277,7 +322,9 @@ class Session:
             return received
 
     def send(self, command):
-        """Just send a message"""
+        """
+        description: Just send a message
+        """
         # Store comments
         try:
             comment = command[re.search(';', command).span()[0]:]
@@ -308,6 +355,9 @@ class Session:
         return False
 
     def send_wait(self, command):
+        """
+        description:
+        """
         self.send(command)
         while True:
             received = self.receive()
@@ -315,20 +365,27 @@ class Session:
                 break
 
     def set_retry(self, retry):
-        """Set default number of retries"""
+        """
+        description: Set default number of retries
+        """
         self.retry = retry
 
     def set_timeout(self, timeout):
-        """Set default timeout value"""
+        """
+        description: Set default timeout value
+        """
         self.timeout = timeout
 
     def clear(self):
-        """ Clear message buffer """
+        """
+        description: Clear message buffer
+        """
         while self.receive():
             continue
 
     def set_program(self, data):
-        """Set G-Code.
+        """
+        description: Set G-Code
         """
         if not data or data == '':
             erroln('Invalid G-code file.')

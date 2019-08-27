@@ -31,16 +31,19 @@ except ImportError as err:
     sys.exit(True)
 
 
-class UserArgumentParser():
+class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
+    """
+    description:
+    reference:
+    - Links
+      https://docs.python.org/2/library/argparse.html
+      http://chase-seibert.github.io/blog/
+    """
 
     # Set default verbosity level
     verbose(1)  # Error level
 
     def __init__(self):
-        """
-        https://docs.python.org/2/library/argparse.html
-        http://chase-seibert.github.io/blog/
-        """
         self.program_name = "xc"
         self.program_version = "0.78"
         self.program_date = "2019-07-08"

@@ -34,22 +34,32 @@ from xC.echo import verbose, level, \
 from xC.timer import Timer
 
 try:
-    import RPi.GPIO as GPIO
+    import RPi.GPIO as GPIO  # pylint: disable=import-error
     GPIO.setmode(GPIO.BOARD)
 except BaseException:
     pass
 
 
 class HostProperties:
+    """
+    description:
+    """
+
     def __init__(self, data):
         self.version = 0.04
         self.load(data)
         self.set()
 
     def load(self, data):
+        """
+        description:
+        """
         self.data = data
 
     def reset(self):
+        """
+        description:
+        """
         self.name = ''
         self.machine = ''
         self.architecture = ''
@@ -65,6 +75,9 @@ class HostProperties:
         self.fan_speed = None
 
     def set(self):
+        """
+        description:
+        """
         self.reset()
         self.name = platform.node()
         self.machine = platform.machine()
@@ -84,6 +97,9 @@ class HostProperties:
             self.profile = 'generic'
 
     def info(self):
+        """
+        description:
+        """
         infoln("Host...")
         debugln("Profile: " + self.profile, 1)
         infoln("Name: " + self.name, 1)
@@ -94,21 +110,27 @@ class HostProperties:
             debug("s")
         debugln(": " + str(self.core))
         debugln("Memory: " +
-               str(self.memory) + "GB (used: " +
-               str(self.memory_used) + "%)", 1)
+                str(self.memory) + "GB (used: " +
+                str(self.memory_used) + "%)", 1)
         debug("Operating system: " + self.system, 1)
         if platform.system() == 'Linux':
             debugln(" (" + self.distribution + " " +
-                   self.distribution_version + ")")
+                    self.distribution_version + ")")
         debugln("Python: " + self.python_version, 1)
 
     def run(self):
+        """
+        description:
+        """
         if self.machine == 'armv7l':
             self.run_armv7l()
         if self.machine == 'x86_64':
             self.run_x86_64()
 
     def start_x86_64(self):
+        """
+        description:
+        """
         self.timer = Timer(1000)
         # Temperature sensor
         status = 'Absent'
@@ -121,12 +143,18 @@ class HostProperties:
         debugln('Temperature sensor: ' + status, 1)
 
     def start(self):
+        """
+        description:
+        """
         if self.machine == 'armv7l':
             self.start_armv7l()
         if self.machine == 'x86_64':
             self.start_x86_64()
 
     def run_x86_64(self):
+        """
+        description:
+        """
         if not self.timer.check():
             return False
         # Temperature sensor
@@ -141,6 +169,9 @@ class HostProperties:
             pass
 
     def run_armv7l(self):
+        """
+        description:
+        """
         # Blink Status LED
         try:
             if self.data[self.name]["resources"]["status_led"]:
@@ -154,8 +185,8 @@ class HostProperties:
         try:
             if self.data[self.name]["resources"]["temperature_sensor"]:
                 temp = os.popen("vcgencmd measure_temp").readline()
-                temp = temp.replace("temp=","")
-                temp = temp.replace("\'C","")
+                temp = temp.replace("temp=", "")
+                temp = temp.replace("\'C", "")
                 self.temperature = str("{:1.0f} C".format(float(temp)))
         except BaseException:
             pass
@@ -170,6 +201,9 @@ class HostProperties:
             pass
 
     def status_armv7l(self):
+        """
+        description:
+        """
         status = ''
         self.run_armv7l()
         try:
@@ -186,6 +220,9 @@ class HostProperties:
         return status
 
     def status_x86_64(self):
+        """
+        description:
+        """
         status = ''
         self.run_x86_64()
         try:
@@ -196,6 +233,9 @@ class HostProperties:
         return status
 
     def status(self):
+        """
+        description:
+        """
         if self.machine == 'armv7l':
             return self.status_armv7l()
         if self.machine == 'x86_64':
@@ -203,6 +243,9 @@ class HostProperties:
         return ''
 
     def start_armv7l(self):
+        """
+        description:
+        """
         try:
             from fan import Fan
         except ImportError as err:
@@ -245,33 +288,51 @@ class HostProperties:
         infoln('Fan: ' + status, 1)
 
     def get_control(self):
+        """
+        description:
+        """
         try:
             return self.data[self.name]["control"]
         except BaseException:
             pass
 
     def get_screen(self):
+        """
+        description:
+        """
         try:
             return self.data[self.name]["screen"]
         except BaseException:
             pass
 
     def get_screensaver(self):
+        """
+        description:
+        """
         try:
             return self.data[self.name]["screensaver"]
         except BaseException:
             pass
 
     def stop(self):
+        """
+        description:
+        """
         if self.machine == 'armv7l':
             self.stop_armv7l()
         if self.machine == 'x86_64':
             self.stop_x86_64()
 
     def stop_x86_64(self):
+        """
+        description:
+        """
         pass
 
     def stop_armv7l(self):
+        """
+        description:
+        """
         try:
             if self.data[self.name]["resources"]["status_led"]:
                 self.status_led.stop()

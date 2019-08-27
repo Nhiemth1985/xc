@@ -121,4 +121,4 @@ class Timer:
         """
         description:
         """
-        return (self.millis() - self.counter) / self.period
+        return (self.millis() - self.counter) #/ self.period

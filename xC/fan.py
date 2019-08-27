@@ -1,50 +1,46 @@
 """
-fan.py
-
-Author: Marcio Pessoa <marcio.pessoa@gmail.com>
-Contributors: none
-
-Change log:
-2017-07-20
-        * Version: 0.02b
-        * New feature: Method setLimits() to pre define temperature limits.
-        * New feature: Method autoSpeed()
-        * Improvement: Added function map().
-        * Improvement: Added function constrain().
-
-2017-06-27
-        * Version: 0.01b
-        * Bug fix: Some minor fixes.
-
-2017-06-25
-        * Version: 0.00b
-        * First version.
+---
+name: fan.py
+description: Fan controller
+copyright: 2017-2019 Márcio Pessoa
+people:
+  developers:
+  - name: Márcio Pessoa
+    email: marcio.pessoa@gmail.com
+change-log:
+  2017-07-20
+  - version: 0.02b
+    added: Method setLimits() to pre define temperature limits.
+    added: Method autoSpeed()
+    added: function amap().
+    added: function constrain().
+  2017-06-27
+  - version: 0.01b
+    fixed: Some minor fixes.
+  2017-06-25
+  - version: 0.00b
+    added: First version.
 """
 
 import RPi.GPIO as GPIO  # pylint: disable=import-error, useless-import-alias
 from xC.timer import Timer
 
 
-class Fan():
+class Fan():  # pylint: disable=too-many-instance-attributes
+    """
+    description: Fan speed control.
+
+        Fan (write_pin, read_pin)
+
+    parameters:
+        write_pin: Arduino LED connected to PWM motor controller
+        read_pin: Arduino pin connected to motor sensor pin
+
+    returns:
+        void
+    """
 
     def __init__(self, write_pin, read_pin=None, max_speed=3000):
-        """
-        Fan speed control.
-        """
-
-        """
-        Description
-            Fan speed control.
-
-            Fan (write_pin, read_pin)
-
-        Parameters
-            write_pin: Arduino LED connected to PWM motor controller
-            read_pin: Arduino pin connected to motor sensor pin
-
-        Returns
-            void
-        """
         self.version = '0.02b'
         self.read_pin = read_pin  # Pin number
         self.write_pin = write_pin  # Pin number
@@ -86,14 +82,13 @@ class Fan():
 
     def counter(self, channel):
         """
-        Description
-            Just a counter.
+        description: Just a counter.
 
-        Parameters
+        parameters:
             none
 
-        Returns
-            void
+        returns:
+            bool
         """
         if not self.is_sensor_present:
             self.counter_rpm = 0
@@ -107,17 +102,16 @@ class Fan():
 
     def writeSpeed(self, speed):
         """
-        Description
-         *   Change fan speed value.
+        description: Change fan speed value.
 
-         *   fan.speedWrite(int percent_speed)
+            fan.speedWrite(int percent_speed)
 
-         * Parameters
-         *   percent_speed: Fan percent speed
+        parameters:
+            percent_speed: Fan percent speed
 
-         * Returns
-         *   false: invalid input
-         *   true: no errors
+        returns:
+            false: invalid input
+            true: no errors
         """
         # Check input limits
         if (speed < 0 or speed > 100):
@@ -138,9 +132,9 @@ class Fan():
         """
         description:
         """
-        speed = map(constrain(x, self.limit_min, self.limit_max),
-                    self.limit_min, self.limit_max,
-                    0, 100)
+        speed = amap(constrain(x, self.limit_min, self.limit_max),
+                     self.limit_min, self.limit_max,
+                     0, 100)
         self.writeSpeed(speed)
 
     def readSpeed(self):
@@ -210,7 +204,7 @@ def constrain(x, a, b):
         return x
 
 
-def map(x, in_min, in_max, out_min, out_max):
+def amap(x, in_min, in_max, out_min, out_max):
     """
     description:
         Re-maps a number from one range to another. That is, a value of in_min
@@ -218,19 +212,19 @@ def map(x, in_min, in_max, out_min, out_max):
         in-between to values in-between, etc.
 
         Note that the "lower bounds" of either range may be larger or smaller
-        than the "upper bounds" so the map() function may be used to reverse a
+        than the "upper bounds" so the amap() function may be used to reverse a
         range of numbers, for example:
 
-        y = map(x, 1, 50, 50, 1);
+        y = amap(x, 1, 50, 50, 1);
 
         The function also handles negative numbers well, so that this example
 
-        y = map(x, 1, 50, 50, -100);
+        y = amap(x, 1, 50, 50, -100);
 
         is also valid and works well.
 
     usage:
-        map(value, in_min, in_max, out_min, out_max)
+        amap(value, in_min, in_max, out_min, out_max)
 
     parameters:
         value: the number to map
