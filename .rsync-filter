@@ -20,5 +20,6 @@
 - *.gnbs.conf
 - Reference
 - *-test.*
+- *_test.*
 - *.retry
 - system-connections
