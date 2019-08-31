@@ -49,24 +49,24 @@ class File:
             # File definition missing
             sys.exit(True)
         try:
-            f = open(file, 'r')
+            file_obj = open(file, 'r')
         except IOError as err:
             print(err)
             sys.exit(True)
         # Set file type and format
         if kind == 'json':
-            data = f.read()
+            data = file_obj.read()
             self.json_load(data)
             self.json_info()
         elif kind == 'gcode':
-            data = f.readlines()
+            data = file_obj.readlines()
             self.gcode_load(data)
             self.gcode_info()
         elif kind == 'yaml':
-            data = f.read()
+            data = file_obj.read()
             self.yaml_load(data)
             self.yaml_info()
-        f.close()
+        file_obj.close()
 
     def get(self):
         """
