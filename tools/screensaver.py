@@ -1,8 +1,8 @@
 """
 ---
-name: pong.py
-description: Timer package
-copyright: 2014-2019 Marcio Pessoa
+name: screensaver.py
+description: Screensaver package
+copyright: 2018-2019 Marcio Pessoa
 people:
   developers:
   - name: Marcio Pessoa

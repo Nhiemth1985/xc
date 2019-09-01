@@ -29,9 +29,9 @@ import platform
 from psutil import virtual_memory
 import re
 from socket import gethostbyname
-from xC.echo import verbose, level, \
+from tools.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, debug, debugln, code, codeln
-from xC.timer import Timer
+from tools.timer import Timer
 
 try:
     import RPi.GPIO as GPIO  # pylint: disable=import-error

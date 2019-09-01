@@ -64,9 +64,9 @@ Change log:
 """
 
 import sys
-from xC.echo import verbose, level, \
+from tools.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
-from xC.session import Session
+from tools.session import Session
 
 
 class DeviceProperties:

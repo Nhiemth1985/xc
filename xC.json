@@ -26,7 +26,7 @@
         "rate": 60
       },
       "screensaver": {
-        "enable": true,
+        "enable": false,
         "time": 1,
         "type": "random"
       },

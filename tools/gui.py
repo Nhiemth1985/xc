@@ -90,14 +90,14 @@ import os.path
 import subprocess
 import time
 
-from xC.device import DeviceProperties
-from xC.host import HostProperties
-from xC.echo import verbose, level, \
+from tools.device import DeviceProperties
+from tools.host import HostProperties
+from tools.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, debug, debugln, code, codeln
 import re
-from xC.screensaver import Screensaver
-from xC.session import Session
-from xC.timer import Timer
+from tools.screensaver import Screensaver
+from tools.session import Session
+from tools.timer import Timer
 
 if sys.version_info >= (3, 0):
     import contextlib

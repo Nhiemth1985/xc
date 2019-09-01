@@ -44,9 +44,9 @@ from time import sleep
 from socket import gethostbyname
 import serial
 # import sh
-from xC.echo import verbose, level, \
+from tools.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
-from xC.timer import Timer
+from tools.timer import Timer
 
 
 class Session:

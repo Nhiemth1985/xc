@@ -23,7 +23,7 @@ change-log:
 """
 
 import RPi.GPIO as GPIO  # pylint: disable=import-error, useless-import-alias
-from xC.timer import Timer
+from tools.timer import Timer
 
 
 class Fan():  # pylint: disable=too-many-instance-attributes

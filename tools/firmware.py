@@ -52,9 +52,9 @@ Change log:
 import sys
 import os.path
 import subprocess
-from xC.session import Session
 from serial.tools.miniterm import Miniterm
-from xC.echo import verbose, level, \
+from tools.session import Session
+from tools.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 
 

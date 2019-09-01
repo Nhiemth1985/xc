@@ -19,13 +19,13 @@ try:
     import os.path
     import time
     # Myself modules
-    from xC.device import DeviceProperties
-    from xC.echo import verbose, level, \
+    from tools.device import DeviceProperties
+    from tools.echo import verbose, level, \
         echo, echoln, erro, erroln, warn, warnln, info, infoln, debug, debugln, code, codeln
-    from xC.file import File
-    from xC.host import HostProperties
-    from xC.session import Session
-    from xC.tools import DevTools
+    from tools.file import File
+    from tools.host import HostProperties
+    from tools.session import Session
+    from tools.firmware import DevTools
 except ImportError as err:
     print("Could not load module. " + str(err))
     sys.exit(True)
@@ -147,7 +147,7 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
         args = parser.parse_args(sys.argv[2:])
         verbose(args.verbosity)
         infoln(self.version)
-        from xC.gui import Gui
+        from tools.gui import Gui
         self.__load_configuration()
         gui = Gui(self.config.get())
         gui.device_set(args.id)
