@@ -1,39 +1,39 @@
 """
-session.py
-
-Author: Marcio Pessoa <marcio.pessoa@gmail.com>
-Contributors: none
-
-Change log:
-2019-01-08
-        * Version: 0.06
-        * Fixed: Minor updated to support serial on Python 3.
-
-2017-07-27
-        * Version: 0.05b
-        * New feature: Featured colours to 'ok' and 'nok' received strings.
-
-2017-06-04
-        * Version: 0.04b
-        * New feature: Added comment parser to '()'
-
-2017-06-02
-        * Version: 0.03b
-        * New feature: Added comment parser to ';'
-
-2017-05-11
-        * Version: 0.02b
-        * New feature: Added is_ready() method.
-        * Bug fix: Added new line to send and receive screen output.
-        * Improvement: Added command string filter in send() method.
-
-2017-02-21
-        * Version: 0.01b
-        * Improvement: Added information messages.
-
-2016-02-19
-        * Version: 0.00b
-        * Scrach version.
+---
+name: session.py
+description: Device session package
+copyright: 2016-2019 Marcio Pessoa
+people:
+  developers:
+  - name: Marcio Pessoa
+    email: marcio.pessoa@gmail.com
+change-log:
+  2019-09-03
+  - version: 0.7
+    fixed: String receive and parsing (only on Python 3).
+  2019-01-08
+  - version: 0.06
+    fixed: Minor updated to support serial on Python 3.
+  2017-07-27
+  - version: 0.05b
+    added: Featured colours to 'ok' and 'nok' received strings.
+  2017-06-04
+  - version: 0.04b
+    added: Added comment parser to '()'
+  2017-06-02
+  - version: 0.03b
+    added: Added comment parser to ';'
+  2017-05-11
+  - version: 0.02b
+    added: Added is_ready() method.
+    fixed: Added new line to send and receive screen output.
+    added: Added command string filter in send() method.
+  2017-02-21
+  - version: 0.01b
+    added: Added information messages.
+  2016-02-19
+  - version: 0.00b
+    added: Scrach version.
 """
 
 import sys
@@ -43,7 +43,6 @@ import re
 from time import sleep
 from socket import gethostbyname
 import serial
-# import sh
 from tools.echo import verbose, level, \
     echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
 from tools.timer import Timer
@@ -55,7 +54,7 @@ class Session:
     """
 
     def __init__(self, data):
-        self.version = '0.06'
+        self.version = 0.7
         self.reset()
         self.load(data)
 
@@ -306,6 +305,7 @@ class Session:
         """
         try:
             received = self.session.readline().rstrip()
+            received = str(received, 'utf-8')
         except IOError as err:
             return True
         if received == "":  # or received == "\n" or received == "\r":

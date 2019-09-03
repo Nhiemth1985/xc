@@ -22,20 +22,10 @@ change-log:
 import sys
 import os
 import random
-
-# TODO: Remove Python 2 compatibility
-if sys.version_info >= (3, 0):
-    import contextlib
-    with contextlib.redirect_stdout(None):
-        import pygame
-        from pygame.locals import *
-else:
-    with open(os.devnull, 'w') as f:
-        oldstdout = sys.stdout
-        sys.stdout = f
-        import pygame
-        from pygame.locals import *
-        sys.stdout = oldstdout
+import contextlib
+with contextlib.redirect_stdout(None):
+    import pygame
+    from pygame.locals import *
 
 
 class Screensaver:

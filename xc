@@ -12,6 +12,9 @@
 #   xc -h
 #
 # Change log:
+# 2019-09-03
+#          * Changed: Removed Python 2 support.
+#
 # 2019-01-01
 #          * Changed: Python 3 ready.
 #
@@ -23,13 +26,13 @@
 #          * Fixed: --verbosity option was using an unmutable value (4).
 #
 # 2017-02-03
-#         * First version.
+#          * First version.
 #
 
 #
 readonly WORK_DIR='/opt/xc'
 readonly WORK_FILE='xc.pyc'
-readonly PYTHON='/usr/bin/python2'
+readonly PYTHON='/usr/bin/python3'
 
 # Default values
 command="gui"
