@@ -12,11 +12,9 @@
       become: true
       apt:
         package: [
-          python-pygame,
-          python-termcolor,
-          python-psutil,
+          python3-pygame,
+          python3-termcolor,
           python3-psutil,
-          python-serial,
           python3-serial
         ]
         state: present
@@ -28,7 +26,6 @@
       become: true
       apt:
         package: [
-          python-rpi.gpio,
           python3-rpi.gpio,
           rpi.gpio-common
         ]
@@ -43,7 +40,6 @@
       become: true
       apt:
         package: [
-          python-rpi.gpio,
           python3-rpi.gpio,
           rpi.gpio-common
         ]
