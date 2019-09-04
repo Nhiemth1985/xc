@@ -36,7 +36,7 @@ readonly PYTHON='/usr/bin/python3'
 
 # Default values
 command="gui"
-verbosity=3
+verbosity=4
 
 # Identify user defined verbosity
 declare -a args=($@)

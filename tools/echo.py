@@ -44,7 +44,7 @@ Change log:
         * Scrach version.
 """
 
-from __future__ import print_function
+# from __future__ import print_function
 import sys
 from termcolor import cprint
 

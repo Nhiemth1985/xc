@@ -849,7 +849,7 @@
         },
         {
           "control": {
-            "joystick": "axis[1] < 0",
+            "joystick": "axis[1]-",
             "keyboard": "K_UP",
             "mouse": "y < 0"
           },
@@ -874,7 +874,7 @@
         },
         {
           "control": {
-            "joystick": "axis[1] > 0",
+            "joystick": "axis[1]+",
             "keyboard": "K_DOWN",
             "mouse": "y > 0"
           },
@@ -1379,7 +1379,7 @@
         },
         {
           "control": {
-            "joystick": "axis[0] > 0",
+            "joystick": "axis[0]+",
             "keyboard": "K_RIGHT",
             "mouse": "x > 0"
           },
@@ -1404,7 +1404,7 @@
         },
         {
           "control": {
-            "joystick": "axis[0] < 0",
+            "joystick": "axis[0]-",
             "keyboard": "K_LEFT",
             "mouse": "x < 1"
           },
@@ -1429,7 +1429,7 @@
         },
         {
           "control": {
-            "joystick": "axis[1] < 0",
+            "joystick": "axis[1]-",
             "keyboard": "K_UP",
             "mouse": "y < 1"
           },
@@ -1454,7 +1454,7 @@
         },
         {
           "control": {
-            "joystick": "axis[1] > 0",
+            "joystick": "axis[1]+",
             "keyboard": "K_DOWN",
             "mouse": "y > 0"
           },
@@ -1479,7 +1479,7 @@
         },
         {
           "control": {
-            "joystick": "axis[4] < 0",
+            "joystick": "axis[4]-",
             "keyboard": "K_KP8"
           },
           "default": "off",
@@ -1503,7 +1503,7 @@
         },
         {
           "control": {
-            "joystick": "axis[4] > 0",
+            "joystick": "axis[4]+",
             "keyboard": "K_KP2"
           },
           "default": "off",
@@ -1527,7 +1527,7 @@
         },
         {
           "control": {
-            "joystick": "axis[3] > 0",
+            "joystick": "axis[3]+",
             "keyboard": "K_KP6"
           },
           "default": "off",
@@ -1551,7 +1551,7 @@
         },
         {
           "control": {
-            "joystick": "axis[3] < 0",
+            "joystick": "axis[3]-",
             "keyboard": "K_KP4"
           },
           "default": "off",

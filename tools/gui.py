@@ -89,7 +89,6 @@ import os
 import os.path
 import subprocess
 import time
-
 from tools.device import DeviceProperties
 from tools.host import HostProperties
 from tools.echo import verbose, level, \
@@ -98,19 +97,11 @@ import re
 from tools.screensaver import Screensaver
 from tools.session import Session
 from tools.timer import Timer
-
-if sys.version_info >= (3, 0):
-    import contextlib
-    with contextlib.redirect_stdout(None):
-        import pygame
-        from pygame.locals import *
-else:
-    with open(os.devnull, 'w') as f:
-        oldstdout = sys.stdout
-        sys.stdout = f
-        import pygame
-        from pygame.locals import *
-        sys.stdout = oldstdout
+import tools.joystick.joystick as joystick
+import contextlib
+with contextlib.redirect_stdout(None):
+    import pygame
+    from pygame.locals import *
 
 # FIXME: Ta ridiculo esse path fixo aqui em baixo
 xc_path = os.getenv('XC_PATH', '/opt/xc')
@@ -150,17 +141,12 @@ class Gui:
         self.data = data
 
     def ctrl_joystick_stop(self):
-        pygame.joystick.quit()
+        self.joystick.disable()
 
     def ctrl_joystick_handle(self, event):
         if not self.control_joystick_enable:
             return
         # Buttons
-        button = []
-        for i in range(self.joystick.get_numbuttons()):
-            if self.joystick.get_button(i):
-                button.append(i)
-        # infoln("Button pressed: " + str(button))
         for i in self.device.get_objects():
             try:
                 if i["control"]["joystick"].split("[")[0] != "button":
@@ -168,60 +154,59 @@ class Gui:
             except BaseException:
                 continue
             i["source"] = ''
+            button = int(re.findall('\\b\\d+\\b', i["control"]["joystick"])[0])
             if event.type == JOYBUTTONDOWN and \
-               int(re.findall('\\b\\d+\\b', i["control"]["joystick"])[0]) in \
-               button:
+               self.joystick.button()[button]:
                 i["source"] = 'joystick'
                 if i["type"] == "switch":
                     i["button"].toggle()
                 elif i["type"] == "push-button":
                     i["button"].on()
             else:
-                if event.type == JOYBUTTONUP and i["type"] == "push-button":
+                if event.type == JOYBUTTONUP and \
+                   i["type"] == "push-button":
                     i["button"].off()
         # Digital motion (hat)
-        if (event.type == JOYHATMOTION or self.joystick_hat_active):
-            for i in self.device.get_objects():
-                try:
-                    i["control"]["joystick"]
-                except BaseException:
-                    continue
-                if i["control"]["joystick"].split("[")[0] == "hat":
-                    hat = []
-                    for j in range(self.joystick.get_numhats()):
-                        hat.append(self.joystick.get_hat(j))
+        # if (event.type == JOYHATMOTION or self.joystick_hat_active):
+            # for i in self.device.get_objects():
+                # try:
+                    # i["control"]["joystick"]
+                # except BaseException:
+                    # continue
+                # if i["control"]["joystick"].split("[")[0] == "hat":
+                    # hat = []
+                    # for j in range(self.joystick.get_numhats()):
+                        # hat.append(self.joystick.get_hat(j))
                         # infoln("hat[" + str(j) + "] = " + str(hat[j]))
-                    if 1 in hat[0] or -1 in hat[0]:
-                        self.joystick_hat_active = True
-                    else:
-                        self.joystick_hat_active = False
-                    if eval(i["control"]["joystick"]):
-                        i["button"].on()
-                    else:
-                        i["button"].off()
+                    # if 1 in hat[0] or -1 in hat[0]:
+                        # self.joystick_hat_active = True
+                    # else:
+                        # self.joystick_hat_active = False
+                    # if eval(i["control"]["joystick"]):
+                        # i["button"].on()
+                    # else:
+                        # i["button"].off()
         # Analog motion
         if event.type == JOYAXISMOTION:
-            # Search for configured axes
             for i in self.device.get_objects():
                 try:
                     i["control"]["joystick"]
                 except BaseException:
                     continue
-                if event.type == pygame.JOYAXISMOTION and \
-                   i["control"]["joystick"].split("[")[0] == "axis":
-                    axis = []
-                    for j in range(self.joystick.get_numaxes()):
-                        axis.append(self.joystick.get_axis(j))
-                        # infoln("axis[" + str(j) + "] = " + str(axis[j]))
-                    if eval(i["control"]["joystick"]):
+                if i["control"]["joystick"].split("[")[0] == "axis":
+                    axis = re.findall(
+                        '\\b\\d+\\b',
+                        i["control"]["joystick"])
+                    axis = int(axis[0])
+                    signal = 0
+                    if i["control"]["joystick"][-1:] == "+":
+                        signal = 1
+                    elif i["control"]["joystick"][-1:] == "-":
+                        signal = -1
+                    value = self.joystick.axis()[axis]
+                    if value * signal * 1000 > 1:
                         i["button"].on()
-                        # Get joystick axis number from JSON device file and
-                        # atrib axis[?] value to n variable
-                        n = eval(i["control"]["joystick"].split(" ")[0])
-                        n = abs(n * self.control_joystick_speed)
-                        n = int(round(n))
-                        if int(n) == 0:
-                            n = 1
+                        n = abs(value * self.control_joystick_speed)
                         i["factor"] = str(n)
                     else:
                         i["button"].off()
@@ -231,48 +216,57 @@ class Gui:
         info('Joystick: ', 1)
         # Is enable?
         try:
-            self.control_joystick_enable = (self.device.get_control()
-                                            ["joystick"]["enable"])
+            self.control_joystick_enable = (
+                self.device.get_control()["joystick"]["enable"])
         except BaseException:
             self.control_joystick_enable = False
         # Speed
         try:
-            self.control_joystick_speed = (self.device.get_control()
-                                           ["joystick"]["speed"])
+            self.control_joystick_speed = (
+                self.device.get_control()["joystick"]["speed"])
         except BaseException:
             self.control_joystick_speed = 1
         # Delay
         try:
-            self.control_joystick_delay = (self.device.get_control()
-                                           ["joystick"]["delay"])
+            self.control_joystick_delay = (
+                self.device.get_control()["joystick"]["delay"])
         except BaseException:
             self.control_joystick_delay = 50
         # Draw
-        self.joyicon = Image(self.controls,
-                             os.path.join(images_directory, 'joystick.png'),
-                             [2, 1])
-        self.control_joystick_button = Button(self.joyicon, [0, 100], [5, 58],
-                                              self.control_joystick_enable)
+        self.joyicon = Image(
+            self.controls,
+            os.path.join(images_directory, 'joystick.png'), [2, 1])
+        self.control_joystick_button = Button(
+            self.joyicon, [0, 100], [5, 58], self.control_joystick_enable)
         # Detect and start
-        self.joystick_hat_active = False
-        joysticks = pygame.joystick.get_count()
-        if joysticks:
-            if (self.joystick_detected != joysticks):
-                self.joystick_detected = joysticks
-            infoln(str(joysticks))
-            for i in range(joysticks):
-                self.joystick = pygame.joystick.Joystick(i)
-                self.joystick.init()
-                self.ctrl_joystick_delay = Timer(self.control_joystick_delay)
-                debug('Enable: ', 2)
-                debugln(str(self.control_joystick_enable))
-                debugln(self.joystick.get_name(), 2)
-                debugln('Axes: ' + str(self.joystick.get_numaxes()), 3)
-                debugln('Buttons: ' + str(self.joystick.get_numbuttons()), 3)
-                debugln('Balls: ' + str(self.joystick.get_numballs()), 3)
-                debugln('Hats: ' + str(self.joystick.get_numhats()), 3)
-                debugln('Speed: ' + str(self.control_joystick_speed) + '%', 3)
-                debugln('Delay: ' + str(self.control_joystick_delay) + 'ms', 3)
+        # self.joystick_hat_active = False
+        # joysticks = pygame.joystick.get_count()
+        self.joystick = joystick.Joystick()
+        if joystick.detect():
+            self.joystick.identification(joystick.detect()[0])
+        # if joysticks:
+            # if (self.joystick_detected != joysticks):
+                # self.joystick_detected = joysticks
+            # infoln(str(joysticks))
+            infoln(self.joystick.configuration()['name'])
+            # for i in range(joysticks):
+                # self.joystick = pygame.joystick.Joystick(i)
+                # self.joystick.init()
+            self.ctrl_joystick_delay = Timer(self.control_joystick_delay)
+            debug('Enable: ', 2)
+            debugln(str(self.control_joystick_enable))
+            debugln('Axes: ' +
+                    str(self.joystick.configuration()['axes']), 2)
+            debugln('Buttons: ' +
+                    str(self.joystick.configuration()['buttons']), 2)
+            debugln('Balls: ' +
+                    str(self.joystick.configuration()['balls']), 2)
+            debugln('Hats: ' +
+                    str(self.joystick.configuration()['hats']), 2)
+            debugln('Speed: ' +
+                    str(self.control_joystick_speed) + '%', 2)
+            debugln('Delay: ' +
+                    str(self.control_joystick_delay) + 'ms', 2)
         else:
             self.control_joystick_enable = False
             infoln('None')
@@ -599,7 +593,8 @@ class Gui:
                 if event.type == pygame.QUIT:
                     self.running = False
                 self.ctrl_check(event)
-            if self.joystick_timer.check():
+            if self.joystick_timer.check() and \
+               self.joystick.identification() == None:
                 self.ctrl_joystick_start()
             self.draw()
             self.ctrl_handle()
