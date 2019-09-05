@@ -31,8 +31,8 @@
 
 #
 readonly WORK_DIR='/opt/xc'
-readonly WORK_FILE='xc.pyc'
-readonly PYTHON='/usr/bin/python3'
+readonly WORK_FILE='xc.py'
+readonly PYTHON='python3'
 
 # Default values
 command="gui"

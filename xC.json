@@ -903,7 +903,8 @@
           "M111  ; Debug mode",
           "G91  ; Relative programming",
           "M15  ; System information",
-          "M81  ; Power on"
+          "M81  ; Power on",
+          "G03 X0  ; Set delay time"
         ]
       },
       "system": {
@@ -1125,7 +1126,7 @@
         },
         {
           "control": {
-            "joystick": "axis[1] < 0",
+            "joystick": "axis[1]-",
             "keyboard": "K_UP",
             "mouse": "y < 0"
           },
@@ -1150,7 +1151,7 @@
         },
         {
           "control": {
-            "joystick": "axis[1] > 0",
+            "joystick": "axis[1]+",
             "keyboard": "K_DOWN",
             "mouse": "y > 0"
           },
@@ -1175,7 +1176,7 @@
         },
         {
           "control": {
-            "joystick": "axis[0] < 0",
+            "joystick": "axis[0]-",
             "keyboard": "K_LEFT",
             "mouse": "x < 0"
           },
@@ -1200,7 +1201,7 @@
         },
         {
           "control": {
-            "joystick": "axis[0] > 0",
+            "joystick": "axis[0]+",
             "keyboard": "K_RIGHT",
             "mouse": "x > 0"
           },
