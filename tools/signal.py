@@ -1,17 +1,19 @@
 """
-signal.py
-
-Author: Marcio Pessoa <marcio.pessoa@gmail.com>
-Contributors: none
-
-Change log:
-2017-06-29
-        * Version: 0.01b
-        * Bug fix: Some minor fixes.
-
-2017-06-28
-        * Version: 0.00b
-        * First version.
+---
+name: signal.py
+description: Signal Generator package
+copyright: 2017-2019 Marcio Pessoa
+people:
+  developers:
+  - name: Marcio Pessoa
+    email: marcio.pessoa@gmail.com
+change-log:
+  2017-06-29
+  - version: 0.01b
+    fixed: Some minor fixes.
+  2017-06-28
+  - version: 0.00b
+    added: First version.
 """
 
 import math
@@ -20,6 +22,7 @@ from timer import Timer
 
 class SigGen():
     """
+    description:
     """
 
     def __init__(self):
@@ -37,7 +40,7 @@ class SigGen():
         Returns
             void
         """
-        self.version = '0.01b'
+        self.version = 0.01
         self.timer = Timer(1000)
 
     def period(self, period):
@@ -68,8 +71,8 @@ class SigGen():
         Returns
             float: sine signal
         """
-        y = ((-math.cos((self.step() * math.pi) * 2.0)) + 1) / 2
-        return y
+        spread = ((-math.cos((self.step() * math.pi) * 2.0)) + 1) / 2
+        return spread
 
     def square(self):
         """
@@ -92,10 +95,10 @@ class SigGen():
             float: square signal
         """
         if self.step() < 0.5:
-            y = 0
+            spread = 0
         else:
-            y = 1
-        return y
+            spread = 1
+        return spread
 
     def step(self):
         """
