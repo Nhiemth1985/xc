@@ -8,10 +8,13 @@ people:
   - name: Márcio Pessoa
     email: marcio.pessoa@gmail.com
 change-log:
+  2019-09-07
+  - version: 0.3
+    fixed: pylint friendly.
   2017-07-20
   - version: 0.02b
-    added: Method setLimits() to pre define temperature limits.
-    added: Method autoSpeed()
+    added: Method set_limits() to pre define temperature limits.
+    added: Method auto_speed()
     added: function amap().
     added: function constrain().
   2017-06-27
@@ -41,7 +44,7 @@ class Fan():  # pylint: disable=too-many-instance-attributes
     """
 
     def __init__(self, write_pin, read_pin=None, max_speed=3000):
-        self.version = '0.02b'
+        self.version = 0.3
         self.read_pin = read_pin  # Pin number
         self.write_pin = write_pin  # Pin number
         self.max_speed = max_speed  # RPM
@@ -80,7 +83,7 @@ class Fan():  # pylint: disable=too-many-instance-attributes
             GPIO.add_event_detect(self.read_pin, GPIO.RISING,
                                   callback=self.counter, bouncetime=self.bounce)
 
-    def counter(self, channel):
+    def counter(self):
         """
         description: Just a counter.
 
@@ -98,9 +101,9 @@ class Fan():  # pylint: disable=too-many-instance-attributes
         if self.timer.check():
             self.rpm = int(self.counter_rpm / self.delta_t * 1000 * 60 / 2.0)
             self.counter_rpm = 0
-            return False
+        return False
 
-    def writeSpeed(self, speed):
+    def write_speed(self, speed):
         """
         description: Change fan speed value.
 
@@ -121,23 +124,23 @@ class Fan():  # pylint: disable=too-many-instance-attributes
         self.fan_controller.ChangeDutyCycle(self.speed)
         return False
 
-    def setLimits(self, min, max):
+    def set_limits(self, minimum, maximum):
         """
         description:
         """
-        self.limit_min = min
-        self.limit_max = max
+        self.limit_min = minimum
+        self.limit_max = maximum
 
-    def autoSpeed(self, x):
+    def auto_speed(self, x_input):
         """
         description:
         """
-        speed = amap(constrain(x, self.limit_min, self.limit_max),
+        speed = amap(constrain(x_input, self.limit_min, self.limit_max),
                      self.limit_min, self.limit_max,
                      0, 100)
-        self.writeSpeed(speed)
+        self.write_speed(speed)
 
-    def readSpeed(self):
+    def read_speed(self):
         """
          * Description
          *   .
@@ -155,7 +158,7 @@ class Fan():  # pylint: disable=too-many-instance-attributes
         """
         return self.speed
 
-    def readRPM(self):
+    def read_rpm(self):
         """
         description:
         """
@@ -176,7 +179,7 @@ class Fan():  # pylint: disable=too-many-instance-attributes
         return GPIO.cleanup()
 
 
-def constrain(x, a, b):
+def constrain(number_x, number_a, number_b):
     """
     constrain(x, a, b)
 
@@ -196,15 +199,14 @@ def constrain(x, a, b):
     Original source:
         https://www.arduino.cc/en/Reference/Constrain
     """
-    if x < a:
-        return a
-    elif b < x:
-        return b
-    else:
-        return x
+    if number_x < number_a:
+        return number_a
+    if number_b < number_x:
+        return number_b
+    return number_x
 
 
-def amap(x, in_min, in_max, out_min, out_max):
+def amap(x_input, in_min, in_max, out_min, out_max):
     """
     description:
         Re-maps a number from one range to another. That is, a value of in_min
@@ -239,5 +241,5 @@ def amap(x, in_min, in_max, out_min, out_max):
     reference:
         https://www.arduino.cc/en/Reference/Map
     """
-    x *= 1.0
-    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+    # x_input *= 1.0
+    return (x_input - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
