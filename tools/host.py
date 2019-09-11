@@ -1,36 +1,37 @@
 """
-host.py
-
-Author: Marcio Pessoa <marcio.pessoa@gmail.com>
-Contributors: none
-
-Change log:
-2019-07-08
-        * Version: 0.04
-        * Fixed: Verboseless messages.
-
-2019-02-12
-        * Version: 0.03
-        * Fixed: Temperature sensing on Raspberry Pi.
-
-2018-07-22
-        * Version: 0.02b
-        * Added: Suport to x86_64.
-
-2018-06-30
-        * Version: 0.01b
-        * Added: First version.
+---
+name: host.py
+description: Host package
+copyright: 2018-2019 Márcio Pessoa
+people:
+  developers:
+  - name: Márcio Pessoa
+    email: marcio.pessoa@gmail.com
+change-log:
+  2019-09-07
+  - version: 0.5
+    fixed: Adequations to pyliny.
+  2019-07-08
+  - version: 0.04
+    fixed: Verboseless messages.
+  2019-02-12
+  - version: 0.03
+    fixed: Temperature sensing on Raspberry Pi.
+  2018-07-22
+  - version: 0.02b
+    added: Suport to x86_64.
+  2018-06-30
+  - version: 0.01b
+    added: First version.
 """
 
 import sys
-import json
 import os
 import platform
-from psutil import virtual_memory
 import re
-from socket import gethostbyname
-from tools.echo import verbose, level, \
-    echo, echoln, erro, erroln, warn, warnln, info, infoln, debug, debugln, code, codeln
+import distro
+from psutil import virtual_memory
+import tools.echo as echo
 from tools.timer import Timer
 
 try:
@@ -40,26 +41,13 @@ except BaseException:
     pass
 
 
-class HostProperties:
+class HostProperties:  # pylint: disable=too-many-instance-attributes
     """
     description:
     """
 
     def __init__(self, data):
-        self.version = 0.04
-        self.load(data)
-        self.set()
-
-    def load(self, data):
-        """
-        description:
-        """
-        self.data = data
-
-    def reset(self):
-        """
-        description:
-        """
+        self.version = 0.5
         self.name = ''
         self.machine = ''
         self.architecture = ''
@@ -72,13 +60,25 @@ class HostProperties:
         self.distribution_version = ''
         self.python_version = ''
         self.temperature = None
+        self.status_led = None
+        self.status_signal = None
         self.fan_speed = None
+        self.fan = None
+        self.timer = None
+        self.load(data)
+        self.set()
+
+    def load(self, data):
+        """
+        description:
+        """
+        self.data = data
 
     def set(self):
         """
         description:
         """
-        self.reset()
+        # self.reset()
         self.name = platform.node()
         self.machine = platform.machine()
         self.architecture = platform.architecture()[0]
@@ -87,8 +87,8 @@ class HostProperties:
         self.memory = int(round(float(virtual_memory().total)/1024/1024/1024))
         self.memory_used = virtual_memory().percent
         self.system = platform.system()
-        self.distribution = platform.linux_distribution()[0]
-        self.distribution_version = platform.linux_distribution()[1]
+        self.distribution = distro.linux_distribution()[0]
+        self.distribution_version = distro.linux_distribution()[1]
         self.python_version = platform.python_version()
         self.profile = 'generic'
         if self.name in self.data:
@@ -100,23 +100,23 @@ class HostProperties:
         """
         description:
         """
-        infoln("Host...")
-        debugln("Profile: " + self.profile, 1)
-        infoln("Name: " + self.name, 1)
-        infoln("Machine: " + self.machine + " (" + self.architecture + ")", 1)
-        debugln("Processor: " + self.processor, 1)
-        debug("Core", 1)
+        echo.infoln("Host...")
+        echo.debugln("Profile: " + self.profile, 1)
+        echo.infoln("Name: " + self.name, 1)
+        echo.infoln("Machine: " + self.machine + " (" + self.architecture + ")", 1)
+        echo.debugln("Processor: " + self.processor, 1)
+        echo.debug("Core", 1)
         if self.core > 1:
-            debug("s")
-        debugln(": " + str(self.core))
-        debugln("Memory: " +
-                str(self.memory) + "GB (used: " +
-                str(self.memory_used) + "%)", 1)
-        debug("Operating system: " + self.system, 1)
+            echo.debug("s")
+        echo.debugln(": " + str(self.core))
+        echo.debugln("Memory: " +
+                     str(self.memory) + "GB (used: " +
+                     str(self.memory_used) + "%)", 1)
+        echo.debug("Operating system: " + self.system, 1)
         if platform.system() == 'Linux':
-            debugln(" (" + self.distribution + " " +
-                    self.distribution_version + ")")
-        debugln("Python: " + self.python_version, 1)
+            echo.debugln(" (" + self.distribution + " " +
+                         self.distribution_version + ")")
+        echo.debugln("Python: " + self.python_version, 1)
 
     def run(self):
         """
@@ -140,7 +140,7 @@ class HostProperties:
                 status = 'Present'
         except BaseException:
             pass
-        debugln('Temperature sensor: ' + status, 1)
+        echo.debugln('Temperature sensor: ' + status, 1)
 
     def start(self):
         """
@@ -167,6 +167,7 @@ class HostProperties:
                                        format(float(temperature)))
         except BaseException:
             pass
+        return False
 
     def run_armv7l(self):
         """
@@ -194,11 +195,12 @@ class HostProperties:
         try:
             if self.data[self.name]["resources"]["temperature_sensor"] and \
                self.data[self.name]["resources"]["fan"]:
-                fan.autoSpeed(self.temperature)
+                self.fan.auto_speed(self.temperature)
                 self.fan_speed = str("{:1.1f} RPM".
-                                     format(float(self.fan.readRPM())))
+                                     format(float(self.fan.read_rpm())))
         except BaseException:
             pass
+        return False
 
     def status_armv7l(self):
         """
@@ -214,7 +216,7 @@ class HostProperties:
         try:
             if self.data[self.name]["resources"]["temperature_sensor"] and \
                self.data[self.name]["resources"]["fan"]:
-                status += '    ' + str(fan_speed) + ' RPM'
+                status += '    ' + str(self.fan_speed) + ' RPM'
         except BaseException:
             pass
         return status
@@ -249,7 +251,7 @@ class HostProperties:
         try:
             from fan import Fan
         except ImportError as err:
-            erroln("Could not load module. " + str(err))
+            echo.erroln("Could not load module. " + str(err))
             sys.exit(True)
         self.timer = Timer(1000)
         # Temperature sensor
@@ -260,12 +262,12 @@ class HostProperties:
                 status = 'Present'
         except BaseException:
             pass
-        debugln('Temperature sensor: ' + status, 1)
+        echo.debugln('Temperature sensor: ' + status, 1)
         # Status LED
         status = 'Absent'
         try:
             if self.data[self.name]["resources"]["status_led"]:
-                from xC.signal import SigGen
+                from tools.signal import SigGen
                 GPIO.setup(33, GPIO.OUT)
                 self.status_led = GPIO.PWM(33, 50)
                 self.status_led.start(0)
@@ -274,18 +276,18 @@ class HostProperties:
                 status = 'Present'
         except BaseException:
             pass
-        infoln('Status LED: ' + status, 1)
+        echo.infoln('Status LED: ' + status, 1)
         # Fan
         status = 'Absent'
         try:
             if self.data[self.name]["resources"]["fan"]:
                 self.fan = Fan(32, 22, max_speed=2000)
-                self.fan.setLimits(40, 60)
+                self.fan.set_limits(40, 60)
                 self.fan_speed = 0
                 status = 'Present'
         except BaseException:
             pass
-        infoln('Fan: ' + status, 1)
+        echo.infoln('Fan: ' + status, 1)
 
     def get_control(self):
         """
@@ -323,11 +325,11 @@ class HostProperties:
         if self.machine == 'x86_64':
             self.stop_x86_64()
 
-    def stop_x86_64(self):
+    def stop_x86_64(self):  # pylint: disable=no-self-use
         """
         description:
         """
-        pass
+        return False
 
     def stop_armv7l(self):
         """
