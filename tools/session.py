@@ -43,18 +43,28 @@ import re
 from time import sleep
 from socket import gethostbyname
 import serial
-from tools.echo import verbose, level, \
-    echo, echoln, erro, erroln, warn, warnln, info, infoln, code, codeln
-from tools.timer import Timer
+import tools.echo as echo
 
 
-class Session:
+class Session:  # pylint: disable=too-many-instance-attributes,too-many-public-methods
     """
     description:
     """
 
     def __init__(self, data):
         self.version = 0.7
+        self.interface = None
+        self.data = None
+        self.gcode = None
+        self.comm_serial_path = ''
+        self.comm_serial_speed = 0
+        self.comm_serial_terminal_echo = True
+        self.comm_serial_terminal_end_of_line = 'CRLF'
+        self.comm_serial_delay = 0
+        self.comm_network_address = None
+        self.retry = 3  # times
+        self.timeout = 100  # milliseconds
+        self.session = None
         self.reset()
         self.load(data)
 
@@ -77,22 +87,22 @@ class Session:
         description:
         """
         if data == []:
-            return
+            return None
         self.data = data
         # Optional keys
         try:
-            self.comm_serial_path = self.data["serial"]\
-                .get('path', self.comm_serial_path)
-            self.comm_serial_speed = self.data["serial"]\
-                .get('speed', self.comm_serial_speed)
-            self.comm_serial_delay = self.data["serial"]\
-                .get('delay', self.comm_serial_delay)
-            self.comm_serial_terminal_echo = self.data["serial"]\
-                .get('terminal_echo', self.comm_serial_terminal_echo)
-            self.comm_serial_terminal_end_of_line = self.data["serial"]\
-                .get('terminal_end_of_line',
-                     self.comm_serial_terminal_end_of_line)
-        except KeyError as err:
+            self.comm_serial_path = \
+                self.data["serial"].get('path', self.comm_serial_path)
+            self.comm_serial_speed = \
+                self.data["serial"].get('speed', self.comm_serial_speed)
+            self.comm_serial_delay = \
+                self.data["serial"].get('delay', self.comm_serial_delay)
+            self.comm_serial_terminal_echo = \
+                self.data["serial"].get('terminal_echo', self.comm_serial_terminal_echo)
+            self.comm_serial_terminal_end_of_line = \
+                self.data["serial"].get('terminal_end_of_line',
+                                        self.comm_serial_terminal_end_of_line)
+        except KeyError:
             pass
         # Network configuration
         try:
@@ -108,26 +118,15 @@ class Session:
         """
         description:
         """
-        if self.is_connected_serial() or self.is_connected_network():
+        if self.is_connected_serial():
             return True
+        return False
 
     def is_connected_serial(self):
         """
         description:
         """
         return os.path.exists(self.comm_serial_path)
-
-    def is_connected_network(self):
-        """
-        description:
-        """
-        if self.comm_network_address is None:
-            return False
-        try:
-            sh.ping(self.comm_network_address, '-c 2 -W 1', _out='/dev/null')
-            return True
-        except BaseException:
-            return False
 
     def stop(self):
         """
@@ -142,8 +141,8 @@ class Session:
         description:
         """
         if not self.data:
-            return
-        infoln("Connecting...", 1)
+            return None
+        echo.infoln("Connecting...", 1)
         if self.is_connected_serial():
             try:
                 self.session = serial.Serial()
@@ -152,67 +151,47 @@ class Session:
                 self.session.timeout = 1
                 self.session.open()
             except BaseException:
-                warnln('Operation not completed.', 2)
+                echo.warnln('Operation not completed.', 2)
                 return False
             sleep(self.comm_serial_delay / 1000)
-            infoln('Speed: ' + str(self.comm_serial_speed) + ' bps', 2)
+            echo.infoln('Speed: ' + str(self.comm_serial_speed) + ' bps', 2)
             return self.session
-        else:
-            warnln('Device is not connected.', 2)
-            return True
+        echo.warnln('Device is not connected.', 2)
+        return True
 
     def info(self):
         """
         description:
         """
-        infoln('Session...')
+        echo.infoln('Session...')
         if not self.data:
             return
         if self.comm_serial_path is not None:
-            infoln('Startup delay: ' + str(self.comm_serial_delay) + ' ms', 1)
-            infoln('Serial: ' + str(self.comm_serial_path), 1)
+            echo.infoln('Startup delay: ' + str(self.comm_serial_delay) + ' ms', 1)
+            echo.infoln('Serial: ' + str(self.comm_serial_path), 1)
         if self.comm_network_address is not None:
-            infoln('Network: ' + str(self.comm_network_address), 1)
-
-    def check_device(self):
-        """
-        description:
-        """
-        if not self.check_device_timer.check():
-            return
-        if (self.session.is_connected() is False) and \
-           (self.session.is_ready() is True):
-            self.id = None
-            self.interface = 'serial'
-            self.start()
-        if self.session.is_connected() is False:
-            if self.device.detect():
-                self.start()
+            echo.infoln('Network: ' + str(self.comm_network_address), 1)
 
     def run(self):
         """
         description:
         """
-        infoln('Running program...')
+        echo.infoln('Running program...')
         go_on = False
         while not go_on:
             go_on = self.is_ready()
         lines = len(self.gcode)
-        n = 0
+        counter = 0
         while True:
             if go_on:
-                if n == lines:
+                if counter == lines:
                     break
-                line = self.gcode[n]
-                n += 1
+                line = self.gcode[counter]
+                counter += 1
                 if self.send(line):
                     continue
             received = self.receive()
-            m = re.search('ok', str(received))
-            if m:
-                go_on = True
-            else:
-                go_on = False
+            go_on = bool(re.search('ok', str(received)))
 
     def is_ready(self):
         """
@@ -220,8 +199,8 @@ class Session:
         """
         i = 0
         while True:
-            b = self.receive()
-            if b is False:
+            content = self.receive()
+            if content is False:
                 i += 1
             else:
                 i = 0
@@ -229,17 +208,17 @@ class Session:
                 break
         return True
 
-    def play(self):
+    def play(self):  # pylint: disable=no-self-use
         """
         description:
         """
-        pass
+        return False
 
-    def pause(self):
+    def pause(self):  # pylint: disable=no-self-use
         """
         description:
         """
-        pass
+        return False
 
     def send_expect(self, command, expected, timeout=0, retry=0):
         """Send a command and receive a message.
@@ -288,15 +267,15 @@ class Session:
             timeout = self.timeout
         try:
             self.send(command)
-        except IOError as err:
+        except IOError:
             return True
         serial_line = ""
-        for i in range(retry):
+        for _ in range(retry):
             sleep(int((timeout) / 1000))
             serial_line += self.receive()
             if expected in serial_line:
                 return serial_line
-        erro("Command return lost.")
+        echo.erro("Command return lost.")
         return True
 
     def receive(self):
@@ -306,20 +285,18 @@ class Session:
         try:
             received = self.session.readline().rstrip()
             received = str(received, 'utf-8')
-        except IOError as err:
+        except IOError:
             return True
         if received == "":  # or received == "\n" or received == "\r":
             return False
         # Change color based on device response ('ok' or 'nok')
         if re.search('nok', str(received)):
-            codeln(received, 'red', attrs=['bold'])
+            echo.codeln(received, 'red', attrs=['bold'])
             return received
-        elif re.search('ok', str(received)):
-            codeln(received, 'green', attrs=['bold'])
+        if re.search('ok', str(received)):
+            echo.codeln(received, 'green', attrs=['bold'])
             return received
-        else:
-            # codeln(received, 'green')
-            return received
+        return received
 
     def send(self, command):
         """
@@ -332,7 +309,7 @@ class Session:
             comment = ''
         if comment == '':
             try:
-                comment = command[re.search('\(', command).span()[0]:]
+                comment = command[re.search('\(', command).span()[0]:]  # pylint: disable=anomalous-backslash-in-string
             except BaseException:
                 comment = ''
         # Remove comments
@@ -344,13 +321,13 @@ class Session:
         # Ignore blank lines
         if command == '':
             if comment != '':
-                codeln(comment)
+                echo.codeln(comment)
             return True
-        code(command, attrs=['bold'])
-        codeln('  ' + comment)
+        echo.code(command, attrs=['bold'])
+        echo.codeln('  ' + comment)
         try:
             self.session.write((command + '\n').encode())
-        except IOError as err:
+        except IOError:
             return True
         return False
 
@@ -388,6 +365,6 @@ class Session:
         description: Set G-Code
         """
         if not data or data == '':
-            erroln('Invalid G-code file.')
+            echo.erroln('Invalid G-code file.')
             sys.exit(True)
         self.gcode = data
