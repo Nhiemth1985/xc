@@ -19,13 +19,11 @@ change-log:
     added: First version.
 """
 
-import sys
-import os
 import random
 import contextlib
 with contextlib.redirect_stdout(None):
     import pygame
-    from pygame.locals import *
+    from pygame.locals import *  # pylint: disable=wildcard-import, unused-import, unused-wildcard-import
 
 
 class Screensaver:
@@ -39,14 +37,12 @@ class Screensaver:
         self.running = False
         self.__style = 'black'
         self.__styles = ['black', 'squares', 'lines', 'circles']
-        self.background = pygame.Surface(self.__screen.get_size())
-        # infoln('Screensaver...')
+        self.background = pygame.Surface(self.__screen.get_size())  # pylint: disable=too-many-function-args
 
     def start(self):
         """
         description:
         """
-        # infoln('Starting...', 1)
         self.running = True
         self.background.fill([0, 0, 0])  # Black
         pygame.mouse.set_visible(False)
@@ -82,30 +78,28 @@ class Screensaver:
         """
         self.running = False
         pygame.mouse.set_visible(True)
-        # infoln("Exiting...", 1)
 
     def __black(self):
         pass
 
     def __lines(self):
-        color = [random.randrange(0, 255),
-                 random.randrange(0, 255),
-                 random.randrange(0, 255)]
+        colour = [random.randrange(0, 255),
+                  random.randrange(0, 255),
+                  random.randrange(0, 255)]
         position = [random.randrange(0, self.background.get_size()[0]),
                     random.randrange(0, self.background.get_size()[1])]
         size = [random.randrange(0, self.background.get_size()[0] -
                                  position[0]),
                 random.randrange(0, self.background.get_size()[1] -
                                  position[1])]
-        #  rect = [position[0], position[1], size[0], size[1]]
-        pygame.draw.line(self.background, color,
+        pygame.draw.line(self.background, colour,
                          position,
                          size)
 
     def __squares(self):
-        color = [random.randrange(0, 255),
-                 random.randrange(0, 255),
-                 random.randrange(0, 255)]
+        colour = [random.randrange(0, 255),
+                  random.randrange(0, 255),
+                  random.randrange(0, 255)]
         position = [random.randrange(0, self.background.get_size()[0]),
                     random.randrange(0, self.background.get_size()[1])]
         size = [random.randrange(0, self.background.get_size()[0] -
@@ -113,13 +107,13 @@ class Screensaver:
                 random.randrange(0, self.background.get_size()[1] -
                                  position[1])]
         rect = [position[0], position[1], size[0], size[1]]
-        pygame.draw.rect(self.background, color, rect)
+        pygame.draw.rect(self.background, colour, rect)
 
     def __circles(self):
-        color = [random.randrange(0, 255),
-                 random.randrange(0, 255),
-                 random.randrange(0, 255)]
+        colour = [random.randrange(0, 255),
+                  random.randrange(0, 255),
+                  random.randrange(0, 255)]
         position = [random.randrange(0, self.background.get_size()[0]),
                     random.randrange(0, self.background.get_size()[1])]
         radius = random.randrange(0, self.background.get_size()[0] / 16)
-        pygame.draw.circle(self.background, color, position, radius)
+        pygame.draw.circle(self.background, colour, position, radius)
