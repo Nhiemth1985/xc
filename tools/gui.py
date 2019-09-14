@@ -84,66 +84,113 @@ change-log:
     added: Scrach version.
 """
 
-import sys
 import os
 import os.path
 import subprocess
-import time
+import re
+import contextlib
+with contextlib.redirect_stdout(None):
+    import pygame
+    from pygame.locals import *  # pylint: disable=wildcard-import, unused-import, unused-wildcard-import
 from tools.device import DeviceProperties
 from tools.host import HostProperties
-from tools.echo import verbose, level, \
-    echo, echoln, erro, erroln, warn, warnln, info, infoln, debug, debugln, code, codeln
-import re
+import tools.echo as echo
+from tools.button import Button
+from tools.image import Image
 from tools.screensaver import Screensaver
 from tools.session import Session
 from tools.timer import Timer
 import tools.joystick.joystick as joystick
-import contextlib
-with contextlib.redirect_stdout(None):
-    import pygame
-    from pygame.locals import *
-
-# FIXME: Ta ridiculo esse path fixo aqui em baixo
-xc_path = os.getenv('XC_PATH', '/opt/xc')
-images_directory = os.path.join(xc_path, 'images')
 
 
-class Gui:
+class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attributes
     """
     description:
     """
 
-    def __init__(self, data):
-        self._version = 0.19
-        self.load(data)
-        self.set()
-
-    def set(self):
-        self.reset()
+    def __init__(self, data):  # pylint: disable=too-many-statements
+        self._version = 0.20
+        self.__work_dir = os.path.dirname(os.path.realpath(__file__))
+        self.__work_dir = os.path.join(self.__work_dir, '../')
+        self.__img_dir = os.path.join(self.__work_dir, 'images')
         self.screen_full = False
         self.screen_size = "480x320"
         self.screen_rate = 30
         self.screensaver_time = 60
         self.screensaver_type = 'black'
         self.screensaver_enable = False
+        self.screen = None
+        self.screen_resolution = None
+        self.screensaver = None
+        self.screensaver_timer = None
+        self.controls = None
+        self.object_area = None
+        self.status_bar = None
+        self.clock = None
+        self.background = None
+        self.host = None
+        self.session = None
+        self.running = None
+        self.device = None
         self.device_timer = Timer(1000)
+        self.connected_devices = None
+        self.was_connected = None
+        self.joystick = None
         self.joystick_detected = set()
         self.joystick_timer = Timer(1000)
-        self.device = DeviceProperties(self.data)
+        self.joyicon = None
+        self.ctrl_joystick_delay = None
+        self.control_joystick_button = None
+        self.control_joystick_delay = None
+        self.control_joystick_enable = None
+        self.control_joystick_speed = None
+        self.keyboard = None
+        self.control_keyboard_button = None
+        self.control_keyboard_delay = None
+        self.control_keyboard_speed = None
+        self.mouse = None
+        self.ctrl_mouse_delay = None
+        self.control_mouse_button = None
+        self.control_mouse_delay = None
+        self.control_mouse_speed = None
+        self.touch = None
+        self.control_touch_button = None
+        self.ctrl_touch_delay = None
+        self.control_touch_delay = None
+        self.control_touch_enable = None
+        self.control_touch_speed = None
+        self.control_touch_visible = None
+        self.window_caption = None
+        self.window_title = None
+        self.load(data)
+        self.reset()
 
     def reset(self):
+        """
+        description:
+        """
+        self.device = DeviceProperties(self.data)
         self.window_title = 'xC'
         self.window_caption = 'xC - Axes Controller'
         self.was_connected = False
         self.connected_devices = 0
 
     def load(self, data):
+        """
+        description:
+        """
         self.data = data
 
     def ctrl_joystick_stop(self):
+        """
+        description:
+        """
         self.joystick.disable()
 
-    def ctrl_joystick_handle(self, event):
+    def ctrl_joystick_handle(self, event):  # pylint: disable=too-many-branches
+        """
+        description:
+        """
         if not self.control_joystick_enable:
             return
         # Buttons
@@ -187,7 +234,7 @@ class Gui:
                     # else:
                         # i["button"].off()
         # Analog motion
-        if event.type == JOYAXISMOTION:
+        if event.type == JOYAXISMOTION:  # pylint: disable=undefined-variable
             for i in self.device.get_objects():
                 try:
                     i["control"]["joystick"]
@@ -206,14 +253,18 @@ class Gui:
                     value = self.joystick.axis()[axis]
                     if value * signal * 1000 > 1:
                         i["button"].on()
-                        n = abs(value * self.control_joystick_speed)
-                        i["factor"] = str(n)
+                        factor = abs(value * self.control_joystick_speed)
+                        i["factor"] = str(factor)
                     else:
                         i["button"].off()
                         i["factor"] = '1'
 
-    def ctrl_joystick_start(self):
-        info('Joystick: ', 1)
+    def ctrl_joystick_start(self, quiet=False):
+        """
+        description:
+        """
+        if not quiet:
+            echo.info('Joystick: ', 1)
         # Is enable?
         try:
             self.control_joystick_enable = (
@@ -235,68 +286,69 @@ class Gui:
         # Draw
         self.joyicon = Image(
             self.controls,
-            os.path.join(images_directory, 'joystick.png'), [2, 1])
+            os.path.join(self.__img_dir, 'joystick.png'), [2, 1])
         self.control_joystick_button = Button(
             self.joyicon, [0, 100], [5, 58], self.control_joystick_enable)
         # Detect and start
-        # self.joystick_hat_active = False
-        # joysticks = pygame.joystick.get_count()
         self.joystick = joystick.Joystick()
         if joystick.detect():
+            if quiet:
+                echo.info('Joystick: ', 1)
             self.joystick.identification(joystick.detect()[0])
-        # if joysticks:
-            # if (self.joystick_detected != joysticks):
-                # self.joystick_detected = joysticks
-            # infoln(str(joysticks))
-            infoln(self.joystick.configuration()['name'])
-            # for i in range(joysticks):
-                # self.joystick = pygame.joystick.Joystick(i)
-                # self.joystick.init()
+            echo.infoln(self.joystick.configuration()['name'])
             self.ctrl_joystick_delay = Timer(self.control_joystick_delay)
-            debug('Enable: ', 2)
-            debugln(str(self.control_joystick_enable))
-            debugln('Axes: ' +
-                    str(self.joystick.configuration()['axes']), 2)
-            debugln('Buttons: ' +
-                    str(self.joystick.configuration()['buttons']), 2)
-            debugln('Balls: ' +
-                    str(self.joystick.configuration()['balls']), 2)
-            debugln('Hats: ' +
-                    str(self.joystick.configuration()['hats']), 2)
-            debugln('Speed: ' +
-                    str(self.control_joystick_speed) + '%', 2)
-            debugln('Delay: ' +
-                    str(self.control_joystick_delay) + 'ms', 2)
+            echo.debug('Enable: ', 2)
+            echo.debugln(str(self.control_joystick_enable))
+            echo.debugln('Axes: ' +
+                         str(self.joystick.configuration()['axes']), 2)
+            echo.debugln('Buttons: ' +
+                         str(self.joystick.configuration()['buttons']), 2)
+            echo.debugln('Balls: ' +
+                         str(self.joystick.configuration()['balls']), 2)
+            echo.debugln('Hats: ' +
+                         str(self.joystick.configuration()['hats']), 2)
+            echo.debugln('Speed: ' +
+                         str(self.control_joystick_speed) + '%', 2)
+            echo.debugln('Delay: ' +
+                         str(self.control_joystick_delay) + 'ms', 2)
         else:
             self.control_joystick_enable = False
-            infoln('None')
+            if not quiet:
+                echo.infoln('None')
 
-    def ctrl_keyboard_stop(self):
-        pass
+    def ctrl_keyboard_stop(self):  # pylint: disable=no-self-use
+        """
+        description:
+        """
+        return False
 
-    def ctrl_keyboard_handle(self, event):
+    def ctrl_keyboard_handle(self, event):  # pylint: disable=too-many-branches
+        """
+        description:
+        """
         # Program behavior
-        if event.type == KEYDOWN:
-            if event.key == K_ESCAPE:  # Escape
+        if event.type == KEYDOWN:  # pylint: disable=undefined-variable
+            # Escape
+            if event.key == K_ESCAPE:  # pylint: disable=undefined-variable
                 self.running = False
-            if event.key == K_F1:  # Help screen
-                help_screen_on = True
-            if event.key == K_F8:  # Keyboard grab
+            # Keyboard grab
+            if event.key == K_F8:  # pylint: disable=undefined-variable
                 self.control_keyboard_button.toggle()
-            if event.key == K_F9:  # Mouse grab
+            # Mouse grab
+            if event.key == K_F9:  # pylint: disable=undefined-variable
                 self.control_mouse_button.toggle()
-            if event.key == K_F10:  # Joystick grab
+            # Joystick grab
+            if event.key == K_F10:  # pylint: disable=undefined-variable
                 self.control_joystick_button.toggle()
-            if event.key == K_F11:  # Touch grab
+            # Touch grab
+            if event.key == K_F11:  # pylint: disable=undefined-variable
                 self.control_touch_button.toggle()
-            if event.key == K_F12:  # Voice grab
-                self.control_voice_button.toggle()
-            if event.key == K_LALT:  # Release controls
+            # Release controls
+            if event.key == K_LALT:  # pylint: disable=undefined-variable
                 self.control_keyboard_button.off()
                 self.control_mouse_button.off()
                 self.control_joystick_button.off()
                 self.control_touch_button.off()
-                self.control_voice_button.off()
         # Object behavior
         if not self.control_keyboard_button.get_state():
             return
@@ -318,7 +370,10 @@ class Gui:
                     i["button"].toggle()
 
     def ctrl_keyboard_start(self):
-        info('Keyboard: ', 1)
+        """
+        description:
+        """
+        echo.info('Keyboard: ', 1)
         # Is enable?
         try:
             control_keyboard_enable = (self.device.get_control()
@@ -339,29 +394,35 @@ class Gui:
             self.control_keyboard_delay = 1
         # Draw
         self.keyboard = Image(self.controls,
-                              os.path.join(images_directory, 'keyboard.png'),
+                              os.path.join(self.__img_dir, 'keyboard.png'),
                               [2, 1])
         self.control_keyboard_button = Button(self.keyboard, [0, 0], [5, 58],
                                               control_keyboard_enable)
         # Check for device
-        check_input = os.path.join(xc_path, 'scripts/check_input.sh')
+        check_input = os.path.join(self.__work_dir, 'scripts/check_input.sh')
         cmd = [check_input, 'keyboard']
-        null = open(os.devnull, 'w')
+        # null = open(os.devnull, 'w')
         return_code = subprocess.call(cmd)
         if return_code == 0:
-            infoln('Found')
-            debug('Enable: ', 2)
-            debugln(str(self.control_keyboard_button.get_state()))
-            debugln('Speed: ' + str(self.control_keyboard_speed) + 'ms', 2)
-            debugln('Delay: ' + str(self.control_keyboard_delay) + 'ms', 2)
+            echo.infoln('Found')
+            echo.debug('Enable: ', 2)
+            echo.debugln(str(self.control_keyboard_button.get_state()))
+            echo.debugln('Speed: ' + str(self.control_keyboard_speed) + 'ms', 2)
+            echo.debugln('Delay: ' + str(self.control_keyboard_delay) + 'ms', 2)
         else:
-            infoln('None')
+            echo.infoln('None')
         pygame.key.set_repeat(1, 100)
 
-    def ctrl_mouse_stop(self):
+    def ctrl_mouse_stop(self):  # pylint: disable=no-self-use
+        """
+        description:
+        """
         pygame.event.set_grab(False)
 
-    def ctrl_mouse_cursor(self, state):
+    def ctrl_mouse_cursor(self, state):  # pylint: disable=no-self-use
+        """
+        description:
+        """
         off = ("        ",  # sized 8x8
                "        ",
                "        ",
@@ -378,9 +439,12 @@ class Gui:
             pygame.mouse.set_cursor(*cursor)
 
     def ctrl_mouse_handle(self, event):
+        """
+        description:
+        """
         if not self.control_mouse_button.get_state():
             return
-        if event.type == MOUSEMOTION:
+        if event.type == MOUSEMOTION:  # pylint: disable=undefined-variable
             r = pygame.mouse.get_rel()
             x = r[0]
             y = r[1]
@@ -395,12 +459,12 @@ class Gui:
                     # i["state"] = i["on"]["picture"]
                     if self.session.is_connected():
                         try:
-                            n = eval(i["control"]["mouse"].split(" ")[0])
-                            n = abs(n * self.control_mouse_speed)
-                            n = int(round(n))
-                            i["factor"] = str(n)
+                            peuda = eval(i["control"]["mouse"].split(" ")[0])
+                            peuda = abs(peuda * self.control_mouse_speed)
+                            peuda = int(round(peuda))
+                            i["factor"] = str(peuda)
                             i["button"].on()
-                            if int(n) == 0:
+                            if int(peuda) == 0:
                                 continue
                         except BaseException:
                             pass
@@ -408,7 +472,10 @@ class Gui:
                     i["button"].off()
 
     def ctrl_mouse_start(self):
-        info('Mouse: ', 1)
+        """
+        description:
+        """
+        echo.info('Mouse: ', 1)
         # Is enable?
         try:
             control_mouse_enable = (self.device.get_control()
@@ -428,53 +495,58 @@ class Gui:
             self.control_mouse_delay = 100
         # Draw
         self.mouse = Image(self.controls,
-                           os.path.join(images_directory, 'mouse.png'),
+                           os.path.join(self.__img_dir, 'mouse.png'),
                            [2, 1])
         self.control_mouse_button = Button(self.mouse, [0, 50], [5, 58],
                                            control_mouse_enable)
         # Check for device
-        check_input = os.path.join(xc_path, 'scripts/check_input.sh')
+        check_input = os.path.join(self.__work_dir, 'scripts/check_input.sh')
         cmd = [check_input, 'mouse']
-        null = open(os.devnull, 'w')
+        # null = open(os.devnull, 'w')
         return_code = subprocess.call(cmd)
         if return_code == 0:
             self.ctrl_mouse_delay = Timer(self.control_mouse_delay)
-            infoln('Found')
-            debug('Enable: ', 2)
-            debugln(str(self.control_mouse_button.get_state()))
-            debugln('Speed: ' + str(self.control_mouse_speed) + '%', 2)
+            echo.infoln('Found')
+            echo.debug('Enable: ', 2)
+            echo.debugln(str(self.control_mouse_button.get_state()))
+            echo.debugln('Speed: ' + str(self.control_mouse_speed) + '%', 2)
         else:
-            infoln('None')
+            echo.infoln('None')
 
     def ctrl_touch_stop(self):
-        pass
+        """
+        description:
+        """
+        return False
 
     def ctrl_touch_handle(self, event):
+        """
+        description:
+        """
         # Program behavior
-        if event.type == MOUSEBUTTONUP:
+        if event.type == MOUSEBUTTONUP:  # pylint: disable=undefined-variable
             self.control_keyboard_button.check(pygame.mouse.get_pos())
             self.control_mouse_button.check(pygame.mouse.get_pos())
             self.control_joystick_button.check(pygame.mouse.get_pos())
             self.control_touch_button.check(pygame.mouse.get_pos())
-            # self.control_voice_button.check(pygame.mouse.get_pos())
         # Object behavior
         if not self.control_touch_button.get_state():
             return
         for i in self.device.get_objects():
             if i["type"] == 'push-button':
-                if event.type == MOUSEBUTTONDOWN:
+                if event.type == MOUSEBUTTONDOWN:  # pylint: disable=undefined-variable
                     i["button"].check(pygame.mouse.get_pos())
-                if event.type == MOUSEBUTTONUP:
+                if event.type == MOUSEBUTTONUP:  # pylint: disable=undefined-variable
                     i["button"].off()
             elif i["type"] == 'switch':
-                if event.type == MOUSEBUTTONUP:
+                if event.type == MOUSEBUTTONUP:  # pylint: disable=undefined-variable
                     i["button"].check(pygame.mouse.get_pos())
 
-    def ctrl_voice_stop(self):
-        pass
-
     def ctrl_touch_start(self):
-        info('Touch: ', 1)
+        """
+        description:
+        """
+        echo.info('Touch: ', 1)
         try:
             self.control_touch_enable = (self.device.get_control()
                                          ["touch"]["enable"])
@@ -499,32 +571,19 @@ class Gui:
         except BaseException:
             self.control_touch_delay = 1
         self.ctrl_touch_delay = Timer(self.control_touch_delay)
-        infoln('Found')
-        debug('Enable: ', 2)
-        debugln(str(self.control_touch_enable))
+        echo.infoln('Found')
+        echo.debug('Enable: ', 2)
+        echo.debugln(str(self.control_touch_enable))
         self.touch = Image(self.controls,
-                           os.path.join(images_directory, 'touch.png'),
+                           os.path.join(self.__img_dir, 'touch.png'),
                            [2, 1])
         self.control_touch_button = Button(self.touch, [0, 150], [5, 58],
                                            self.control_touch_enable)
 
-    def ctrl_voice_handle(self, event):
-        if self.control_voice_enable is False:
-            return
-
-    def ctrl_voice_start(self):
-        info('Voice: ', 1)
-        infoln('Not implemented yet.')
-        self.control_voice_enable = False
-        debug('Enable: ', 2)
-        debugln(str(self.control_voice_enable))
-        self.voice = Image(self.controls,
-                           os.path.join(images_directory, 'voice.png'),
-                           [2, 1])
-        self.control_voice_button = Button(self.voice, [0, 200], [5, 58],
-                                           self.control_voice_enable)
-
     def start_session(self):
+        """
+        description:
+        """
         self.session = Session(self.device.get_comm())
         self.session.info()
         self.session.start()
@@ -537,6 +596,9 @@ class Gui:
             self.was_connected = True
 
     def draw_device(self):
+        """
+        description:
+        """
         # Device name
         font = pygame.font.SysFont('Ubuntu', 22)
         text = font.render(self.window_caption, True, (100, 100, 100))
@@ -546,12 +608,15 @@ class Gui:
         self.screen.blit(text, textpos)
 
     def stop_session(self):
+        """
+        description:
+        """
         if not self.session.is_connected_serial():
             return
-        infoln('Session...')
+        echo.infoln('Session...')
         while not self.session.is_ready():
             continue
-        infoln('Terminating...', 1)
+        echo.infoln('Terminating...', 1)
         for c in self.device.get_endup()["command"]:
             self.session.send_wait(c)
             # self.session.clear()
@@ -559,51 +624,57 @@ class Gui:
         self.was_connected = False
 
     def stop_ctrl(self):
+        """
+        description:
+        """
         self.ctrl_joystick_stop()
         self.ctrl_keyboard_stop()
         self.ctrl_mouse_stop()
         self.ctrl_touch_stop()
-        self.ctrl_voice_stop()
 
     def stop(self):
+        """
+        description:
+        """
         self.stop_ctrl()
         self.stop_session()
         self.host.stop()
-        pygame.quit()
-
-    def images_load(self):
-        # Help screen
-        self.helpscreen = Image(self.screen,
-                                os.path.join(images_directory, 'help.png'))
-        imgpos = self.helpscreen.surface.get_rect()
-        imgpos.center = self.background.get_rect().center
-        self.helpscreen.position(position=imgpos)
+        pygame.quit()  # pylint: disable=no-member
 
     def draw_object(self):
+        """
+        description:
+        """
         self.object_area.fill([0, 0, 0])  # Black
         for i in self.device.get_objects():
             i["button"].draw()
         self.screen.blit(self.object_area, [65, 50])
 
     def run(self):
-        infoln('Ready...')
+        """
+        description:
+        """
+        echo.infoln('Ready...')
         self.running = True
         while self.running:
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                if event.type == pygame.QUIT:  # pylint: disable=no-member
                     self.running = False
                 self.ctrl_check(event)
             if self.joystick_timer.check() and \
                self.joystick.identification() == None:
-                self.ctrl_joystick_start()
+                self.ctrl_joystick_start(quiet=True)
             self.draw()
             self.ctrl_handle()
             self.device_check()
-        infoln("Exiting...")
+        echo.infoln("Exiting...")
         self.stop()
         return False
 
     def ctrl_handle(self):
+        """
+        description:
+        """
         # Mouse visible
         if self.control_mouse_button.get_state() or \
             (self.control_touch_button.get_state() and not
@@ -659,7 +730,6 @@ class Gui:
         self.control_mouse_button.draw()
         self.control_joystick_button.draw()
         self.control_touch_button.draw()
-        # self.control_voice_button.draw()
         self.screen.blit(self.controls, (5, 58))
 
     def draw_screensaver(self):
@@ -718,7 +788,7 @@ class Gui:
         """
         for i in self.device.get_objects():
             i["image"] = Image(self.object_area,
-                               os.path.join(images_directory,
+                               os.path.join(self.__img_dir,
                                             i["picture"]["file"]),
                                eval(i["picture"]["split"]))
             i["boolean"] = True if i["default"] == "on" else False
@@ -735,14 +805,14 @@ class Gui:
                 i["timer"] = Timer(20)
             i["state"] = i["default"]
         if len(self.device.get_objects()):
-            infoln('Objects...')
-            infoln('Imported: ' + str(len(self.device.get_objects())), 1)
+            echo.infoln('Objects...')
+            echo.infoln('Imported: ' + str(len(self.device.get_objects())), 1)
 
-    def device_set(self, id):
+    def device_set(self, device_id):
         """
         description:
         """
-        self.device.set(id)
+        self.device.set(device_id)
 
     def device_check(self):
         """
@@ -761,31 +831,31 @@ class Gui:
             self.start_session()
         if self.device.get_id() is None:
             # How many devices are connected?
-            n = self.device.detect()
+            devices = self.device.detect()
             # If is just one...
-            if len(n) == 1:
-                # Confiure a new device.
+            if len(devices) == 1:
+                # Configure a new device.
                 self.session.reset()
                 self.start_device()
                 self.ctrl_start()
                 self.start_objects()
                 self.start_session()
-                return
+                return False
             # Abort if are more than one.
-            elif len(n) > 1 and (len(n) != self.connected_devices):
-                self.connected_devices = len(n)
-                infoln('Too many connected devices: ' + str(n), 1)
-                return
+            if len(devices) > 1 and (len(devices) != self.connected_devices):
+                self.connected_devices = len(devices)
+                echo.infoln('Too many connected devices: ' + str(devices), 1)
+        return False
 
     def start_device(self):
         """
         description:
         """
-        infoln("Device...")
+        echo.infoln("Device...")
         if not self.device.get_id():
             detected = self.device.detect()
             if len(detected) > 1:
-                warnln('Too many connected devices: ' + str(detected), 1)
+                echo.warnln('Too many connected devices: ' + str(detected), 1)
                 return
         self.device.info()
         if self.device.get_id():
@@ -799,8 +869,8 @@ class Gui:
         """
         description:
         """
-        global pygame
-        infoln("Screen...")
+        # global pygame
+        echo.infoln("Screen...")
         # Set screen resolution
         self.screen_resolution = [int(s) for s in self.screen_size.split('x')
                                   if s.isdigit()]
@@ -810,74 +880,55 @@ class Gui:
             self.screen_resolution = (480, 320)
         self.screen_resolution[0] -= 1
         self.screen_resolution[1] -= 1
-
-        infoln("Size: " + str(self.screen_resolution[0] + 1) + 'x' +
-               str(self.screen_resolution[1] + 1) + ' px', 1)
-        infoln("Refresh rate: " + str(self.screen_rate) + ' FPS', 1)
-
+        echo.infoln("Size: " + str(self.screen_resolution[0] + 1) + 'x' +
+                    str(self.screen_resolution[1] + 1) + ' px', 1)
+        echo.infoln("Refresh rate: " + str(self.screen_rate) + ' FPS', 1)
         # Positioning
         os.environ['SDL_VIDEO_CENTERED'] = '1'
-
-        # os.environ['SDL_VIDEO_WINDOW_POS'] = "%d, %d" % (200, 200)
-
         # Initialise screen
-        pygame.init()
-
+        pygame.init()  # pylint: disable=no-member
         self.screen = pygame.display.set_mode(self.screen_resolution)
-
         if self.screen_full:
             pygame.display.toggle_fullscreen()
-
         # Window caption
         pygame.display.set_caption(self.window_title)
-
         # Checking fonts
-        debugln('Checking fonts...', 1)
+        echo.debugln('Checking fonts...', 1)
         for ttf_name in ['Digital Readout Thick Upright',
                          'Ubuntu']:
             ttf_path = pygame.font.match_font(ttf_name)
             if ttf_path is None:
-                erroln('TrueType font missing.')
-                infoln('\"' + str(ttf_name) + '\" not found (' +
-                       str(ttf_path) + ')', 2)
-
+                echo.erroln('TrueType font missing.')
+                echo.infoln('\"' + str(ttf_name) + '\" not found (' +
+                            str(ttf_path) + ')', 2)
         # Background
         self.background = pygame.Surface(self.screen.get_size())
         self.background.fill([0, 0, 0])  # Black
-
         # Controls area
         self.controls = pygame.Surface([120, 240])
-
         # Object area
         self.object_area = pygame.Surface([self.screen.get_size()[0] - 65,
                                            self.screen.get_size()[1] - 70])
         # Status bar
         self.status_bar = pygame.Surface([self.screen.get_size()[0], 16])
-
         # Clockling
-        debugln('Clockling...', 1)
+        echo.debugln('Clockling...', 1)
         self.clock = pygame.time.Clock()
-
         # Screensaver
         self.screensaver = Screensaver(self.screen)
         self.screensaver_timer = Timer(1000 * self.screensaver_time, 'COUNTDOWN')
         if not self.screensaver_enable:
             self.screensaver_timer.disable()
 
-        # Images
-        debugln('Loading images...', 1)
-        self.images_load()
-
     def ctrl_start(self):
         """
         description:
         """
-        infoln('Input...')
+        echo.infoln('Input...')
         self.ctrl_keyboard_start()
         self.ctrl_mouse_start()
         self.ctrl_joystick_start()
         self.ctrl_touch_start()
-        # self.ctrl_voice_start()
 
     def start(self):
         """
@@ -899,7 +950,6 @@ class Gui:
                          (0, 0, self.status_bar.get_size()[0],
                           self.status_bar.get_size()[1]))
         font = pygame.font.SysFont("Digital Readout Thick Upright", 13)
-
         # Frame rate
         fps = str("FPS: {:1.1f}".format(float(self.clock.get_fps())))
         text = font.render(fps, True, (32, 128, 32))
@@ -907,7 +957,6 @@ class Gui:
         textpos.bottomleft = self.status_bar.get_rect().bottomleft
         textpos[0] += 3
         self.status_bar.blit(text, textpos)
-
         # Device connection status
         connection = 'Connected' if self.session.is_connected() \
                      else 'Disconnected'
@@ -916,181 +965,9 @@ class Gui:
         textpos.bottomright = self.status_bar.get_rect().bottomright
         textpos[0] += -3
         self.status_bar.blit(text, textpos)
-
         # General information
         text = font.render(str(self.host.status()), True, (32, 128, 32))
         textpos = text.get_rect()
         textpos.midbottom = self.status_bar.get_rect().midbottom
         self.status_bar.blit(text, textpos)
-
         self.screen.blit(self.status_bar, [0, self.screen.get_size()[1] - 16])
-
-    def terminal(self):
-        """
-        description:
-        """
-        self.terminal = pygame.Surface((320, 200))
-        font = pygame.font.SysFont('Ubuntu', 14)
-        text = font.render(self.window_caption, True, (131, 148, 150))
-        textpos = text.get_rect()
-        textpos.bottomleft = self.background.get_rect().bottomleft
-        textpos[1] += 10
-        self.terminal.blit(text, textpos)
-
-
-class Image:
-
-    def __init__(self, screen, source, splits=[None, None]):
-        """
-        description:
-        """
-        self.source = source
-        self.screen = screen
-        self.surface = pygame.image.load(self.source)
-        self.size = self.surface.get_rect().size
-        self.splits = splits
-        if self.splits != [None, None]:
-            self.split(self.splits)
-
-    def draw(self, item=[None, None], position=[None, None]):
-        """
-        description:
-        """
-        if position != [None, None]:
-            self.position = position
-        if item == [None, None]:
-            self.screen.blit(self.surface, self.position)
-        else:
-            if item[0] > (self.splits[0] - 1) or \
-               item[1] > (self.splits[1] - 1):
-                warnln('Split image out of range: ' + self.source)
-            self.screen.blit(self.surface, self.position, self.piece(item))
-
-    def piece(self, item):
-        """
-        Description:
-            Define one piece points of an image.
-
-        Example:
-            Consider a single image, split it into 8 equal pieces, like
-            this:
-                |---|---|---|---|
-                | 1 | 2 | 3 | 4 |
-                |---|---|---|---|
-                | 5 | 6 | 7 | 8 |
-                |---|---|---|---|
-
-            Take a look at one piece, the piece number 7 for example:
-               A|---|B
-                | 7 |
-               D|---|C
-
-            All pieces have 4 sides and 4 corners. Each corner can be
-            identified by A, B, C and D.
-            To define a sub area of an image, you must have just A and C
-            corner.
-
-            I wrote the following code with A and C in lower case to adopt
-            PEP 0008 -- Style Guide for Python Code.
-
-        Parameters:
-            A list with x and y piece of image.
-
-        Returns:
-            A list with x and y coodinates of piece of image.
-        """
-        a = [0, 0]
-        c = [0, 0]
-        a[0] = self.dimensions[0] * item[0]
-        a[1] = self.dimensions[1] * item[1]
-        c[0] = self.dimensions[0]
-        c[1] = self.dimensions[1]
-        return [a, c]
-
-    def position(self, position):
-        """
-        description:
-        """
-        self.position = position
-
-    def split(self, splits):
-        """
-        description:
-        """
-        self.dimensions = [0, 0]
-        self.splits = splits
-        self.splits_total = self.splits[0] * self.splits[1]
-        self.dimensions[0] = self.size[0] / self.splits[0]
-        self.dimensions[1] = self.size[1] / self.splits[1]
-        return self.splits_total
-
-    def get_size(self):
-        """
-        description:
-        """
-        return self.dimensions
-
-
-class Button:
-    def __init__(self, image, position, surface, state=False):
-        """
-        description:
-        """
-        pass
-        self.image = image
-        self.size = self.image.get_size()
-        self.state = state
-        self.state_before = self.state
-        self.position = position
-        self.click = [0, 0]
-        self.click[0] = position[0] + surface[0]
-        self.click[1] = position[1] + surface[1]
-
-    def on(self):
-        """
-        description:
-        """
-        self.state = True
-
-    def off(self):
-        """
-        description:
-        """
-        self.state = False
-
-    def draw(self):
-        """
-        description:
-        """
-        self.image.draw([self.state, 0], self.position)
-
-    def toggle(self):
-        """
-        description:
-        """
-        self.state = not self.state
-
-    def check(self, mouse):
-        """
-        description:
-        """
-        if mouse[0] >= self.click[0] and \
-           mouse[0] <= self.click[0] + self.size[0] and\
-           mouse[1] >= self.click[1] and \
-           mouse[1] <= self.click[1] + self.size[1]:
-            self.toggle()
-
-    def get_state(self):
-        """
-        description:
-        """
-        return self.state
-
-    def get_change(self):
-        """
-        description:
-        """
-        if self.state != self.state_before:
-            self.state_before = self.state
-            return True
-        return False

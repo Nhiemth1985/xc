@@ -944,6 +944,7 @@
       },
       "endup": {
         "command": [
+          "M80  ; Power on",
           "G28  ; Home axes",
           "M81  ; Power off"
         ]
