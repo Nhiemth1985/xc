@@ -31,15 +31,18 @@ All notable changes to this project will be documented in this [Change log](CHAN
 ``` bash
 wget https://github.com/marcio-pessoa/xC/archive/0.58.zip
 ```
+
 ### Uncompress
 ``` bash
 unzip xc.zip
 cd xc
 ```
+
 ### Install
 ``` bash
 ansible-playbook xC.yaml
 ```
+
 ### Run
 It's ready to run on Python 3.
 
