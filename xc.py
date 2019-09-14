@@ -20,8 +20,7 @@ try:
     import time
     # Myself modules
     from tools.device import DeviceProperties
-    from tools.echo import verbose, level, \
-        echo, echoln, erro, erroln, warn, warnln, info, infoln, debug, debugln, code, codeln
+    import tools.echo as echo
     from tools.file import File
     from tools.host import HostProperties
     from tools.session import Session
@@ -41,19 +40,24 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
     """
 
     # Set default verbosity level
-    verbose(1)  # Error level
+    echo.verbose(1)  # Error level
 
     def __init__(self):
         self.program_name = "xc"
-        self.program_version = "0.8"
+        self.program_version = 0.8
         self.program_date = "2019-09-04"
         self.program_description = "xC - aXes Controller"
         self.program_copyright = "Copyright (c) 2014-2019 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
         self.program_website = "https://github.com/marcio-pessoa/xC"
         self.program_contact = "Marcio Pessoa <marcio.pessoa@gmail.com>"
-        self.id = None
+        self.__id = None
         self.interface = None
+        self.project = None
+        self.device = None
+        self.config = None
+        self.host = None
+        self.session = None
         self.config_file = os.path.join(os.getenv('HOME', ''), '.xC.json')
         header = ('xc <command> [<args>]\n\n' +
                   'commands:\n' +
@@ -73,7 +77,8 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
                     '  xc upload\n' +
                     '  xc gui --id x2\n' +
                     '  xc run -i x6 -p file.gcode\n')
-        self.version = (self.program_name + " " + self.program_version + " (" +
+        self.version = (self.program_name + " " +
+                        str(self.program_version) + " (" +
                         self.program_date + ")")
         epilog = (examples + '\n' + footer)
         parser = argparse.ArgumentParser(
@@ -91,7 +96,7 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
             sys.exit(False)
         args = parser.parse_args(sys.argv[1:2])
         if not hasattr(self, args.command):
-            echoln('Unrecognized command')
+            echo.echoln('Unrecognized command')
             parser.print_help()
             sys.exit(True)
         getattr(self, args.command)()
@@ -117,10 +122,10 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
             help='verbose mode, options: ' +
             '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Debug')
         args = parser.parse_args(sys.argv[2:])
-        verbose(args.verbosity)
-        infoln(self.version)
+        echo.verbose(args.verbosity)
+        echo.infoln(self.version)
         self.__load_configuration()
-        infoln('Loading program...')
+        echo.infoln('Loading program...')
         program = File()
         program.load(args.program, 'gcode')
         self.__connection(args.id, 'serial')
@@ -145,8 +150,8 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
             help='verbose mode, options: ' +
             '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Debug')
         args = parser.parse_args(sys.argv[2:])
-        verbose(args.verbosity)
-        infoln(self.version)
+        echo.verbose(args.verbosity)
+        echo.infoln(self.version)
         from tools.gui import Gui
         self.__load_configuration()
         gui = Gui(self.config.get())
@@ -177,8 +182,8 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
             help='verbose mode, options: ' +
             '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Debug')
         args = parser.parse_args(sys.argv[2:])
-        verbose(args.verbosity)
-        infoln(self.version)
+        echo.verbose(args.verbosity)
+        echo.infoln(self.version)
         self.__dev_tools(args.id, args.interface)
         self.project.terminal()
 
@@ -202,8 +207,8 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
             help='verbose mode, options: ' +
             '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Debug')
         args = parser.parse_args(sys.argv[2:])
-        verbose(args.verbosity)
-        infoln(self.version)
+        echo.verbose(args.verbosity)
+        echo.infoln(self.version)
         self.__dev_tools(args.id, args.date)
         self.project.verify()
 
@@ -232,12 +237,12 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
             help='verbose mode, options: ' +
             '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Debug')
         args = parser.parse_args(sys.argv[2:])
-        verbose(args.verbosity)
-        infoln(self.version)
+        echo.verbose(args.verbosity)
+        echo.infoln(self.version)
         self.__dev_tools(args.id, args.date, args.interface)
         self.project.upload()
 
-    def list(self):
+    def list(self):  # pylint: disable=too-many-branches,too-many-statements
         """
         description:
         """
@@ -260,23 +265,23 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
         self.__load_configuration()
         device = DeviceProperties(self.config.get())
         if args.verbosity >= 2:
-            echo(' Id\tName\tMark')
+            echo.echo(' Id\tName\tMark')
         if args.verbosity >= 3:
-            echo('\tDescription')
+            echo.echo('\tDescription')
         if args.verbosity >= 4:
-            echo('\t\tLink')
+            echo.echo('\t\tLink')
         if args.verbosity > 1:
-            echoln('')
+            echo.echoln('')
         if args.verbosity >= 2:
-            echo('------------------------')
+            echo.echo('------------------------')
         if args.verbosity >= 3:
-            echo('------------------------')
+            echo.echo('------------------------')
         if args.verbosity >= 4:
-            echo('--------')
+            echo.echo('--------')
         if args.verbosity > 1:
-            echoln('')
-        for id in device.list():
-            device.set(id)
+            echo.echoln('')
+        for device_id in device.list():
+            device.set(device_id)
             session = Session(device.get_comm())
             if not args.all and not device.is_enable():
                 continue
@@ -286,35 +291,32 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
                 if args.interface == 'serial' or args.interface == 'all':
                     if session.is_connected_serial():
                         interface = "Serial"
-                if args.interface == 'network' or args.interface == 'all':
-                    if session.is_connected_network():
-                        interface = "Network"
             if args.connected and interface == 'Offline':
                 continue
             if args.verbosity >= 1:
-                echo(id)
+                echo.echo(device_id)
             if args.verbosity >= 2:
-                echo("\t" +
-                     device.system_plat + "\t" +
-                     device.system_mark)
+                echo.echo("\t" +
+                          device.system_plat + "\t" +
+                          device.system_mark)
             if args.verbosity >= 3:
-                echo('\t' + device.system_desc)
+                echo.echo('\t' + device.system_desc)
                 if len(device.system_desc) < 16:
-                    for i in range(16-len(device.system_desc)):
-                        echo(" ")
+                    for _ in range(16-len(device.system_desc)):
+                        echo.echo(" ")
             if args.verbosity >= 4:
-                echo('\t' + interface)
+                echo.echo('\t' + interface)
             if args.verbosity > 0:
-                echoln('')
+                echo.echoln('')
         sys.exit(False)
 
     def __load_configuration(self):
-        infoln('Loading configuration...')
+        echo.infoln('Loading configuration...')
         self.config = File()
         self.config.load(self.config_file, 'json')
 
-    def __connection(self, id=None, interface=None):
-        self.__device_select(id)
+    def __connection(self, device_id=None, interface=None):
+        self.__device_select(device_id)
         if interface:
             self.interface = interface
             self.session = Session(self.device.get_comm())
@@ -323,68 +325,54 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
                 if self.session.is_connected_serial():
                     self.session.start()
                 else:
-                    erroln('Device is not connected.', 1)
-                    sys.exit(True)
-            elif self.interface == 'network':
-                if self.device.comm_network_address is None:
-                    erroln("Interface not configured for this device.")
-                    sys.exit(True)
-                if not self.device.is_network_connected():
-                    erroln('Device is not reacheable: ' +
-                           str(self.device.comm_network_address))
+                    echo.erroln('Device is not connected.', 1)
                     sys.exit(True)
 
-    def __device_select(self, id=None):
-        infoln('Device...')
+    def __device_select(self, device_id=None):
+        echo.infoln('Device...')
         self.device = DeviceProperties(self.config.get())
-        if id:
-            self.id = id
-            self.device.set(self.id)
+        if device_id:
+            self.__id = device_id
+            self.device.set(self.__id)
             self.device.info()
             return
-        n = self.device.detect()
-        if len(n) < 1:
-            erroln('Device not connected.', 1)
+        devices_list = self.device.detect()
+        devices = len(self.device.detect())
+        if devices < 1:
+            echo.erroln('Device not connected.', 1)
             sys.exit(True)
-        if len(n) > 1:
-            erroln('Too many connected devices: ' + str(n), 1)
+        if devices > 1:
+            echo.erroln('Too many connected devices: ' + str(devices_list), 1)
             sys.exit(True)
-        if len(n) == 1:
-            self.id = self.device.get_id()
+        if devices == 1:
+            self.__id = self.device.get_id()
             self.device.info()
             return
 
-    def __dev_tools(self, id=None, date=False, interface=None):
+    def __dev_tools(self, device_id=None, date=False, interface=None):
         if date:
-            infoln('Started at: ' + time.strftime('%Y-%m-%d %H:%M:%S'))
+            echo.infoln('Started at: ' + time.strftime('%Y-%m-%d %H:%M:%S'))
         if interface:
             self.interface = interface
         self.__load_configuration()
         self.host = HostProperties(self.config.get()["host"])
         self.host.info()
-        self.__device_select(id)
+        self.__device_select(device_id)
         self.project = DevTools(self.device.get())
         self.project.info()
         self.session = Session(self.device.get_comm())
         self.session.info()
         if self.interface:
-            # infoln("Connecting...", 1)
             if self.interface == 'serial':
                 if not self.session.is_connected_serial():
-                    erroln('Serial device is not connected.', 2)
-                    sys.exit(True)
-            elif self.interface == 'network':
-                if self.device.comm_network_address is None:
-                    erroln("Network interface not configured for this device.")
-                    sys.exit(True)
-                if not self.session.is_connected_network():
-                    erroln('Network device is not reacheable.')
-                    infoln('Check device connectivity: ' +
-                           str(self.device.comm_network_address))
+                    echo.erroln('Serial device is not connected.', 2)
                     sys.exit(True)
 
 
 def main():
+    """
+    description:
+    """
     UserArgumentParser()
 
 

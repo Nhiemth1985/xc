@@ -938,7 +938,7 @@
           "enable": true
         },
         "mouse": {
-          "enable": true,
+          "enable": false,
           "speed": 0.3
         }
       },
