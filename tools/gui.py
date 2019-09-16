@@ -91,7 +91,7 @@ import re
 import contextlib
 with contextlib.redirect_stdout(None):
     import pygame
-    from pygame.locals import *  # pylint: disable=wildcard-import, unused-import, unused-wildcard-import
+from pygame.locals import *  # pylint: disable=wildcard-import, unused-import, unused-wildcard-import
 from tools.device import DeviceProperties
 from tools.host import HostProperties
 import tools.echo as echo
@@ -99,7 +99,7 @@ from tools.button import Button
 from tools.image import Image
 from tools.screensaver import Screensaver
 from tools.session import Session
-from tools.timer import Timer
+from tools.pytimer.pytimer import Timer
 import tools.joystick.joystick as joystick
 
 
@@ -445,12 +445,10 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
         if not self.control_mouse_button.get_state():
             return
         if event.type == MOUSEMOTION:  # pylint: disable=undefined-variable
-            r = pygame.mouse.get_rel()
-            x = r[0]
-            y = r[1]
+            relative = pygame.mouse.get_rel()
+            x = relative[0]  # pylint: disable=invalid-name,unused-variable
+            y = relative[1]  # pylint: disable=invalid-name,unused-variable
             for i in self.device.get_objects():
-                # if i["type"] == "push-button":
-                    # i["button"].off()
                 try:
                     i["control"]["mouse"]
                 except BaseException:
@@ -513,7 +511,7 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
         else:
             echo.infoln('None')
 
-    def ctrl_touch_stop(self):
+    def ctrl_touch_stop(self):  # pylint: disable=no-self-use
         """
         description:
         """
@@ -591,8 +589,8 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
             while not self.session.is_ready():
                 continue
             # self.session.clear()
-            for c in self.device.get_startup()["command"]:
-                self.session.send_wait(c)
+            for command in self.device.get_startup()["command"]:
+                self.session.send_wait(command)
             self.was_connected = True
 
     def draw_device(self):
@@ -617,9 +615,8 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
         while not self.session.is_ready():
             continue
         echo.infoln('Terminating...', 1)
-        for c in self.device.get_endup()["command"]:
-            self.session.send_wait(c)
-            # self.session.clear()
+        for command in self.device.get_endup()["command"]:
+            self.session.send_wait(command)
         self.session.stop()
         self.was_connected = False
 
@@ -662,7 +659,7 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
                     self.running = False
                 self.ctrl_check(event)
             if self.joystick_timer.check() and \
-               self.joystick.identification() == None:
+               self.joystick.identification() is None:
                 self.ctrl_joystick_start(quiet=True)
             self.draw()
             self.ctrl_handle()
@@ -761,6 +758,7 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
         """
         self.host = HostProperties(self.data["host"])
         self.host.info()
+        echo.debugln("pygame: " + pygame.version.ver, 1)
         self.host.start()
         # Get Screen parameters
         try:
@@ -791,7 +789,7 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
                                os.path.join(self.__img_dir,
                                             i["picture"]["file"]),
                                eval(i["picture"]["split"]))
-            i["boolean"] = True if i["default"] == "on" else False
+            i["boolean"] = i["default"] == "on"
             # infoln('ID: ' + str(i["id"]) + ", default: " + str(i["default"]))
             i["source"] = ''
             i["factor"] = '1'

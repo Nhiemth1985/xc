@@ -17,7 +17,7 @@ change-log:
 """
 
 import math
-from timer import Timer
+from pytimer.pytimer import Timer
 
 
 class SigGen():

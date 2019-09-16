@@ -2,7 +2,7 @@
 #
 # xc
 #
-# Author: Márcio Pessoa <marcio.pessoa@gmail.com>
+# Author: Marcio Pessoa <marcio.pessoa@gmail.com>
 # Contributors: none
 #
 # Description:

@@ -214,7 +214,7 @@ class DevTools:  # pylint: disable=too-many-instance-attributes
         # arduino
         else:
             # Check if arduino exists
-            if __which(self.arduino_program) is None:
+            if _which(self.arduino_program) is None:
                 echo.erroln('Program not found: ' + self.arduino_program)
                 sys.exit(True)
             # Build command
@@ -251,7 +251,7 @@ class DevTools:  # pylint: disable=too-many-instance-attributes
         # Arduino
         else:
             # Check if arduino program exists
-            if __which(self.arduino_program) is None:
+            if _which(self.arduino_program) is None:
                 echo.erroln('Program not found: ' + self.arduino_program)
                 sys.exit(True)
             # Build command
@@ -282,7 +282,7 @@ class DevTools:  # pylint: disable=too-many-instance-attributes
         sys.exit(return_code)
 
 
-def __which(program):
+def _which(program):
     def is_exe(fpath):
         return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
     fpath = os.path.split(program)[0]

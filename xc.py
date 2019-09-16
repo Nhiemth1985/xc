@@ -4,10 +4,10 @@
 ---
 name: xc.py
 description: Main program file
-copyright: 2014-2019 Márcio Pessoa
+copyright: 2014-2019 Marcio Pessoa
 people:
   developers:
-  - name: Márcio Pessoa
+  - name: Marcio Pessoa
     email: marcio.pessoa@gmail.com
 change-log: Check CHANGELOG.md file.
 """

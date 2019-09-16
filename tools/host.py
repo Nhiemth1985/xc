@@ -2,10 +2,10 @@
 ---
 name: host.py
 description: Host package
-copyright: 2018-2019 Márcio Pessoa
+copyright: 2018-2019 Marcio Pessoa
 people:
   developers:
-  - name: Márcio Pessoa
+  - name: Marcio Pessoa
     email: marcio.pessoa@gmail.com
 change-log:
   2019-09-07
@@ -32,7 +32,7 @@ import re
 import distro
 from psutil import virtual_memory
 import tools.echo as echo
-from tools.timer import Timer
+from tools.pytimer.pytimer import Timer
 
 try:
     import RPi.GPIO as GPIO  # pylint: disable=import-error
@@ -103,7 +103,7 @@ class HostProperties:  # pylint: disable=too-many-instance-attributes
         echo.infoln("Host...")
         echo.debugln("Profile: " + self.profile, 1)
         echo.infoln("Name: " + self.name, 1)
-        echo.infoln("Machine: " + self.machine + " (" + self.architecture + ")", 1)
+        echo.debugln("Machine: " + self.machine + " (" + self.architecture + ")", 1)
         echo.debugln("Processor: " + self.processor, 1)
         echo.debug("Core", 1)
         if self.core > 1:

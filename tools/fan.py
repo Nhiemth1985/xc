@@ -2,10 +2,10 @@
 ---
 name: fan.py
 description: Fan controller
-copyright: 2017-2019 Márcio Pessoa
+copyright: 2017-2019 Marcio Pessoa
 people:
   developers:
-  - name: Márcio Pessoa
+  - name: Marcio Pessoa
     email: marcio.pessoa@gmail.com
 change-log:
   2019-09-07
@@ -26,7 +26,7 @@ change-log:
 """
 
 import RPi.GPIO as GPIO  # pylint: disable=import-error, useless-import-alias
-from tools.timer import Timer
+from tools.pytimer.pytimer import Timer
 
 
 class Fan():  # pylint: disable=too-many-instance-attributes
