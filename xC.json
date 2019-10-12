@@ -717,6 +717,68 @@
           "terminal_end_of_line": "LF"
         }
       },
+      "command": [
+        {
+          "G0": "Move axis"
+        },
+        {
+          "G03": "Finger delay"
+        },
+        {
+          "G28": "Finger home"
+        },
+        {
+          "G29": "Finger out-of-door"
+        },
+        {
+          "G90": "Absolute programming"
+        },
+        {
+          "G91": "Incremental programming"
+        },
+        {
+          "M0": "Stop"
+        },
+        {
+          "M15": "System information"
+        },
+        {
+          "M17": "Attach motor"
+        },
+        {
+          "M18": "Detach motor"
+        },
+        {
+          "M80": "Power status"
+        },
+        {
+          "M81": "Power on"
+        },
+        {
+          "M82": "Power off"
+        },
+        {
+          "M86": "Axis information"
+        },
+        {
+          "M89": "Memory information"
+        },
+        {
+          "M90": "Lever status"
+        },
+        {
+          "M92": "System version"
+        },
+        {
+          "M99": "Reset system"
+        },
+        {
+          "M100": "This help message"
+        },
+        {
+          "M111": "Debug mode"
+        }
+      ],
       "control": {
         "joystick": {
           "enable": true,
