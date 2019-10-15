@@ -782,8 +782,9 @@
       "control": {
         "joystick": {
           "enable": true,
-          "delay": 40,
-          "speed": 3
+          "delay": 0,
+          "speed": 0,
+          "factor": 1
         },
         "keyboard": {
           "enable": true,

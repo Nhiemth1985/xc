@@ -101,6 +101,7 @@ from tools.screensaver import Screensaver
 from tools.session import Session
 from tools.pytimer.pytimer import Timer
 import tools.joystick.joystick as joystick
+from tools.control_joystick import ControlJoystick
 
 
 class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attributes
@@ -927,6 +928,10 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
         self.ctrl_mouse_start()
         self.ctrl_joystick_start()
         self.ctrl_touch_start()
+        # Joystick
+        self.__joystick = ControlJoystick()
+        self.__joystick.period()
+        self.__joystick.start()
 
     def start(self):
         """
