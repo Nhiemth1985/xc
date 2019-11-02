@@ -16,7 +16,7 @@ change-log:
 """
 
 import re
-from pygame.locals import JOYBUTTONDOWN, JOYBUTTONUP
+import pygame.locals  # pylint: disable=unused-import
 import tools.echo as echo
 from tools.pytimer.pytimer import Timer
 import tools.joystick.joystick as joystick
@@ -106,14 +106,16 @@ class ControlJoystick:
                 continue
             i["source"] = ''
             button = int(re.findall('\\b\\d+\\b', i["control"]["joystick"])[0])
-            if event.type == JOYBUTTONDOWN and self.__joystick.button()[button]:
+            if self.__joystick.button()[button] and \
+               event.type == JOYBUTTONDOWN:  # pylint: disable=undefined-variable
                 i["source"] = 'joystick'
                 if i["type"] == "switch":
                     i["button"].toggle()
                 elif i["type"] == "push-button":
                     i["button"].on()
             else:
-                if event.type == JOYBUTTONUP and i["type"] == "push-button":
+                if i["type"] == "push-button" and \
+                   event.type == JOYBUTTONUP:  # pylint: disable=undefined-variable
                     i["button"].off()
         # Digital motion (hat)
         # if (event.type == JOYHATMOTION or self.joystick_hat_active):

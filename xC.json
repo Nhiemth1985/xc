@@ -783,7 +783,7 @@
         "joystick": {
           "enable": true,
           "delay": 0,
-          "speed": 0,
+          "speed": 5,
           "factor": 1
         },
         "keyboard": {
