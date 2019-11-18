@@ -1,7 +1,11 @@
-# pytimer
+# Timer
 
 # Change log
 All notable changes to this project will be documented here.
+
+## 2019-11-18 (version: 0.1)
+### changed
+- Renamed from pytimer to timer.
 
 ## 2019-08-25 (version: 0.09)
 ### fixed
