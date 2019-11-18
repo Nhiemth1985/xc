@@ -24,7 +24,7 @@ class Timer:
         self.period = period * 1.0
         self.__style = style
         self.__enable = True
-        self.__unit = None
+        self.__unit = 'm'
         self.counter = self.millis()
 
     def set(self, period):
