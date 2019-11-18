@@ -1,6 +1,0 @@
-[submodule "tools/pytimer"]
-	path = tools/pytimer
-	url = https://github.com/marcio-pessoa/pytimer
-[submodule "tools/joystick"]
-	path = tools/joystick
-	url = https://github.com/marcio-pessoa/pygame-joystick
