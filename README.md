@@ -32,6 +32,11 @@ All notable changes to this project will be documented in this [Change log](CHAN
 wget https://github.com/marcio-pessoa/xC/archive/0.58.zip
 ```
 
+## Cloning
+```
+git clone --recurse-submodules git@github.com:marcio-pessoa/xC.git
+```
+
 ### Uncompress
 ``` bash
 unzip xc.zip
