@@ -99,7 +99,7 @@ from tools.button import Button
 from tools.image import Image
 from tools.screensaver import Screensaver
 from tools.session import Session
-from tools.pytimer.pytimer import Timer
+from tools.timer.timer import Timer
 import tools.joystick.joystick as joystick
 from tools.control_joystick import ControlJoystick
 

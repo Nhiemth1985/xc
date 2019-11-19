@@ -18,7 +18,7 @@ change-log:
 import re
 import pygame.locals  # pylint: disable=unused-import
 import tools.echo as echo
-from tools.pytimer.pytimer import Timer
+from tools.timer.timer import Timer
 import tools.joystick.joystick as joystick
 
 

@@ -32,7 +32,7 @@ import re
 import distro
 from psutil import virtual_memory
 import tools.echo as echo
-from tools.pytimer.pytimer import Timer
+from tools.timer.timer import Timer
 
 try:
     import RPi.GPIO as GPIO  # pylint: disable=import-error
