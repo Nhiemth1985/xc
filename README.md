@@ -34,7 +34,7 @@ wget https://github.com/marcio-pessoa/xC/archive/0.58.zip
 
 ## Cloning
 ```
-git clone --recurse-submodules git@github.com:marcio-pessoa/xC.git
+git clone --recurse-submodules https://github.com/marcio-pessoa/xC.git
 ```
 
 ### Uncompress
