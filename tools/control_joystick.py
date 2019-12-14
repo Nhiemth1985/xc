@@ -10,13 +10,16 @@ people:
   contributors:
   - name: None
 change-log:
+  2019-12-14
+  - version: 0.1
+    fixed: info method was breking when joystick not found
   2019-10-12
   - version: 0.01
     added: Scrach version.
 """
 
 import re
-import pygame.locals  # pylint: disable=unused-import
+from pygame.locals import *  # pylint: disable=wildcard-import, unused-import, unused-wildcard-import
 import tools.echo as echo
 from tools.timer.timer import Timer
 import tools.joystick.joystick as joystick
@@ -28,7 +31,7 @@ class ControlJoystick:
     """
 
     def __init__(self):
-        self.__version__ = 0.00
+        self.__version__ = 0.1
         self.__enable = False
         self.__factor = 1
         # self.__quiet = False
@@ -77,6 +80,14 @@ class ControlJoystick:
         """
         self.__enable = False
 
+    def state(self, state=None):
+        """
+        description:
+        """
+        if state is not None:
+            self.__enable = state
+        return self.__enable
+
     def factor(self, factor):
         """
         description:
@@ -91,7 +102,7 @@ class ControlJoystick:
             print(json_pretty(self.__mapping))
         self.__mapping = mapping
 
-    def ctrl_joystick_handle(self, event):  # pylint: disable=too-many-branches
+    def handle(self, event):  # pylint: disable=too-many-branches
         """
         description:
         """
@@ -179,13 +190,17 @@ class ControlJoystick:
         """
         description:
         """
-        echo.infoln('Joystick: ' + str(self.__joystick.configuration()['name']), 1)
+        echo.info('Joystick: ', 1)
+        if not self.__joystick:
+            echo.infoln(str(self.__joystick))
+            return
+        echo.infoln(str(self.__joystick.configuration()['name']))
         echo.debugln('Enable: ' + str(self.__enable), 2)
         echo.debugln('Axes: ' + str(self.__joystick.configuration()['axes']), 2)
         echo.debugln('Buttons: ' + str(self.__joystick.configuration()['buttons']), 2)
         echo.debugln('Balls: ' + str(self.__joystick.configuration()['balls']), 2)
         echo.debugln('Hats: ' + str(self.__joystick.configuration()['hats']), 2)
-        echo.debugln('Factor: ' + str(self.__factor) + 'ms', 2)
+        echo.debugln('Factor: ' + str(self.__factor), 2)
 
 
 def json_pretty(data):
