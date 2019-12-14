@@ -44,8 +44,8 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
 
     def __init__(self):
         self.program_name = "xc"
-        self.program_version = 0.8
-        self.program_date = "2019-09-04"
+        self.program_version = 0.81
+        self.program_date = "2019-12-14"
         self.program_description = "xC - aXes Controller"
         self.program_copyright = "Copyright (c) 2014-2019 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
