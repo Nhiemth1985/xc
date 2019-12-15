@@ -34,7 +34,6 @@ class ControlJoystick:
         self.__version__ = 0.1
         self.__enable = False
         self.__factor = 1
-        # self.__quiet = False
         self.__scan_time = 1000  # milliseconds
         self.__scan_timer = Timer(self.__scan_time)
         self.__joystick = None
@@ -47,7 +46,6 @@ class ControlJoystick:
         """
         self.__enable = False
         self.__factor = 1
-        # self.__quiet = False
         self.__scan_time = 1000  # milliseconds
         self.__scan_timer = None
         self.__joystick = None
@@ -98,15 +96,13 @@ class ControlJoystick:
         """
         description:
         """
-        if not mapping:
-            print(json_pretty(self.__mapping))
         self.__mapping = mapping
 
     def handle(self, event):  # pylint: disable=too-many-branches
         """
         description:
         """
-        if not self.__enable:
+        if not self.__enable or not self.__joystick:
             return
         # Buttons
         for i in self.__mapping:
@@ -201,11 +197,3 @@ class ControlJoystick:
         echo.debugln('Balls: ' + str(self.__joystick.configuration()['balls']), 2)
         echo.debugln('Hats: ' + str(self.__joystick.configuration()['hats']), 2)
         echo.debugln('Factor: ' + str(self.__factor), 2)
-
-
-def json_pretty(data):
-    """
-    description:
-    """
-    import json
-    return json.dumps(data, indent=2, separators=(", ", ": "))

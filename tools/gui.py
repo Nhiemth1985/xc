@@ -86,8 +86,6 @@ change-log:
 
 import os
 import os.path
-import subprocess
-import re
 import contextlib
 with contextlib.redirect_stdout(None):
     import pygame
@@ -100,8 +98,10 @@ from tools.image import Image
 from tools.screensaver import Screensaver
 from tools.session import Session
 from tools.timer.timer import Timer
-import tools.joystick.joystick as joystick
+from tools.control_keyboard import ControlKeyboard
+from tools.control_mouse import ControlMouse
 from tools.control_joystick import ControlJoystick
+from tools.control_touch import ControlTouch
 
 
 class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attributes
@@ -136,24 +136,16 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
         self.device_timer = Timer(1000)
         self.connected_devices = None
         self.was_connected = None
-        self.joystick = None
-        self.joystick_detected = set()
-        self.joystick_timer = Timer(1000)
+        self.__joystick = None
         self.joyicon = None
-        self.ctrl_joystick_delay = None
         self.control_joystick_button = None
-        self.control_joystick_delay = None
-        self.control_joystick_enable = None
-        self.control_joystick_speed = None
+        self.__keyboard = None
         self.keyboard = None
         self.control_keyboard_button = None
-        self.control_keyboard_delay = None
-        self.control_keyboard_speed = None
+        self.__mouse = None
         self.mouse = None
-        self.ctrl_mouse_delay = None
         self.control_mouse_button = None
-        self.control_mouse_delay = None
-        self.control_mouse_speed = None
+        self.__touch = None
         self.touch = None
         self.control_touch_button = None
         self.ctrl_touch_delay = None
@@ -182,146 +174,31 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
         """
         self.data = data
 
-    def ctrl_joystick_stop(self):
+    def ctrl_joystick_start(self):
         """
         description:
         """
-        self.joystick.disable()
-
-    def ctrl_joystick_handle(self, event):  # pylint: disable=too-many-branches
-        """
-        description:
-        """
-        if not self.control_joystick_enable:
-            return
-        # Buttons
-        for i in self.device.get_objects():
-            try:
-                if i["control"]["joystick"].split("[")[0] != "button":
-                    continue
-            except BaseException:
-                continue
-            i["source"] = ''
-            button = int(re.findall('\\b\\d+\\b', i["control"]["joystick"])[0])
-            if event.type == JOYBUTTONDOWN and \
-               self.joystick.button()[button]:
-                i["source"] = 'joystick'
-                if i["type"] == "switch":
-                    i["button"].toggle()
-                elif i["type"] == "push-button":
-                    i["button"].on()
-            else:
-                if event.type == JOYBUTTONUP and \
-                   i["type"] == "push-button":
-                    i["button"].off()
-        # Digital motion (hat)
-        # if (event.type == JOYHATMOTION or self.joystick_hat_active):
-            # for i in self.device.get_objects():
-                # try:
-                    # i["control"]["joystick"]
-                # except BaseException:
-                    # continue
-                # if i["control"]["joystick"].split("[")[0] == "hat":
-                    # hat = []
-                    # for j in range(self.joystick.get_numhats()):
-                        # hat.append(self.joystick.get_hat(j))
-                        # infoln("hat[" + str(j) + "] = " + str(hat[j]))
-                    # if 1 in hat[0] or -1 in hat[0]:
-                        # self.joystick_hat_active = True
-                    # else:
-                        # self.joystick_hat_active = False
-                    # if eval(i["control"]["joystick"]):
-                        # i["button"].on()
-                    # else:
-                        # i["button"].off()
-        # Analog motion
-        if event.type == JOYAXISMOTION:  # pylint: disable=undefined-variable
-            for i in self.device.get_objects():
-                try:
-                    i["control"]["joystick"]
-                except BaseException:
-                    continue
-                if i["control"]["joystick"].split("[")[0] == "axis":
-                    axis = re.findall(
-                        '\\b\\d+\\b',
-                        i["control"]["joystick"])
-                    axis = int(axis[0])
-                    signal = 0
-                    if i["control"]["joystick"][-1:] == "+":
-                        signal = 1
-                    elif i["control"]["joystick"][-1:] == "-":
-                        signal = -1
-                    value = self.joystick.axis()[axis]
-                    if value * signal * 1000 > 1:
-                        i["button"].on()
-                        factor = abs(value * self.control_joystick_speed)
-                        i["factor"] = str(factor)
-                    else:
-                        i["button"].off()
-                        i["factor"] = '1'
-
-    def ctrl_joystick_start(self, quiet=False):
-        """
-        description:
-        """
-        if not quiet:
-            echo.info('Joystick: ', 1)
-        # Is enable?
-        try:
-            self.control_joystick_enable = (
-                self.device.get_control()["joystick"]["enable"])
-        except BaseException:
-            self.control_joystick_enable = False
-        # Speed
-        try:
-            self.control_joystick_speed = (
-                self.device.get_control()["joystick"]["speed"])
-        except BaseException:
-            self.control_joystick_speed = 1
-        # Delay
-        try:
-            self.control_joystick_delay = (
-                self.device.get_control()["joystick"]["delay"])
-        except BaseException:
-            self.control_joystick_delay = 50
+        self.__joystick = ControlJoystick()
+        # Is supported?
+        if 'joystick' in self.device.get_control():
+            # Is enable?
+            if 'enable' in self.device.get_control()['joystick']:
+                if self.device.get_control()['joystick']['enable'] is True:
+                    self.__joystick.enable()
+            # Set factor
+            if 'factor' in self.device.get_control()['joystick']:
+                self.__joystick.factor(
+                    self.device.get_control()['joystick']['factor'])
+        # Start
+        self.__joystick.start()
+        self.__joystick.info()
+        self.__joystick.mapping(self.device.get_objects())
         # Draw
         self.joyicon = Image(
             self.controls,
             os.path.join(self.__img_dir, 'joystick.png'), [2, 1])
         self.control_joystick_button = Button(
-            self.joyicon, [0, 100], [5, 58], self.control_joystick_enable)
-        # Detect and start
-        self.joystick = joystick.Joystick()
-        if joystick.detect():
-            if quiet:
-                echo.info('Joystick: ', 1)
-            self.joystick.identification(joystick.detect()[0])
-            echo.infoln(self.joystick.configuration()['name'])
-            self.ctrl_joystick_delay = Timer(self.control_joystick_delay)
-            echo.debug('Enable: ', 2)
-            echo.debugln(str(self.control_joystick_enable))
-            echo.debugln('Axes: ' +
-                         str(self.joystick.configuration()['axes']), 2)
-            echo.debugln('Buttons: ' +
-                         str(self.joystick.configuration()['buttons']), 2)
-            echo.debugln('Balls: ' +
-                         str(self.joystick.configuration()['balls']), 2)
-            echo.debugln('Hats: ' +
-                         str(self.joystick.configuration()['hats']), 2)
-            echo.debugln('Speed: ' +
-                         str(self.control_joystick_speed) + '%', 2)
-            echo.debugln('Delay: ' +
-                         str(self.control_joystick_delay) + 'ms', 2)
-        else:
-            self.control_joystick_enable = False
-            if not quiet:
-                echo.infoln('None')
-
-    def ctrl_keyboard_stop(self):  # pylint: disable=no-self-use
-        """
-        description:
-        """
-        return False
+            self.joyicon, [0, 100], [5, 58], self.__joystick.state())
 
     def ctrl_keyboard_handle(self, event):  # pylint: disable=too-many-branches
         """
@@ -333,16 +210,16 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
             if event.key == K_ESCAPE:  # pylint: disable=undefined-variable
                 self.running = False
             # Keyboard grab
-            if event.key == K_F8:  # pylint: disable=undefined-variable
+            if event.key == K_F9:  # pylint: disable=undefined-variable
                 self.control_keyboard_button.toggle()
             # Mouse grab
-            if event.key == K_F9:  # pylint: disable=undefined-variable
+            if event.key == K_F10:  # pylint: disable=undefined-variable
                 self.control_mouse_button.toggle()
             # Joystick grab
-            if event.key == K_F10:  # pylint: disable=undefined-variable
+            if event.key == K_F11:  # pylint: disable=undefined-variable
                 self.control_joystick_button.toggle()
             # Touch grab
-            if event.key == K_F11:  # pylint: disable=undefined-variable
+            if event.key == K_F12:  # pylint: disable=undefined-variable
                 self.control_touch_button.toggle()
             # Release controls
             if event.key == K_LALT:  # pylint: disable=undefined-variable
@@ -350,173 +227,68 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
                 self.control_mouse_button.off()
                 self.control_joystick_button.off()
                 self.control_touch_button.off()
+            self.__keyboard.state(self.control_keyboard_button.state())
+            self.__mouse.state(self.control_mouse_button.state())
+            self.__joystick.state(self.control_joystick_button.state())
+            self.__touch.state(self.control_touch_button.state())
         # Object behavior
-        if not self.control_keyboard_button.get_state():
-            return
-        for i in self.device.get_objects():
-            try:
-                i["control"]["keyboard"]
-            except BaseException:
-                continue
-            if i["type"] == "push-button":
-                if event.type == KEYDOWN and \
-                   event.key == eval(i["control"]["keyboard"]):
-                    i["button"].on()
-                if event.type == KEYUP and \
-                   event.key == eval(i["control"]["keyboard"]):
-                    i["button"].off()
-            elif i["type"] == "switch":
-                if event.type == KEYDOWN and \
-                   event.key == eval(i["control"]["keyboard"]):
-                    i["button"].toggle()
+        self.__keyboard.handle(event)
 
     def ctrl_keyboard_start(self):
         """
         description:
         """
-        echo.info('Keyboard: ', 1)
-        # Is enable?
-        try:
-            control_keyboard_enable = (self.device.get_control()
-                                       ["keyboard"]["enable"])
-        except BaseException:
-            control_keyboard_enable = False
-        # Is speed configured?
-        try:
-            self.control_keyboard_speed = (self.device.get_control()
-                                           ["keyboard"]["speed"])
-        except BaseException:
-            self.control_keyboard_speed = 1
-        # Is delay configured?
-        try:
-            self.control_keyboard_delay = (self.device.get_control()
-                                           ["keyboard"]["delay"])
-        except BaseException:
-            self.control_keyboard_delay = 1
+        self.__keyboard = ControlKeyboard()
+        # Is supported?
+        if 'keyboard' in self.device.get_control():
+            # Is enable?
+            if 'enable' in self.device.get_control()['keyboard']:
+                if self.device.get_control()['keyboard']['enable'] is True:
+                    self.__keyboard.enable()
+            # Set delay
+            if 'delay' in self.device.get_control()['keyboard']:
+                self.__keyboard.delay(
+                    self.device.get_control()['keyboard']['delay'])
+            # Set interval
+            if 'interval' in self.device.get_control()['keyboard']:
+                self.__keyboard.delay(
+                    self.device.get_control()['keyboard']['interval'])
+        # Start
+        self.__keyboard.start()
+        self.__keyboard.info()
+        self.__keyboard.mapping(self.device.get_objects())
         # Draw
-        self.keyboard = Image(self.controls,
-                              os.path.join(self.__img_dir, 'keyboard.png'),
-                              [2, 1])
-        self.control_keyboard_button = Button(self.keyboard, [0, 0], [5, 58],
-                                              control_keyboard_enable)
-        # Check for device
-        check_input = os.path.join(self.__work_dir, 'scripts/check_input.sh')
-        cmd = [check_input, 'keyboard']
-        # null = open(os.devnull, 'w')
-        return_code = subprocess.call(cmd)
-        if return_code == 0:
-            echo.infoln('Found')
-            echo.debug('Enable: ', 2)
-            echo.debugln(str(self.control_keyboard_button.get_state()))
-            echo.debugln('Speed: ' + str(self.control_keyboard_speed) + 'ms', 2)
-            echo.debugln('Delay: ' + str(self.control_keyboard_delay) + 'ms', 2)
-        else:
-            echo.infoln('None')
-        pygame.key.set_repeat(1, 100)
-
-    def ctrl_mouse_stop(self):  # pylint: disable=no-self-use
-        """
-        description:
-        """
-        pygame.event.set_grab(False)
-
-    def ctrl_mouse_cursor(self, state):  # pylint: disable=no-self-use
-        """
-        description:
-        """
-        off = ("        ",  # sized 8x8
-               "        ",
-               "        ",
-               "        ",
-               "        ",
-               "        ",
-               "        ",
-               "        ")
-        curs, mask = pygame.cursors.compile(off, ".", "X")
-        cursor = ((8, 8), (5, 1), curs, mask)
-        if state:
-            pygame.mouse.set_cursor(*pygame.cursors.arrow)
-        else:
-            pygame.mouse.set_cursor(*cursor)
-
-    def ctrl_mouse_handle(self, event):
-        """
-        description:
-        """
-        if not self.control_mouse_button.get_state():
-            return
-        if event.type == MOUSEMOTION:  # pylint: disable=undefined-variable
-            relative = pygame.mouse.get_rel()
-            x = relative[0]  # pylint: disable=invalid-name,unused-variable
-            y = relative[1]  # pylint: disable=invalid-name,unused-variable
-            for i in self.device.get_objects():
-                try:
-                    i["control"]["mouse"]
-                except BaseException:
-                    continue
-                if eval(i["control"]["mouse"]):
-                    # i["state"] = i["on"]["picture"]
-                    if self.session.is_connected():
-                        try:
-                            peuda = eval(i["control"]["mouse"].split(" ")[0])
-                            peuda = abs(peuda * self.control_mouse_speed)
-                            peuda = int(round(peuda))
-                            i["factor"] = str(peuda)
-                            i["button"].on()
-                            if int(peuda) == 0:
-                                continue
-                        except BaseException:
-                            pass
-                else:
-                    i["button"].off()
+        self.keyboard = Image(
+            self.controls,
+            os.path.join(self.__img_dir, 'keyboard.png'), [2, 1])
+        self.control_keyboard_button = Button(
+            self.keyboard, [0, 0], [5, 58], self.__keyboard.state())
 
     def ctrl_mouse_start(self):
         """
         description:
         """
-        echo.info('Mouse: ', 1)
-        # Is enable?
-        try:
-            control_mouse_enable = (self.device.get_control()
-                                    ["mouse"]["enable"])
-        except BaseException:
-            control_mouse_enable = False
-        # Is speed configured?
-        try:
-            self.control_mouse_speed = (self.device.get_control()
-                                        ["mouse"]["speed"])
-        except BaseException:
-            self.control_mouse_speed = 100
-        try:
-            self.control_mouse_delay = (self.device.get_control()
-                                        ["mouse"]["delay"])
-        except BaseException:
-            self.control_mouse_delay = 100
+        self.__mouse = ControlMouse()
+        # Is supported?
+        if 'mouse' in self.device.get_control():
+            # Is enable?
+            if 'enable' in self.device.get_control()['mouse']:
+                if self.device.get_control()['mouse']['enable'] is True:
+                    self.__mouse.enable()
+            # Set factor
+            if 'factor' in self.device.get_control()['mouse']:
+                self.__mouse.factor(
+                    self.device.get_control()['mouse']['factor'])
+        # Start
+        self.__mouse.start()
+        self.__mouse.info()
+        self.__mouse.mapping(self.device.get_objects())
         # Draw
-        self.mouse = Image(self.controls,
-                           os.path.join(self.__img_dir, 'mouse.png'),
-                           [2, 1])
-        self.control_mouse_button = Button(self.mouse, [0, 50], [5, 58],
-                                           control_mouse_enable)
-        # Check for device
-        check_input = os.path.join(self.__work_dir, 'scripts/check_input.sh')
-        cmd = [check_input, 'mouse']
-        # null = open(os.devnull, 'w')
-        return_code = subprocess.call(cmd)
-        if return_code == 0:
-            self.ctrl_mouse_delay = Timer(self.control_mouse_delay)
-            echo.infoln('Found')
-            echo.debug('Enable: ', 2)
-            echo.debugln(str(self.control_mouse_button.get_state()))
-            echo.debugln('Speed: ' + str(self.control_mouse_speed) + '%', 2)
-        else:
-            echo.infoln('None')
-
-    def ctrl_touch_stop(self):  # pylint: disable=no-self-use
-        """
-        description:
-        """
-        return False
+        self.mouse = Image(
+            self.controls,
+            os.path.join(self.__img_dir, 'mouse.png'), [2, 1])
+        self.control_mouse_button = Button(
+            self.mouse, [0, 50], [5, 58], self.__mouse.state())
 
     def ctrl_touch_handle(self, event):
         """
@@ -524,60 +296,44 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
         """
         # Program behavior
         if event.type == MOUSEBUTTONUP:  # pylint: disable=undefined-variable
+            # Set button
             self.control_keyboard_button.check(pygame.mouse.get_pos())
             self.control_mouse_button.check(pygame.mouse.get_pos())
             self.control_joystick_button.check(pygame.mouse.get_pos())
             self.control_touch_button.check(pygame.mouse.get_pos())
+            # Set control
+            self.__keyboard.state(self.control_keyboard_button.state())
+            self.__mouse.state(self.control_mouse_button.state())
+            self.__joystick.state(self.control_joystick_button.state())
+            self.__touch.state(self.control_touch_button.state())
         # Object behavior
-        if not self.control_touch_button.get_state():
-            return
-        for i in self.device.get_objects():
-            if i["type"] == 'push-button':
-                if event.type == MOUSEBUTTONDOWN:  # pylint: disable=undefined-variable
-                    i["button"].check(pygame.mouse.get_pos())
-                if event.type == MOUSEBUTTONUP:  # pylint: disable=undefined-variable
-                    i["button"].off()
-            elif i["type"] == 'switch':
-                if event.type == MOUSEBUTTONUP:  # pylint: disable=undefined-variable
-                    i["button"].check(pygame.mouse.get_pos())
+        self.__touch.handle(event)
 
     def ctrl_touch_start(self):
         """
         description:
         """
-        echo.info('Touch: ', 1)
-        try:
-            self.control_touch_enable = (self.device.get_control()
-                                         ["touch"]["enable"])
-        except BaseException:
-            self.control_touch_enable = False
-        # Speed
-        try:
-            self.control_touch_speed = (self.device.get_control()
-                                        ["touch"]["speed"])
-        except BaseException:
-            self.control_touch_speed = False
-        # Visible
-        try:
-            self.control_touch_visible = (self.host.get_control()
-                                          ["touch"]["visible"])
-        except BaseException:
-            self.control_touch_visible = 1
-        # Delay
-        try:
-            self.control_touch_delay = (self.device.get_control()
-                                        ["touch"]["delay"])
-        except BaseException:
-            self.control_touch_delay = 1
-        self.ctrl_touch_delay = Timer(self.control_touch_delay)
-        echo.infoln('Found')
-        echo.debug('Enable: ', 2)
-        echo.debugln(str(self.control_touch_enable))
-        self.touch = Image(self.controls,
-                           os.path.join(self.__img_dir, 'touch.png'),
-                           [2, 1])
-        self.control_touch_button = Button(self.touch, [0, 150], [5, 58],
-                                           self.control_touch_enable)
+        self.__touch = ControlTouch()
+        # Is supported?
+        if 'touch' in self.device.get_control():
+            # Is enable?
+            if 'enable' in self.device.get_control()['touch']:
+                if self.device.get_control()['touch']['enable'] is True:
+                    self.__touch.enable()
+            # Set visitility
+            if 'visible' in self.host.get_control()['touch']:
+                self.__touch.visible(
+                    self.host.get_control()['touch']['visible'])
+        # Start
+        self.__touch.start()
+        self.__touch.info()
+        self.__touch.mapping(self.device.get_objects())
+        # Draw
+        self.touch = Image(
+            self.controls,
+            os.path.join(self.__img_dir, 'touch.png'), [2, 1])
+        self.control_touch_button = Button(
+            self.touch, [0, 150], [5, 58], self.__touch.state())
 
     def start_session(self):
         """
@@ -625,10 +381,10 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
         """
         description:
         """
-        self.ctrl_joystick_stop()
-        self.ctrl_keyboard_stop()
-        self.ctrl_mouse_stop()
-        self.ctrl_touch_stop()
+        self.__touch.disable()
+        self.__joystick.disable()
+        self.__mouse.disable()
+        self.__keyboard.disable()
 
     def stop(self):
         """
@@ -659,9 +415,6 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
                 if event.type == pygame.QUIT:  # pylint: disable=no-member
                     self.running = False
                 self.ctrl_check(event)
-            if self.joystick_timer.check() and \
-               self.joystick.identification() is None:
-                self.ctrl_joystick_start(quiet=True)
             self.draw()
             self.ctrl_handle()
             self.device_check()
@@ -673,22 +426,9 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
         """
         description:
         """
-        # Mouse visible
-        if self.control_mouse_button.get_state() or \
-            (self.control_touch_button.get_state() and not
-             self.control_touch_visible):
-            self.ctrl_mouse_cursor(False)
-        else:
-            self.ctrl_mouse_cursor(True)
-        # Mouse grab
-        if self.control_mouse_button.get_state():
-            pygame.event.set_grab(True)
-        else:
-            pygame.event.set_grab(False)
         # Objects
         for i in self.device.get_objects():
-            if (i["source"] == 'joystick') and \
-               (not self.ctrl_joystick_delay.check()):
+            if (i["source"] == 'joystick'):
                 continue
             # Push button (pulse)
             if i["type"] == 'push-button' and \
@@ -714,8 +454,8 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
             self.screensaver.stop()
             return
         self.ctrl_keyboard_handle(event)
-        self.ctrl_mouse_handle(event)
-        self.ctrl_joystick_handle(event)
+        self.__mouse.handle(event)
+        self.__joystick.handle(event)
         self.ctrl_touch_handle(event)
         self.ctrl_handle()
 
@@ -928,10 +668,6 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
         self.ctrl_mouse_start()
         self.ctrl_joystick_start()
         self.ctrl_touch_start()
-        # Joystick
-        self.__joystick = ControlJoystick()
-        self.__joystick.period()
-        self.__joystick.start()
 
     def start(self):
         """

@@ -782,18 +782,16 @@
       "control": {
         "joystick": {
           "enable": true,
-          "delay": 0,
-          "speed": 5,
-          "factor": 1
+          "factor": 5.1
         },
         "keyboard": {
           "enable": true,
           "delay": 1,
-          "speed": 10
+          "interval": 10
         },
         "mouse": {
           "enable": false,
-          "speed": 10
+          "factor": 0.1
         },
         "touch": {
           "enable": false,
@@ -1319,9 +1317,8 @@
       },
       "control": {
         "joystick": {
-          "delay": 40,
           "enable": true,
-          "speed": 3
+          "factor": 0.8
         },
         "keyboard": {
           "enable": true
@@ -1331,7 +1328,7 @@
         },
         "mouse": {
           "enable": false,
-          "speed": 0.12
+          "factor": 0.2
         }
       },
       "endup": {
