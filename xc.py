@@ -17,14 +17,11 @@ try:
     import sys
     import argparse
     import os.path
-    import time
     # Myself modules
     from tools.device import DeviceProperties
     import tools.echo as echo
     from tools.file import File
-    from tools.host import HostProperties
     from tools.session import Session
-    from tools.firmware import DevTools
 except ImportError as err:
     print("Could not load module. " + str(err))
     sys.exit(True)
@@ -44,8 +41,8 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
 
     def __init__(self):
         self.program_name = "xc"
-        self.program_version = 0.81
-        self.program_date = "2019-12-14"
+        self.program_version = 0.83
+        self.program_date = "2019-12-16"
         self.program_description = "xC - aXes Controller"
         self.program_copyright = "Copyright (c) 2014-2019 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
@@ -63,8 +60,6 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
                   'commands:\n' +
                   '  gui            graphical user interface\n' +
                   '  terminal       connect to device terminal\n' +
-                  '  verify         check firmware code sintax\n' +
-                  '  upload         upload firmware to device\n' +
                   '  run            run a program\n' +
                   '  list           list devices\n\n')
         footer = (self.program_copyright + '\n' +
@@ -73,8 +68,6 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
                   'Contact: ' + self.program_contact + '\n')
         examples = ('examples:\n' +
                     '  xc list\n' +
-                    '  xc verify --id x6 --verbosity=3\n' +
-                    '  xc upload\n' +
                     '  xc gui --id x2\n' +
                     '  xc run -i x6 -p file.gcode\n')
         self.version = (self.program_name + " " +
@@ -182,65 +175,10 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
             help='verbose mode, options: ' +
             '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Debug')
         args = parser.parse_args(sys.argv[2:])
+        self.__id = args.id
         echo.verbose(args.verbosity)
         echo.infoln(self.version)
-        self.__dev_tools(args.id, args.interface)
-        self.project.terminal()
-
-    def verify(self):
-        """
-        description:
-        """
-        parser = argparse.ArgumentParser(
-            prog=self.program_name + ' verify',
-            description='check firmware code')
-        parser.add_argument(
-            '-i', '--id',
-            help='device ID')
-        parser.add_argument(
-            '-d', '--date', action="store_true",
-            help='display date')
-        parser.add_argument(
-            '-v', '--verbosity', type=int,
-            default=1,
-            choices=[0, 1, 2, 3, 4],
-            help='verbose mode, options: ' +
-            '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Debug')
-        args = parser.parse_args(sys.argv[2:])
-        echo.verbose(args.verbosity)
-        echo.infoln(self.version)
-        self.__dev_tools(args.id, args.date)
-        self.project.verify()
-
-    def upload(self):
-        """
-        description:
-        """
-        parser = argparse.ArgumentParser(
-            prog=self.program_name + ' upload',
-            description='upload firmware to device')
-        parser.add_argument(
-            '-i', '--id',
-            help='device ID')
-        parser.add_argument(
-            '-d', '--date', action="store_true",
-            help='display date')
-        parser.add_argument(
-            '--interface',
-            default='serial',
-            choices=['serial', 'network'],
-            help='communication interface (default: serial)')
-        parser.add_argument(
-            '-v', '--verbosity', type=int,
-            default=1,
-            choices=[0, 1, 2, 3, 4],
-            help='verbose mode, options: ' +
-            '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Debug')
-        args = parser.parse_args(sys.argv[2:])
-        echo.verbose(args.verbosity)
-        echo.infoln(self.version)
-        self.__dev_tools(args.id, args.date, args.interface)
-        self.project.upload()
+        self.__terminal()
 
     def list(self):  # pylint: disable=too-many-branches,too-many-statements
         """
@@ -349,24 +287,49 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
             self.device.info()
             return
 
-    def __dev_tools(self, device_id=None, date=False, interface=None):
-        if date:
-            echo.infoln('Started at: ' + time.strftime('%Y-%m-%d %H:%M:%S'))
-        if interface:
-            self.interface = interface
+    def __terminal(self):
+        """
+        description:
+        """
+        # Connect terminal to device serial console.
+        from serial.tools.miniterm import Miniterm
         self.__load_configuration()
-        self.host = HostProperties(self.config.get()["host"])
-        self.host.info()
-        self.__device_select(device_id)
-        self.project = DevTools(self.device.get())
-        self.project.info()
-        self.session = Session(self.device.get_comm())
-        self.session.info()
-        if self.interface:
-            if self.interface == 'serial':
-                if not self.session.is_connected_serial():
-                    echo.erroln('Serial device is not connected.', 2)
-                    sys.exit(True)
+        device = DeviceProperties(self.config.get())
+        device.set(self.__id)
+        terminal_echo = False
+        terminal_end_of_line = 'LF'
+        if 'serial' not in device.get_comm():
+            echo.erroln("Missed configuration field: 'serial'")
+            sys.exit(True)
+        if 'terminal_echo' in device.get_comm()['serial']:
+            terminal_echo = device.get_comm()['serial']['terminal_echo']
+        if 'terminal_end_of_line' in device.get_comm()['serial']:
+            terminal_end_of_line = device.get_comm()['serial']['terminal_end_of_line']
+        echo.infoln("Communication device: " +
+                    os.popen("readlink -f " + device.get_comm()['serial']['path']).read().rstrip())
+        # Start serial session
+        session = Session(device.get_comm())
+        instance = session.start()
+        if instance is True:
+            sys.exit(True)
+        # Start minicom session
+        miniterm = Miniterm(instance,
+                            echo=terminal_echo,
+                            eol=terminal_end_of_line.lower(),
+                            filters=[])
+        miniterm.exit_character = chr(0x1d)
+        miniterm.menu_character = chr(0x14)
+        miniterm.raw = True
+        miniterm.set_rx_encoding('UTF-8')
+        miniterm.set_tx_encoding('UTF-8')
+        miniterm.start()
+        try:
+            miniterm.join(True)
+        except KeyboardInterrupt:
+            pass
+        miniterm.join()
+        miniterm.close()
+        sys.exit(False)
 
 
 def main():

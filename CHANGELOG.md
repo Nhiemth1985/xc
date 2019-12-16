@@ -1,6 +1,14 @@
 # Change log
 All notable changes to this project will be documented in this file.
 
+## [0.83] - 2019-12-16
+### Changed
+- Performance improvements.
+
+## [0.81] - 2019-12-14
+### Changed
+- Improved controls on GUI.
+
 ## [0.8] - 2019-09-04
 ### Changed
 - Removed Python 2 support.
