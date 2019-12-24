@@ -1,5 +1,5 @@
 ---
-- name: Install/update xC
+- name: Install/update xc
   hosts: all
   vars:
     owner: "{{ ansible_user }}"
@@ -19,6 +19,7 @@
         ]
         state: present
         cache_valid_time: 3600
+        force_apt_get: yes
         update_cache: yes
       tags: apt
 
@@ -31,6 +32,7 @@
         ]
         state: present
         cache_valid_time: 3600
+        force_apt_get: yes
         update_cache:
       when:
         - ansible_facts['architecture'] == "armv7l"
@@ -45,6 +47,7 @@
         ]
         state: present
         cache_valid_time: 3600
+        force_apt_get: yes
         update_cache:
       when:
         - ansible_facts['architecture'] == "aarch64"
@@ -90,7 +93,7 @@
 
     - name: Configuration - Create config file
       file:
-        src: "{{ dest }}/{{ path }}/xC.json"
-        dest: ~/.xC.json
+        src: "{{ dest }}/{{ path }}/device.json"
+        dest: ~/.device.json
         state: link
       tags: configuration

@@ -1,57 +1,42 @@
-# xC - aXes Controller
+# xc - aXes Controller
 
 ## Introduction
-xC is a software to rule all robots.
+xc is a software to rule robots.
 
 ### Screenshots
 ![x6](Screenshots/x6.png)
 
 ![Escriba](Screenshots/escriba.png)
 
-<!--
-## Videos
-Watch this projects videos on [YouTube Playlist].
--->
-
 ## Changes
 All notable changes to this project will be documented in this [Change log](CHANGELOG.md).
 
 ## Topology
-![Topology](Documents/Pictures/xC.png)
+![Topology](Documents/Pictures/xc.png)
 
 ## Terminology
-- xC: aXes Controller, this software
-- Host: The computer system running xC software
-- Device: The device that will be controlled by xC, such as a robot, CNC, 3D Printer, and much more.
+- xc: this software;
+- Host: The computer system running xc software;
+- Device: The device that will be controlled by xc, such as a robot, CNC, 3D Printer, and much more;
 - User: It's you!
+
+## Requirements
+For installing and running, you will need Ansible (>= 2.7), Python (>=3.6) and PIP (>= 1.5).
 
 ## Installation
 
-### Download xC lastest version
+### Cloning
 ``` bash
-wget https://github.com/marcio-pessoa/xC/archive/0.58.zip
+git clone --recurse-submodules https://github.com/marcio-pessoa/xc.git
 ```
-
-## Cloning
-```
-git clone --recurse-submodules https://github.com/marcio-pessoa/xC.git
-```
-
-### Uncompress
-``` bash
-unzip xc.zip
-cd xc
-```
-
 ### Install
+Change to work directory and run Ansible Playbook:
 ``` bash
-ansible-playbook xC.yaml
+cd xc
+ansible-playbook xc.yaml
 ```
 
-### Run
-It's ready to run on Python 3.
-
-Just type:
+Running:
 ``` bash
 xc
 ```
@@ -69,3 +54,5 @@ I recommend you use underline before macro name. It's usefull to quickly identif
 ### Keyboard map
 
 To configure controls, take a look at [controls.md](Documents/controls.md).
+
+---

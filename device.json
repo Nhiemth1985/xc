@@ -1,0 +1,1855 @@
+{
+  "host": {
+    "uvvi": {
+      "screen": {
+        "size": "480x320",
+        "full": false,
+        "rate": 50
+      },
+      "screensaver": {
+        "time": 120,
+        "type": "black"
+      },
+      "resources": {
+        "temperature_sensor": true
+      },
+      "control": {
+        "touch": {
+          "visible": true
+        }
+      }
+    },
+    "t1": {
+      "screen": {
+        "size": "800x480",
+        "full": false,
+        "rate": 60
+      },
+      "screensaver": {
+        "enable": false,
+        "time": 1,
+        "type": "random"
+      },
+      "resources": {
+        "temperature_sensor": true
+      },
+      "control": {
+        "touch": {
+          "visible": true
+        }
+      },
+      "joystick": {
+        "scan_time": 10
+      }
+    },
+    "xCm1": {
+      "screen": {
+        "size": "480x320",
+        "full": false,
+        "rate": 30
+      },
+      "comm": {
+        "network": {
+          "address": "192.168.0.101"
+        }
+      },
+      "system": {
+        "arch": "raspberry2pi:B:arm:linux",
+        "desc": "Axes Controller",
+        "logs": "Development/xC/Mark_I/",
+        "mark": "I",
+        "path": "Development/xC/Mark_I/xc",
+        "plat": "xC"
+      },
+      "resources": {
+        "temperature_sensor": true,
+        "fan": true,
+        "status_led": true
+      },
+      "control": {
+        "touch": {
+          "visible": true
+        }
+      },
+      "joystick": {
+        "scan_time": 10
+      }
+    },
+    "xCm2": {
+      "screen": {
+        "size": "480x320",
+        "full": true,
+        "rate": 30
+      },
+      "screensaver": {
+        "time": 60,
+        "type": "random"
+      },
+      "comm": {
+        "network": {
+          "address": "192.168.0.102"
+        }
+      },
+      "system": {
+        "arch": "raspberry3pi:B:arm:linux",
+        "desc": "Axes Controller",
+        "logs": "Development/xC/Mark_II/",
+        "mark": "II",
+        "path": "Development/xC/Mark_II/xc",
+        "plat": "xC"
+      },
+      "resources": {
+        "temperature_sensor": true,
+        "fan": false,
+        "status_led": true
+      }
+    },
+    "xCm3": {
+      "screen": {
+        "size": "480x320",
+        "full": false,
+        "rate": 30
+      },
+      "screensaver": {
+        "enable": false,
+        "time": 0,
+        "type": "random"
+      },
+      "comm": {
+        "network": {
+          "address": "192.168.15.115"
+        }
+      },
+      "system": {
+        "arch": "raspberry3pi:B+:arm:linux",
+        "desc": "Axes Controller",
+        "logs": "Development/xC/Mark_III/",
+        "mark": "III",
+        "path": "Development/xC/Mark_III/xc",
+        "plat": "xC"
+      },
+      "resources": {
+        "temperature_sensor": true,
+        "fan": false,
+        "status_led": false
+      }
+    }
+  },
+  "device": {
+    "enm1": {
+      "comm": {
+        "network": {
+          "address": "192.168.0.105"
+        },
+        "serial": {
+          "path": "/dev/serial/by-id/usb-Arduino_LLC_Arduino_Leonardo-if00",
+          "speed": 9600
+        }
+      },
+      "enable": false,
+      "system": {
+        "arch": "arduino:avr:yun",
+        "desc": "Environment Monitor",
+        "logs": "Development/envmon/Mark_I",
+        "work": "Development/envmon/Mark_I",
+        "mark": "I",
+        "path": "Development/envmon/Mark_I/enm1",
+        "plat": "envmon"
+      }
+    },
+    "enm2": {
+      "comm": {
+        "network": {
+          "address": "192.168.0.105"
+        },
+        "serial": {
+          "path": "/dev/serial/by-id/usb-Arduino_LLC_Arduino_Leonardo-if00",
+          "speed": 9600
+        }
+      },
+      "enable": false,
+      "system": {
+        "arch": "arduino:avr:yun",
+        "desc": "Environment Monitor",
+        "logs": "Development/envmon/Mark_I",
+        "work": "Development/envmon/Mark_I",
+        "mark": "I",
+        "path": "Development/envmon/Mark_I/enm1",
+        "plat": "envmon"
+      }
+    },
+    "escriba": {
+      "comm": {
+        "network": {},
+        "serial": {
+          "path": "/dev/serial/by-id/usb-Arduino__www.arduino.cc__Arduino_Uno_55632313338351900171-if00",
+          "speed": 115200,
+          "terminal_echo": true,
+          "terminal_end_of_line": "LF",
+          "delay": 400
+        }
+      },
+      "control": {
+        "joystick": {
+          "enable": true,
+          "speed": 1.1
+        },
+        "keyboard": {
+          "enable": true
+        },
+        "mouse": {
+          "enable": false,
+          "speed": 1
+        },
+        "touch": {
+          "enable": true,
+          "delay": 1,
+          "speed": 1
+        }
+      },
+      "endup": {
+        "sequence": [
+          {
+            "command": "G28  ; Go to home position",
+            "expects": "ok"
+          },
+          {
+            "command": "M2  ; Program end",
+            "expects": "ok"
+          }
+        ],
+        "command": [
+          "G28  ; Go to home position",
+          "M2  ; Program end"
+        ]
+      },
+      "object": [
+        {
+          "control": {
+            "keyboard": "K_a"
+          },
+          "default": "on",
+          "id": "absolute",
+          "off": {
+            "command": "G90",
+            "expects": "ok",
+            "picture": "off"
+          },
+          "on": {
+            "command": "G91",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "power.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[50, 10]",
+            "split": "[2, 1]"
+          },
+          "type": "switch"
+        },
+        {
+          "control": {
+            "keyboard": "K_HOME"
+          },
+          "default": "off",
+          "id": "home",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G28",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "power.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[110, 10]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "axis[1] < 0",
+            "keyboard": "K_UP",
+            "mouse": "x > 0"
+          },
+          "default": "off",
+          "id": "up",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 Y*",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_up.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[65, 74]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "axis[1] > 0",
+            "keyboard": "K_DOWN",
+            "mouse": "x < 0"
+          },
+          "default": "off",
+          "id": "down",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 Y-*",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_down.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[65, 176]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "axis[0] < 0",
+            "keyboard": "K_LEFT",
+            "mouse": "x < 0"
+          },
+          "default": "off",
+          "id": "left",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 X-*",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_left.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[14, 125]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "axis[0] > 0",
+            "keyboard": "K_RIGHT",
+            "mouse": "x < 0"
+          },
+          "default": "off",
+          "id": "right",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 X*",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_right.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[116, 125]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "axis[5] < 0",
+            "keyboard": "K_PAGEUP"
+          },
+          "default": "off",
+          "id": "axis_z_add",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 Z*",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_up.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[265, 95]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "axis[5] > 0",
+            "keyboard": "K_PAGEDOWN"
+          },
+          "default": "off",
+          "id": "axis_z_rid",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 Z-*",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_down.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[265, 155]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        }
+      ],
+      "startup": {
+        "command": [
+          "$I  ; View build info",
+          "$G  ; View G-code parser state",
+          "$$  ; View Grbl settings",
+          "?  ; View current status",
+          "G91  ; Set relative distance mode",
+          "G21  ; Set all units in millimeters"
+        ],
+        "sequence": [
+          {
+            "command": "$I  ; View build info",
+            "expects": "ok"
+          },
+          {
+            "command": "$G  ; View G-code parser state",
+            "expects": "ok"
+          },
+          {
+            "command": "$$  ; View Grbl settings",
+            "expects": "ok"
+          },
+          {
+            "command": "?  ; View current status",
+            "expects": "ok"
+          },
+          {
+            "command": "G91  ; Set relative distance mode",
+            "expects": "ok"
+          },
+          {
+            "command": "G21  ; Set all units in millimeters",
+            "expects": "ok"
+          }
+        ]
+      },
+      "system": {
+        "arch": "arduino:avr:uno",
+        "desc": "Light CNC",
+        "logs": "Development/Escriba/Mark_I",
+        "mark": "I",
+        "path": "Development/Escriba/Mark_I/Escriba",
+        "work": "Development/Escriba/Mark_I",
+        "plat": "Escriba"
+      }
+    },
+    "fc": {
+      "comm": {
+        "network": {},
+        "serial": {
+          "path": "/dev/serial/by-id/usb-Arduino_LLC_Arduino_Micro-if00",
+          "speed": 9600
+        }
+      },
+      "enable": false,
+      "system": {
+        "arch": "arduino:avr:micro",
+        "desc": "Fan Controller",
+        "logs": "Development/.other/fC/Mark_I",
+        "work": "Development/.other/fC/Mark_I",
+        "mark": "I",
+        "path": "Development/.other/fC/Mark_I/fC/",
+        "plat": "fC"
+      }
+    },
+    "marlon": {
+      "comm": {
+        "network": {},
+        "serial": {
+          "path": "/dev/serial/by-id/usb-Arduino__www.arduino.cc__0042_75533343336351214101-if00",
+          "speed": 250000,
+          "terminal_echo": true,
+          "terminal_end_of_line": "LF",
+          "delay": 10
+        }
+      },
+      "system": {
+        "arch": "arduino:avr:mega:cpu=atmega2560",
+        "desc": "3D Printer",
+        "logs": "Development/Marlon/Mark_I",
+        "mark": "I",
+        "path": "Development/Marlon/Mark_I/Marlin/Marlin",
+        "work": "Development/Marlon/Mark_I",
+        "plat": "Marlon"
+      }
+    },
+    "w1": {
+      "enable": true,
+      "comm": {
+        "network": {},
+        "serial": {
+          "path": "/dev/serial/by-id/usb-Arduino_LLC_Arduino_Leonardo-if00",
+          "speed": 115200,
+          "terminal_echo": true,
+          "terminal_end_of_line": "LF",
+          "delay": 100
+        }
+      },
+      "control": {
+        "joystick": {
+          "delay": 100,
+          "enable": true,
+          "speed": 10
+        },
+        "keyboard": {
+          "delay": 100,
+          "enable": true,
+          "speed": 10
+        },
+        "mouse": {
+          "enable": false,
+          "speed": 0.1
+        },
+        "touch": {
+          "enable": true
+        }
+      },
+      "endup": {
+        "command": [
+        ]
+      },
+      "object": [
+        {
+          "control": {
+            "joystick": "hat[0] == (1, 0)",
+            "keyboard": "K_RIGHT"
+          },
+          "default": "off",
+          "id": "right",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "M1  ; Clockwise",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_turn_right.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[701, 46]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "hat[0] == (-1, 0)",
+            "keyboard": "K_LEFT"
+          },
+          "default": "off",
+          "id": "left",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "M2  ; Counterclockwise",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_turn_left.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[625, 46]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "hat[0] == (0, -1)",
+            "keyboard": "K_SPACE"
+          },
+          "default": "off",
+          "id": "stop",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "M0  ; Turn off",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_openclose.png",
+            "off": "[0, 0]",
+            "on": "[0, 1]",
+            "position": "[660, 110]",
+            "split": "[2, 2]"
+          },
+          "type": "push-button"
+        }
+      ],
+      "startup": {
+        "command": [
+          "M111  ; Debug mode"
+        ]
+      },
+      "system": {
+        "arch": "arduino:avr:leonardo",
+        "desc": "Watch Winder",
+        "logs": "Development/w1/Mark_I",
+        "mark": "I",
+        "path": "Development/w1/Mark_I/w1",
+        "work": "Development/w1/Mark_I",
+        "plat": "w1"
+      }
+    },
+    "r1": {
+      "comm": {
+        "network": {},
+        "serial": {
+          "path": "/dev/serial/by-id/usb-MicroPython_Pyboard_Virtual_Comm_Port_in_FS_Mode_326631633536-if01",
+          "speed": 9600,
+          "delay": 10,
+          "terminal_echo": false,
+          "terminal_end_of_line": "CRLF"
+        }
+      },
+      "control": {
+        "joystick": {
+          "enable": false,
+          "delay": 40,
+          "speed": 3
+        },
+        "keyboard": {
+          "enable": true,
+          "delay": 1,
+          "speed": 10
+        },
+        "mouse": {
+          "enable": false,
+          "speed": 10
+        },
+        "touch": {
+          "enable": false,
+          "delay": 100,
+          "speed": 10
+        }
+      },
+      "endup": {
+        "command": [
+        ]
+      },
+      "object": [
+      ],
+      "startup": {
+        "command": [
+        ]
+      },
+      "system": {
+        "plat": "r1",
+        "mark": "I",
+        "arch": "MicroPython:ARM:PYBv1.1",
+        "desc": "Self Balancing Robot",
+        "path": "Development/r1/Mark_I/x1",
+        "work": "Development/r1/Mark_I/Firmware",
+        "code": "/media/$USER/PYBFLASH/",
+        "logs": "Development/r1/Mark_I"
+      }
+    },
+    "r1m2": {
+      "enable": false,
+      "comm": {
+        "network": {},
+        "serial": {
+          "path": "/dev/serial/by-id/usb-Arduino_LLC_Arduino_Micro-if00",
+          "speed": 19200,
+          "delay": 0,
+          "terminal_echo": false,
+          "terminal_end_of_line": "CRLF"
+        }
+      },
+      "system": {
+        "plat": "r1",
+        "mark": "II",
+        "arch": "arduino:avr:micro",
+        "desc": "Self Balancing Robot",
+        "path": "Development/r1/Mark_I/Reference/MPU6050-test",
+        "work": "Development/r1/Mark_I/Reference/MPU6050-test",
+        "code": "Development/r1/Mark_I/Reference/MPU6050-test",
+        "logs": "Development/r1/Mark_I/Reference/MPU6050-test"
+      }
+    },
+    "b1": {
+      "enable": false,
+      "comm": {
+        "network": {},
+        "serial": {
+          "path": "/dev/serial/by-id/usb-Arduino_LLC_Arduino_Leonardo-if00",
+          "speed": 9600,
+          "delay": 20,
+          "terminal_echo": true,
+          "terminal_end_of_line": "LF"
+        }
+      },
+      "command": [
+      ],
+      "control": {
+        "joystick": {
+          "enable": true,
+          "factor": 6.1
+        },
+        "keyboard": {
+          "enable": true,
+          "delay": 1,
+          "interval": 10
+        },
+        "mouse": {
+          "enable": false,
+          "factor": 0.1
+        },
+        "touch": {
+          "enable": true
+        }
+      },
+      "endup": {
+        "command": [
+        ]
+      },
+      "object": [
+      ],
+      "startup": {
+        "command": [
+        ]
+      },
+      "system": {
+        "arch": "arduino:avr:leonardo",
+        "desc": "Self Balancing Robot",
+        "logs": "Development/b1/Mark_I",
+        "mark": "I",
+        "path": "Development/b1/Mark_I/b1",
+        "work": "Development/b1/Mark_I",
+        "plat": "b1"
+      }
+    },
+    "x1": {
+      "comm": {
+        "network": {},
+        "serial": {
+          "path": "/dev/serial/by-id/usb-Arduino_LLC_Arduino_Leonardo-if00",
+          "speed": 9600,
+          "delay": 200,
+          "terminal_echo": true,
+          "terminal_end_of_line": "LF"
+        }
+      },
+      "command": [
+        {
+          "G0": "Move axis"
+        },
+        {
+          "G03": "Finger delay"
+        },
+        {
+          "G28": "Finger home"
+        },
+        {
+          "G29": "Finger out-of-door"
+        },
+        {
+          "G90": "Absolute programming"
+        },
+        {
+          "G91": "Incremental programming"
+        },
+        {
+          "M0": "Stop"
+        },
+        {
+          "M15": "System information"
+        },
+        {
+          "M17": "Attach motor"
+        },
+        {
+          "M18": "Detach motor"
+        },
+        {
+          "M80": "Power status"
+        },
+        {
+          "M81": "Power on"
+        },
+        {
+          "M82": "Power off"
+        },
+        {
+          "M86": "Axis information"
+        },
+        {
+          "M89": "Memory information"
+        },
+        {
+          "M90": "Lever status"
+        },
+        {
+          "M92": "System version"
+        },
+        {
+          "M99": "Reset system"
+        },
+        {
+          "M100": "This help message"
+        },
+        {
+          "M111": "Debug mode"
+        }
+      ],
+      "control": {
+        "joystick": {
+          "enable": true,
+          "factor": 5.1
+        },
+        "keyboard": {
+          "enable": true,
+          "delay": 1,
+          "interval": 10
+        },
+        "mouse": {
+          "enable": false,
+          "factor": 0.1
+        },
+        "touch": {
+          "enable": false,
+          "delay": 100,
+          "speed": 10
+        }
+      },
+      "endup": {
+        "command": [
+          "M81  ; Power on",
+          "G28  ; Home axis",
+          "M82  ; Power off"
+        ]
+      },
+      "object": [
+        {
+          "control": {
+            "keyboard": "K_PAUSE",
+            "joystick": "button[10] == 1"
+          },
+          "default": "off",
+          "id": "power",
+          "off": {
+            "command": "M82  ; Power off'",
+            "expects": "ok",
+            "picture": "off"
+          },
+          "on": {
+            "command": "M81  ; Power on",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "power.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[250, 0]",
+            "split": "[2, 1]"
+          },
+          "type": "switch"
+        },
+        {
+          "control": {
+            "keyboard": "K_a"
+          },
+          "default": "on",
+          "id": "absolute",
+          "off": {
+            "command": "G91  ; Incremental programming",
+            "expects": "ok",
+            "picture": "off"
+          },
+          "on": {
+            "command": "G90  ; Absolute programming",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "power.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[150, 0]",
+            "split": "[2, 1]"
+          },
+          "type": "switch"
+        },
+        {
+          "control": {
+            "keyboard": "K_RETURN"
+          },
+          "default": "off",
+          "id": "door",
+          "off": {
+            "command": "G28  ; Home axis",
+            "expects": "ok",
+            "picture": "off"
+          },
+          "on": {
+            "command": "G29  ; Lever off",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "door.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[80, 5]",
+            "split": "[2, 1]"
+          },
+          "type": "switch"
+        },
+        {
+          "control": {
+            "joystick": "button[0] == 1"
+          },
+          "default": "off",
+          "id": "opa",
+          "off": {
+            "command": "M0  ; Stop",
+            "expects": "ok",
+            "picture": "off"
+          },
+          "on": {
+            "command": "G28  ; Home axis",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "door.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[80, 5]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "axis[1]-",
+            "keyboard": "K_UP",
+            "mouse": "y < 0"
+          },
+          "default": "off",
+          "id": "up",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 X-*  ; Move up",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_up.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[250, 125]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "axis[1]+",
+            "keyboard": "K_DOWN",
+            "mouse": "y > 0"
+          },
+          "default": "off",
+          "id": "down",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 X*  ; Move down",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_down.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[250, 175]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        }
+      ],
+      "startup": {
+        "command": [
+          "M111  ; Debug mode",
+          "G91  ; Relative programming",
+          "M15  ; System information",
+          "M81  ; Power on",
+          "G03 X0  ; Set delay time"
+        ]
+      },
+      "system": {
+        "arch": "arduino:avr:leonardo",
+        "desc": "Useless Machine",
+        "logs": "Development/x1/Mark_I",
+        "mark": "I",
+        "path": "Development/x1/Mark_I/x1",
+        "work": "Development/x1/Mark_I",
+        "plat": "x1"
+      }
+    },
+    "x2": {
+      "comm": {
+        "network": {},
+        "serial": {
+          "path": "/dev/serial/by-id/usb-RLRduino__www.rlrobotics.ind.br__06f8_741363339323512171F0-if00",
+          "speed": 115200,
+          "delay": 200,
+          "terminal_echo": true,
+          "terminal_end_of_line": "LF"
+        }
+      },
+      "control": {
+        "joystick": {
+          "delay": 16,
+          "enable": true,
+          "speed": 8
+        },
+        "keyboard": {
+          "enable": true
+        },
+        "mouse": {
+          "enable": false,
+          "speed": 0.3
+        }
+      },
+      "endup": {
+        "command": [
+          "M80  ; Power on",
+          "G28  ; Home axes",
+          "M81  ; Power off"
+        ]
+      },
+      "object": [
+        {
+          "control": {
+            "joystick": "button[12] == 1",
+            "keyboard": "K_PAUSE"
+          },
+          "default": "on",
+          "id": "power",
+          "off": {
+            "command": "M81  ; Power off",
+            "expects": "ok",
+            "picture": "off"
+          },
+          "on": {
+            "command": "M80  ; Power on",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "power.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[250, 10]",
+            "split": "[2, 1]"
+          },
+          "type": "switch"
+        },
+        {
+          "control": {
+            "joystick": "button[3] == 1",
+            "keyboard": "K_HOME"
+          },
+          "default": "off",
+          "id": "home",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G28  ; Home axes",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "power.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[210, 10]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "button[0] == 1",
+            "keyboard": "K_a"
+          },
+          "default": "off",
+          "id": "absolute",
+          "off": {
+            "command": "G91  ; Incremental programming",
+            "expects": "ok",
+            "picture": "off"
+          },
+          "on": {
+            "command": "G90  ; Relative programming",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "power.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[130, 10]",
+            "split": "[2, 1]"
+          },
+          "type": "switch"
+        },
+        {
+          "control": {
+            "joystick": "button[2] == 1",
+            "keyboard": "K_SPACE"
+          },
+          "default": "off",
+          "id": "stop",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "M0  ; Compulsory stop",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "power.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[0, 10]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "button[1] == 1",
+            "keyboard": "K_RETURN"
+          },
+          "default": "off",
+          "id": "laser",
+          "off": {
+            "command": "M5  ; Laser off",
+            "expects": "ok",
+            "picture": "off"
+          },
+          "on": {
+            "command": "M4  ; Laser on",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "power.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[160, 10]",
+            "split": "[2, 1]"
+          },
+          "type": "switch"
+        },
+        {
+          "control": {
+            "keyboard": "K_BACKSPACE"
+          },
+          "default": "off",
+          "id": "distance",
+          "off": {
+            "command": "M88  ; Distance measure",
+            "expects": "ok",
+            "picture": "off"
+          },
+          "on": {
+            "command": "M80  ; Power on",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "power.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[100, 10]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "button[9] == 1",
+            "keyboard": "K_c"
+          },
+          "default": "off",
+          "id": "calibrate",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G132  ; Calibrate axes",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "power.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[100, 10]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "axis[1]-",
+            "keyboard": "K_UP",
+            "mouse": "y < 0"
+          },
+          "default": "off",
+          "id": "up",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 Y*  ; Move up",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_up.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[165, 184]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "axis[1]+",
+            "keyboard": "K_DOWN",
+            "mouse": "y > 0"
+          },
+          "default": "off",
+          "id": "down",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 Y-*  ; Move down",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_down.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[165, 286]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "axis[0]-",
+            "keyboard": "K_LEFT",
+            "mouse": "x < 0"
+          },
+          "default": "off",
+          "id": "left",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 X-*  ; Move left",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_left.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[114, 235]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "axis[0]+",
+            "keyboard": "K_RIGHT",
+            "mouse": "x > 0"
+          },
+          "default": "off",
+          "id": "right",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 X*  ; Move right",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_right.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[216, 235]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        }
+      ],
+      "startup": {
+        "command": [
+          "M111  ; Debug mode",
+          "G91  ; Relative programming",
+          "M80  ; Power on"
+        ]
+      },
+      "system": {
+        "arch": "arduino:avr:uno",
+        "desc": "Two Axes Platform",
+        "logs": "Development/x2/Mark_I",
+        "mark": "I",
+        "path": "Development/x2/Mark_I/x2",
+        "work": "Development/x2/Mark_I",
+        "plat": "x2"
+      }
+    },
+    "x6": {
+      "comm": {
+        "network": {},
+        "serial": {
+          "path": "/dev/serial/by-id/usb-Arduino__www.arduino.cc__0042_7523031383335150A021-if00",
+          "speed": 115200,
+          "delay": 50,
+          "terminal_echo": true,
+          "terminal_end_of_line": "LF"
+        }
+      },
+      "control": {
+        "joystick": {
+          "enable": true,
+          "factor": 0.8
+        },
+        "keyboard": {
+          "enable": true
+        },
+        "touch": {
+          "enable": true
+        },
+        "mouse": {
+          "enable": false,
+          "factor": 0.2
+        }
+      },
+      "endup": {
+        "command": [
+          "M80  ; Power on",
+          "G28  ; Home axes",
+          "M81  ; Power off"
+        ]
+      },
+      "object": [
+        {
+          "control": {
+            "joystick": "button[12]",
+            "keyboard": "K_PAUSE"
+          },
+          "default": "on",
+          "id": "power",
+          "off": {
+            "command": "M81  ; Power off",
+            "expects": "ok",
+            "picture": "off"
+          },
+          "on": {
+            "command": "M80  ; Power on",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "power.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[30, 0]",
+            "split": "[2, 1]"
+          },
+          "type": "switch"
+        },
+        {
+          "control": {
+            "keyboard": "K_SPACE",
+            "joystick": "button[10]"
+          },
+          "default": "off",
+          "id": "stop",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "M0  ; Compulsory stop",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "power.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[130, 0]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "button[3]",
+            "keyboard": "K_HOME"
+          },
+          "default": "off",
+          "id": "home",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G28  ; Home axes",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "power.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[230, 0]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "button[0]",
+            "keyboard": "K_a"
+          },
+          "default": "off",
+          "id": "absolute",
+          "off": {
+            "command": "G91  ; Incremental programming",
+            "expects": "ok",
+            "picture": "off"
+          },
+          "on": {
+            "command": "G90  ; Absolute programming",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "power.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[330, 0]",
+            "split": "[2, 1]"
+          },
+          "type": "switch"
+        },
+        {
+          "control": {
+            "joystick": "axis[0]+",
+            "keyboard": "K_RIGHT",
+            "mouse": "x > 0"
+          },
+          "default": "off",
+          "id": "axis_x_add",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 X-*  ; Move +x",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_right.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[92, 134]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "axis[0]-",
+            "keyboard": "K_LEFT",
+            "mouse": "x < 1"
+          },
+          "default": "off",
+          "id": "axis_x_rid",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 X*  ; Move -x",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_left.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[0, 134]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "axis[1]-",
+            "keyboard": "K_UP",
+            "mouse": "y < 1"
+          },
+          "default": "off",
+          "id": "axis_y_add",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 Y*  ; Move +y",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_up.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[46, 88]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "axis[1]+",
+            "keyboard": "K_DOWN",
+            "mouse": "y > 0"
+          },
+          "default": "off",
+          "id": "axis_y_rid",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 Y-*  ; Move -y",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_down.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[46, 180]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "axis[4]-",
+            "keyboard": "K_KP8"
+          },
+          "default": "off",
+          "id": "axis_z_add",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 Z-*  ; Move z+",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_up.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[304, 88]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "axis[4]+",
+            "keyboard": "K_KP2"
+          },
+          "default": "off",
+          "id": "axis_z_rid",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 Z*  ; Move -z",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_down.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[304, 180]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "axis[3]+",
+            "keyboard": "K_KP6"
+          },
+          "default": "off",
+          "id": "axis_u_add",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 U-*  ; Move +u",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_right.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[350, 134]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "axis[3]-",
+            "keyboard": "K_KP4"
+          },
+          "default": "off",
+          "id": "axis_u_rid",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 U*  ; Move -u",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_left.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[258, 134]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "hat[0] == (0, -1)",
+            "keyboard": "K_KP_MINUS"
+          },
+          "default": "off",
+          "id": "axis_v_add",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 V-*  ; Move +v",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_up.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[125, 30]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "hat[0] == (0, 1)",
+            "keyboard": "K_KP_PLUS"
+          },
+          "default": "off",
+          "id": "axis_v_rid",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 V*  ; Move -v",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_down.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[125, 80]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "hat[0] == (1, 0)",
+            "keyboard": "K_KP_MULTIPLY"
+          },
+          "default": "off",
+          "id": "axis_w_add",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 W*  ; Move +w",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_turn_right.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[208, 170]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "hat[0] == (-1, 0)",
+            "keyboard": "K_KP_DIVIDE"
+          },
+          "default": "off",
+          "id": "axis_w_rid",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 W-*  ; Move -w",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_turn_left.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[138, 170]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "button[5]",
+            "keyboard": "K_KP0"
+          },
+          "default": "off",
+          "id": "axis_t_add",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 T-*  ; Close tool",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_up.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[225, 30]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        },
+        {
+          "control": {
+            "joystick": "button[4]",
+            "keyboard": "K_KP_PERIOD"
+          },
+          "default": "off",
+          "id": "axis_t_rid",
+          "off": {
+            "picture": "off"
+          },
+          "on": {
+            "command": "G0 T*  ; Open tool",
+            "expects": "ok",
+            "picture": "on"
+          },
+          "picture": {
+            "file": "arrow_down.png",
+            "off": "[0, 0]",
+            "on": "[1, 0]",
+            "position": "[225, 80]",
+            "split": "[2, 1]"
+          },
+          "type": "push-button"
+        }
+      ],
+      "startup": {
+        "command": [
+          "M111  ; Debug mode",
+          "M80  ; Power on",
+          "G91  ; Incremental programming",
+          "G3 X2 Y2 Z4 U2 V2 W2 T2  ; Set axis speed"
+        ]
+      },
+      "system": {
+        "arch": "arduino:avr:mega:cpu=atmega2560 ",
+        "desc": "Robotic Arm",
+        "logs": "Development/x6/Mark_I",
+        "work": "Development/x6/Mark_I",
+        "mark": "I",
+        "path": "Development/x6/Mark_I/x6",
+        "plat": "x6"
+      }
+    }
+  }
+}
