@@ -25,6 +25,8 @@ class SigGen():
     description:
     """
 
+    __version__ = 0.01
+
     def __init__(self):
         """
         Description
@@ -40,7 +42,6 @@ class SigGen():
         Returns
             void
         """
-        self.version = 0.01
         self.timer = Timer(1000)
 
     def period(self, period):

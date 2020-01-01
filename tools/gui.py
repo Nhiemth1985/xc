@@ -90,13 +90,13 @@ import contextlib
 with contextlib.redirect_stdout(None):
     import pygame
 from pygame.locals import *  # pylint: disable=wildcard-import, unused-import, unused-wildcard-import
-from tools.device import DeviceProperties
+from tools.device.device import DeviceProperties
 from tools.host import HostProperties
-import tools.echo as echo
+import tools.echo.echo as echo
 from tools.button import Button
 from tools.image import Image
 from tools.screensaver import Screensaver
-from tools.session import Session
+from tools.session.session import Session
 from tools.timer.timer import Timer
 from tools.control_keyboard import ControlKeyboard
 from tools.control_mouse import ControlMouse
@@ -109,8 +109,9 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
     description:
     """
 
+    __version__ = 0.20
+
     def __init__(self, data):  # pylint: disable=too-many-statements
-        self._version = 0.20
         self.__work_dir = os.path.dirname(os.path.realpath(__file__))
         self.__work_dir = os.path.join(self.__work_dir, '../')
         self.__img_dir = os.path.join(self.__work_dir, 'images')
@@ -428,7 +429,7 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
         """
         # Objects
         for i in self.device.get_objects():
-            if (i["source"] == 'joystick'):
+            if i["source"] == 'joystick':
                 continue
             # Push button (pulse)
             if i["type"] == 'push-button' and \
@@ -543,7 +544,7 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
             except BaseException:
                 i["timer"] = Timer(20)
             i["state"] = i["default"]
-        if len(self.device.get_objects()):
+        if self.device.get_objects():
             echo.infoln('Objects...')
             echo.infoln('Imported: ' + str(len(self.device.get_objects())), 1)
 

@@ -31,8 +31,9 @@ class Screensaver:
     description:
     """
 
+    __version__ = 0.3
+
     def __init__(self, screen):
-        self.version = 0.3
         self.__screen = screen
         self.running = False
         self.__style = 'black'

@@ -21,7 +21,8 @@ import contextlib
 with contextlib.redirect_stdout(None):
     import pygame
 from pygame.locals import *  # pylint: disable=wildcard-import, unused-import, unused-wildcard-import
-import tools.echo as echo
+import tools.echo.echo as echo
+from tools.cursor_mouse import cursor_mouse
 
 
 class ControlTouch:
@@ -29,8 +30,9 @@ class ControlTouch:
     description:
     """
 
+    __version__ = 0.1
+
     def __init__(self):
-        self.__version__ = 0.1
         self.__work_dir = os.path.dirname(os.path.realpath(__file__))
         self.__work_dir = os.path.join(self.__work_dir, '../')
         self.__enable = False
@@ -45,20 +47,7 @@ class ControlTouch:
         """
         if visible is not None:
             self.__visible = visible
-            off = ("        ",  # sized 8x8
-                   "        ",
-                   "        ",
-                   "        ",
-                   "        ",
-                   "        ",
-                   "        ",
-                   "        ")
-            curs, mask = pygame.cursors.compile(off, ".", "X")
-            cursor = ((8, 8), (5, 1), curs, mask)
-            if self.__visible:
-                pygame.mouse.set_cursor(*pygame.cursors.arrow)
-            else:
-                pygame.mouse.set_cursor(*cursor)
+            cursor_mouse(self.__visible)
         return self.__visible
 
     def reset(self):

@@ -29,8 +29,9 @@ class Image:  # pylint: disable=too-many-instance-attributes
     description:
     """
 
+    __version__ = 0.2
+
     def __init__(self, screen, source, splits=None):
-        self._version = 0.2
         self.source = source
         self.screen = screen
         self.surface = pygame.image.load(self.source)

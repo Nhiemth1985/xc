@@ -633,6 +633,58 @@
     },
     "r1": {
       "comm": {
+        "serial": {
+          "path": "/dev/serial/by-id/usb-Arduino_LLC_Arduino_Leonardo-if00",
+          "speed": 9600,
+          "delay": 20,
+          "terminal_echo": true,
+          "terminal_end_of_line": "LF"
+        }
+      },
+      "control": {
+        "joystick": {
+          "enable": false,
+          "delay": 40,
+          "speed": 3
+        },
+        "keyboard": {
+          "enable": true,
+          "delay": 1,
+          "speed": 10
+        },
+        "mouse": {
+          "enable": false,
+          "speed": 10
+        },
+        "touch": {
+          "enable": false,
+          "delay": 100,
+          "speed": 10
+        }
+      },
+      "endup": {
+        "command": [
+        ]
+      },
+      "object": [
+      ],
+      "startup": {
+        "command": [
+        ]
+      },
+      "system": {
+        "plat": "r1",
+        "arch": "arduino:avr:leonardo",
+        "desc": "Rover",
+        "logs": "Development/b1/Mark_I",
+        "mark": "I",
+        "path": "Development/b1/Mark_I/b1",
+        "work": "Development/b1/Mark_I"
+      }
+    },
+    "r1_old": {
+      "enable": false,
+      "comm": {
         "network": {},
         "serial": {
           "path": "/dev/serial/by-id/usb-MicroPython_Pyboard_Virtual_Comm_Port_in_FS_Mode_326631633536-if01",
@@ -708,7 +760,6 @@
       }
     },
     "b1": {
-      "enable": false,
       "comm": {
         "network": {},
         "serial": {

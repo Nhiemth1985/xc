@@ -20,7 +20,7 @@ change-log:
 
 import re
 from pygame.locals import *  # pylint: disable=wildcard-import, unused-import, unused-wildcard-import
-import tools.echo as echo
+import tools.echo.echo as echo
 from tools.timer.timer import Timer
 import tools.joystick.joystick as joystick
 
@@ -30,8 +30,9 @@ class ControlJoystick:
     description:
     """
 
+    __version__ = 0.1
+
     def __init__(self):
-        self.__version__ = 0.1
         self.__enable = False
         self.__factor = 1
         self.__scan_time = 1000  # milliseconds

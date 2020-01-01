@@ -12,16 +12,24 @@ people:
 change-log: Check CHANGELOG.md file.
 """
 
+# Check Python version
+import sys
+if not (sys.version_info.major == 3 and sys.version_info.minor >= 6):
+    print("This progarm requires Python 3.6 or higher!")
+    print("You are using Python {}.{}." .
+          format(sys.version_info.major, sys.version_info.minor))
+    sys.exit(1)
+
+# Check and import modules
 try:
     # Ubuntu default modules
-    import sys
     import argparse
     import os.path
     # Myself modules
-    from tools.device import DeviceProperties
-    import tools.echo as echo
-    from tools.file import File
-    from tools.session import Session
+    import tools.echo.echo as echo
+    from tools.device.device import DeviceProperties
+    from tools.file.file import File
+    from tools.session.session import Session
 except ImportError as err:
     print("Could not load module. " + str(err))
     sys.exit(True)
@@ -36,17 +44,15 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
       http://chase-seibert.github.io/blog/
     """
 
-    # Set default verbosity level
-    echo.verbose(1)  # Error level
+    __version__ = 0.84
 
     def __init__(self):
         self.program_name = "xc"
-        self.program_version = 0.83
-        self.program_date = "2019-12-16"
-        self.program_description = "xC - aXes Controller"
+        self.program_date = "2019-12-22"
+        self.program_description = "xc - aXes Controller"
         self.program_copyright = "Copyright (c) 2014-2019 Marcio Pessoa"
         self.program_license = "undefined. There is NO WARRANTY."
-        self.program_website = "https://github.com/marcio-pessoa/xC"
+        self.program_website = "https://github.com/marcio-pessoa/xc"
         self.program_contact = "Marcio Pessoa <marcio.pessoa@gmail.com>"
         self.__id = None
         self.interface = None
@@ -55,23 +61,22 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
         self.config = None
         self.host = None
         self.session = None
-        self.config_file = os.path.join(os.getenv('HOME', ''), '.xC.json')
-        header = ('xc <command> [<args>]\n\n' +
+        self.config_file = os.path.join(os.getenv('HOME', ''), '.device.json')
+        header = (self.program_name + ' <command> [<args>]\n\n' +
                   'commands:\n' +
                   '  gui            graphical user interface\n' +
                   '  terminal       connect to device terminal\n' +
-                  '  run            run a program\n' +
-                  '  list           list devices\n\n')
+                  '  run            run a program\n\n')
         footer = (self.program_copyright + '\n' +
                   'License: ' + self.program_license + '\n' +
                   'Website: ' + self.program_website + '\n' +
                   'Contact: ' + self.program_contact + '\n')
         examples = ('examples:\n' +
-                    '  xc list\n' +
-                    '  xc gui --id x2\n' +
-                    '  xc run -i x6 -p file.gcode\n')
-        self.version = (self.program_name + " " +
-                        str(self.program_version) + " (" +
+                    '  ' + self.program_name + ' terminal \n' +
+                    '  ' + self.program_name + ' gui --id x2\n' +
+                    '  ' + self.program_name + ' run -i x6 -p file.gcode\n')
+        self.version = (self.program_description + " " +
+                        str(self.__version__) + " (" +
                         self.program_date + ")")
         epilog = (examples + '\n' + footer)
         parser = argparse.ArgumentParser(
@@ -94,13 +99,40 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
             sys.exit(True)
         getattr(self, args.command)()
 
+    def gui(self):
+        """
+        description:
+        """
+        parser = argparse.ArgumentParser(
+            prog=self.program_name + ' gui',
+            description='Graphical user interface')
+        parser.add_argument(
+            '-i', '--id',
+            help='device ID')
+        parser.add_argument(
+            '-v', '--verbosity', type=int,
+            default=4,
+            choices=[0, 1, 2, 3, 4],
+            help='verbose mode, options: ' +
+            '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Debug')
+        args = parser.parse_args(sys.argv[2:])
+        echo.level(args.verbosity)
+        echo.infoln(self.version)
+        from tools.gui import Gui
+        self.__load_configuration()
+        gui = Gui(self.config.get())
+        gui.device_set(args.id)
+        gui.start()
+        gui.run()
+        sys.exit(False)
+
     def run(self):
         """
         description:
         """
         parser = argparse.ArgumentParser(
             prog=self.program_name + ' run',
-            description='connect to device terminal')
+            description='Run a program on device')
         parser.add_argument(
             '-i', '--id',
             help='device ID')
@@ -110,12 +142,12 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
             help='load G-code file')
         parser.add_argument(
             '-v', '--verbosity', type=int,
-            default=1,
+            default=4,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
             '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Debug')
         args = parser.parse_args(sys.argv[2:])
-        echo.verbose(args.verbosity)
+        echo.level(args.verbosity)
         echo.infoln(self.version)
         self.__load_configuration()
         echo.infoln('Loading program...')
@@ -126,127 +158,27 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
         self.session.run()
         sys.exit(False)
 
-    def gui(self):
-        """
-        description:
-        """
-        parser = argparse.ArgumentParser(
-            prog=self.program_name + ' gui',
-            description='graphical user interface')
-        parser.add_argument(
-            '-i', '--id',
-            help='device ID')
-        parser.add_argument(
-            '-v', '--verbosity', type=int,
-            default=1,
-            choices=[0, 1, 2, 3, 4],
-            help='verbose mode, options: ' +
-            '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Debug')
-        args = parser.parse_args(sys.argv[2:])
-        echo.verbose(args.verbosity)
-        echo.infoln(self.version)
-        from tools.gui import Gui
-        self.__load_configuration()
-        gui = Gui(self.config.get())
-        gui.device_set(args.id)
-        gui.start()
-        gui.run()
-        sys.exit(False)
-
     def terminal(self):
         """
         description:
         """
         parser = argparse.ArgumentParser(
             prog=self.program_name + ' terminal',
-            description='command line interface')
+            description='Connect to device console')
         parser.add_argument(
             '-i', '--id',
             help='device ID')
         parser.add_argument(
-            '--interface',
-            default='serial',
-            choices=['serial', 'network'],
-            help='communication interface (default: serial)')
-        parser.add_argument(
             '-v', '--verbosity', type=int,
-            default=1,
+            default=3,
             choices=[0, 1, 2, 3, 4],
             help='verbose mode, options: ' +
             '0 Quiet, 1 Errors (default), 2 Warnings, 3 Info, 4 Debug')
         args = parser.parse_args(sys.argv[2:])
         self.__id = args.id
-        echo.verbose(args.verbosity)
+        echo.level(args.verbosity)
         echo.infoln(self.version)
         self.__terminal()
-
-    def list(self):  # pylint: disable=too-many-branches,too-many-statements
-        """
-        description:
-        """
-        parser = argparse.ArgumentParser(
-            prog=self.program_name + ' list',
-            description='list devices')
-        parser.add_argument(
-            '-c', '--connected', action="store_true",
-            help='show only connected devices')
-        parser.add_argument(
-            '-a', '--all', action="store_true",
-            help='show even disabled devices')
-        parser.add_argument(
-            '-v', '--verbosity', type=int,
-            default=1,
-            choices=[0, 1, 2, 3, 4],
-            help='verbose mode, options: ' +
-            '0 Quiet, 1 IDs (default), 2 Names, 3 Description, 4 Link')
-        args = parser.parse_args(sys.argv[2:])
-        self.__load_configuration()
-        device = DeviceProperties(self.config.get())
-        if args.verbosity >= 2:
-            echo.echo(' Id\tName\tMark')
-        if args.verbosity >= 3:
-            echo.echo('\tDescription')
-        if args.verbosity >= 4:
-            echo.echo('\t\tLink')
-        if args.verbosity > 1:
-            echo.echoln('')
-        if args.verbosity >= 2:
-            echo.echo('------------------------')
-        if args.verbosity >= 3:
-            echo.echo('------------------------')
-        if args.verbosity >= 4:
-            echo.echo('--------')
-        if args.verbosity > 1:
-            echo.echoln('')
-        for device_id in device.list():
-            device.set(device_id)
-            session = Session(device.get_comm())
-            if not args.all and not device.is_enable():
-                continue
-            if args.verbosity >= 4 or args.connected:
-                interface = 'Offline'
-                args.interface = 'serial'
-                if args.interface == 'serial' or args.interface == 'all':
-                    if session.is_connected_serial():
-                        interface = "Serial"
-            if args.connected and interface == 'Offline':
-                continue
-            if args.verbosity >= 1:
-                echo.echo(device_id)
-            if args.verbosity >= 2:
-                echo.echo("\t" +
-                          device.system_plat + "\t" +
-                          device.system_mark)
-            if args.verbosity >= 3:
-                echo.echo('\t' + device.system_desc)
-                if len(device.system_desc) < 16:
-                    for _ in range(16-len(device.system_desc)):
-                        echo.echo(" ")
-            if args.verbosity >= 4:
-                echo.echo('\t' + interface)
-            if args.verbosity > 0:
-                echo.echoln('')
-        sys.exit(False)
 
     def __load_configuration(self):
         echo.infoln('Loading configuration...')
@@ -291,9 +223,9 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
         """
         description:
         """
-        # Connect terminal to device serial console.
         from serial.tools.miniterm import Miniterm
         self.__load_configuration()
+        echo.infoln('Device...')
         device = DeviceProperties(self.config.get())
         device.set(self.__id)
         terminal_echo = False
@@ -305,8 +237,10 @@ class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
             terminal_echo = device.get_comm()['serial']['terminal_echo']
         if 'terminal_end_of_line' in device.get_comm()['serial']:
             terminal_end_of_line = device.get_comm()['serial']['terminal_end_of_line']
-        echo.infoln("Communication device: " +
-                    os.popen("readlink -f " + device.get_comm()['serial']['path']).read().rstrip())
+        echo.infoln(
+            "Communication device: " +
+            os.popen("readlink -f " +
+                     device.get_comm()['serial']['path']).read().rstrip(), 1)
         # Start serial session
         session = Session(device.get_comm())
         instance = session.start()

@@ -28,8 +28,9 @@ class Button:
     description:
     """
 
+    __version__ = 0.3
+
     def __init__(self, image, position, surface, state=False):
-        self._version = 0.3
         self.__image = image
         self.__size = self.__image.get_size()
         self.__state = state

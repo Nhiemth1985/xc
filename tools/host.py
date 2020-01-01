@@ -31,7 +31,7 @@ import platform
 import re
 import distro
 from psutil import virtual_memory
-import tools.echo as echo
+import tools.echo.echo as echo
 from tools.timer.timer import Timer
 
 try:
@@ -46,8 +46,9 @@ class HostProperties:  # pylint: disable=too-many-instance-attributes
     description:
     """
 
+    __version__ = 0.5
+
     def __init__(self, data):
-        self.version = 0.5
         self.name = ''
         self.machine = ''
         self.architecture = ''

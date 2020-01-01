@@ -21,7 +21,7 @@ import contextlib
 with contextlib.redirect_stdout(None):
     import pygame
 from pygame.locals import *  # pylint: disable=wildcard-import, unused-import, unused-wildcard-import
-import tools.echo as echo
+import tools.echo.echo as echo
 
 
 class ControlKeyboard:
@@ -29,8 +29,9 @@ class ControlKeyboard:
     description:
     """
 
+    __version__ = 0.1
+
     def __init__(self):
-        self.__version__ = 0.1
         self.__work_dir = os.path.dirname(os.path.realpath(__file__))
         self.__work_dir = os.path.join(self.__work_dir, '../')
         self.__enable = False
@@ -119,15 +120,15 @@ class ControlKeyboard:
             except BaseException:
                 continue
             if i["type"] == "push-button":
-                if event.type == KEYDOWN and \
-                   event.key == eval(i["control"]["keyboard"]):
+                if event.key == eval(i["control"]["keyboard"]) and \
+                   event.type == KEYDOWN:  # pylint: disable=undefined-variable
                     i["button"].on()
-                if event.type == KEYUP and \
-                   event.key == eval(i["control"]["keyboard"]):
+                if event.key == eval(i["control"]["keyboard"]) and \
+                   event.type == KEYUP:  # pylint: disable=undefined-variable
                     i["button"].off()
             elif i["type"] == "switch":
-                if event.type == KEYDOWN and \
-                   event.key == eval(i["control"]["keyboard"]):
+                if event.key == eval(i["control"]["keyboard"]) and \
+                   event.type == KEYDOWN:  # pylint: disable=undefined-variable
                     i["button"].toggle()
 
     def start(self):

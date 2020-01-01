@@ -43,8 +43,9 @@ class Fan():  # pylint: disable=too-many-instance-attributes
         void
     """
 
+    __version__ = 0.3
+
     def __init__(self, write_pin, read_pin=None, max_speed=3000):
-        self.version = 0.3
         self.read_pin = read_pin  # Pin number
         self.write_pin = write_pin  # Pin number
         self.max_speed = max_speed  # RPM
