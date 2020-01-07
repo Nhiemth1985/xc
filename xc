@@ -35,7 +35,7 @@ except ImportError as err:
     sys.exit(True)
 
 
-class UserArgumentParser():  # pylint: disable=too-many-instance-attributes
+class XC():  # pylint: disable=too-many-instance-attributes
     """
     description:
     reference:
@@ -270,7 +270,7 @@ def main():
     """
     description:
     """
-    UserArgumentParser()
+    XC()
 
 
 if __name__ == '__main__':
