@@ -15,7 +15,7 @@ change-log: Check CHANGELOG.md file.
 # Check Python version
 import sys
 if not (sys.version_info.major == 3 and sys.version_info.minor >= 6):
-    print("This progarm requires Python 3.6 or higher!")
+    print("This program requires Python 3.6 or higher!")
     print("You are using Python {}.{}." .
           format(sys.version_info.major, sys.version_info.minor))
     sys.exit(1)
@@ -118,7 +118,7 @@ class XC():  # pylint: disable=too-many-instance-attributes
         args = parser.parse_args(sys.argv[2:])
         echo.level(args.verbosity)
         echo.infoln(self.version)
-        from tools.gui import Gui
+        from tools.gui import Gui  # pylint: disable=import-outside-toplevel
         self.__load_configuration()
         gui = Gui(self.config.get())
         gui.device_set(args.id)
@@ -223,14 +223,17 @@ class XC():  # pylint: disable=too-many-instance-attributes
         """
         description:
         """
-        from serial.tools.miniterm import Miniterm
+        from serial.tools.miniterm import Miniterm  # pylint: disable=import-outside-toplevel
         self.__load_configuration()
         echo.infoln('Device...')
         device = DeviceProperties(self.config.get())
         device.set(self.__id)
+        echo.debugln(device.info())
         terminal_echo = False
         terminal_end_of_line = 'LF'
         if 'serial' not in device.get_comm():
+            # FIXME: Auto detect is not work and this message is displaying when
+            # no devices is specified
             echo.erroln("Missed configuration field: 'serial'")
             sys.exit(True)
         if 'terminal_echo' in device.get_comm()['serial']:
@@ -242,6 +245,7 @@ class XC():  # pylint: disable=too-many-instance-attributes
             os.popen("readlink -f " +
                      device.get_comm()['serial']['path']).read().rstrip(), 1)
         # Start serial session
+        echo.echoln('')
         session = Session(device.get_comm())
         instance = session.start()
         if instance is True:

@@ -84,24 +84,32 @@ change-log:
     added: Scrach version.
 """
 
-import os
-import os.path
-import contextlib
-with contextlib.redirect_stdout(None):
-    import pygame
-from pygame.locals import *  # pylint: disable=wildcard-import, unused-import, unused-wildcard-import
-from tools.device.device import DeviceProperties
-from tools.host import HostProperties
-import tools.echo.echo as echo
-from tools.button import Button
-from tools.image import Image
-from tools.screensaver import Screensaver
-from tools.session.session import Session
-from tools.timer.timer import Timer
-from tools.control_keyboard import ControlKeyboard
-from tools.control_mouse import ControlMouse
-from tools.control_joystick import ControlJoystick
-from tools.control_touch import ControlTouch
+# Check and import modules
+import sys
+try:
+    # Ubuntu default modules
+    import os
+    import os.path
+    import contextlib
+    with contextlib.redirect_stdout(None):
+        import pygame
+    from pygame.locals import *  # pylint: disable=wildcard-import, unused-import, unused-wildcard-import
+    # Myself modules
+    from tools.device.device import DeviceProperties
+    from tools.host import HostProperties
+    import tools.echo.echo as echo
+    from tools.button import Button
+    from tools.image import Image
+    from tools.screensaver import Screensaver
+    from tools.session.session import Session
+    from tools.timer.timer import Timer
+    from tools.control_keyboard import ControlKeyboard
+    from tools.control_mouse import ControlMouse
+    from tools.control_joystick import ControlJoystick
+    from tools.control_touch import ControlTouch
+except ImportError as err:
+    print("Could not load module. " + str(err))
+    sys.exit(True)
 
 
 class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attributes
@@ -597,7 +605,7 @@ class Gui:  # pylint: disable=too-many-public-methods,too-many-instance-attribut
             if len(detected) > 1:
                 echo.warnln('Too many connected devices: ' + str(detected), 1)
                 return
-        self.device.info()
+        echo.debugln(self.device.info())
         if self.device.get_id():
             self.window_title = self.device.system_plat + ' Mark ' + \
                 self.device.system_mark
