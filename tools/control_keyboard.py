@@ -112,7 +112,8 @@ class ControlKeyboard:
         """
         description:
         """
-        if not self.__enable:
+        if not self.__enable or \
+           (event.type != KEYUP and event.type != KEYDOWN):  # pylint: disable=undefined-variable
             return
         for i in self.__mapping:
             try:
